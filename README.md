@@ -77,6 +77,17 @@ pip3 install -r requirements.txt  # 목록에 있는 패키지를 로컬에 설�
 
 SQL, NoSQL 데이터베이스를 다루는 문제도 당연히 출제합니다. 사실 바라는 것은 크지 않지만 데이터 엔지니어보다 크다고 가정하고 정리할 수 있습니다.
 
+# Git & Github 문제
+
+갑자기 생각났습니다. 이런것도 코테를 볼 수 있다는 생각이 들었습니다.
+
+데브옵스가 엔지니어를 경영하는 방법론이라면 이 문제는 경영당하는 법 위주로 풀이하고자 합니다.
+
+# React
+
+[This is a good intermediate react interview challenge](https://www.youtube.com/watch?v=dCCYALKSZEs)
+[I loved solving this junior react interview challenge](https://www.youtube.com/watch?v=A0BmLYHLPZs)
+
 # 면접질문
 
 면접질문에 대한 것도 따로 다루겠습니다.
@@ -132,3 +143,7 @@ https://30secondsofinterviews.org/
 [Data Structures Easy to Advanced Course - Full Tutorial from a Google Engineer](https://youtu.be/RBSGKlAvoiM?t=53)
 
 [Big O Notation - Full Course](https://youtu.be/Mo4vesaut8g)
+
+https://www.daleseo.com/python-queue/
+
+[coding-interview-university](https://github.com/jwasham/coding-interview-university)

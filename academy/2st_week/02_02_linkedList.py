@@ -47,7 +47,7 @@ class LinkedList:
             self.head = newNode
             return  #실행 종료
 
-        prevNode = self.getNode(index - 1)  # [a] -> [b] -> [c] a랑 b사이 d를 추가할 때 b 이전 a를 선택합니다.
+        prevNode = self.getNode(index - 1)  # [a] -> [b] -> [c] [a]랑 [b]사이 [d]를 추가할 때 [b] 이전 [a]를 선택합니다.
         nextNode = prevNode.next            # [b] 노드를 기록합니다.
         prevNode.next = newNode             # [a]의 다음 노드를 [d]를 바라보게 합니다. [a] -> [b] -> none  & [b] -> [c]
         newNode.next = nextNode             # [d]는 [b]를 바라보게 합니다. [a] -> [b] -> [b] -> [c]

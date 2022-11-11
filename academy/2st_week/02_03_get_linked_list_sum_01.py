@@ -15,17 +15,21 @@ class LinkedList:
         cur.next = Node(value)
 
 
-def get_linked_list_sum(linked_list_1: LinkedList, linked_list_2: LinkedList):
-    def loopLinkedList(linkedList: LinkedList):
+def get_linked_list_sum(*linked_lists: LinkedList) -> int:
+
+    def loopLinkedList(linkedList: LinkedList) -> int:
         result = ''
         cur = linkedList.head
-        result += str(cur.data)
-        while cur.next is not None:
-            cur = cur.next
+        while cur is not None:
             result += str(cur.data)
+            cur = cur.next
         return int(result)
 
-    return loopLinkedList(linked_list_1) + loopLinkedList(linked_list_2)
+    total = 0
+    for linked_list in linked_lists:
+        total += loopLinkedList(linked_list)
+
+    return total
 
 
 linked_list_1 = LinkedList(6)
