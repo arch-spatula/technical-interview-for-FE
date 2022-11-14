@@ -27,15 +27,32 @@ def solution(id_pw: list, db: list) -> str:
     # DB를 순회합니다.
     for DB in db:
         # DB의 ID와 PW를 저장합니다.
-        [AppID, AppPW] = [DB[0], DB[1]]
+        [appID, appPW] = [DB[0], DB[1]]
         # 아이디가 비교
-        if userID == AppID:
-            # 비밀번호 비교
-            if userPW == AppPW: return 'login'  # 비밀번호 일치
-            else: return 'wrong pw'             # 비밀번호 불일치
+        if userID == appID:
+            # 비밀번호 일치       # 비밀번호 비교       # 비밀번호 불일치
+            return 'login' if userPW == appPW else 'wrong pw'
     # 아이디가 불일치
-    else: return 'fail'
+    else: return 'fail' '
 ```
 
-문제 예약
 [팩토리얼](https://school.programmers.co.kr/learn/courses/30/lessons/120848)
+
+```py
+# 팩토리얼 함수를 만듭니다.
+def factorial(n: int) -> int:
+    if n <= 1 : return 1
+    return n * factorial(n - 1)
+
+# [1!, 2!, 3! ... 10!,]
+factoArray = [factorial(num) for num in range(1, 10 + 1)]
+
+def solution(n: int) -> int:
+    result = 0
+    # 순회합니다.
+    for facto in factoArray:
+        # facto 보다 크면
+        if n >= facto: result += 1
+
+    return result
+```
