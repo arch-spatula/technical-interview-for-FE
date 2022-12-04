@@ -1,25 +1,16 @@
+// array	n	result
+// [1, 1, 2, 3, 4, 5]	1	2
+// [0, 2, 3, 4]	1	0
+
 /**
  *
- * @param {String} s 문자열을 받습니다.
- * @returns {String} 중복이 없고 정렬된 문자열을 반환합니다.
+ * @param {Array} array
+ * @param {Number} n
+ * @returns {Number}
  */
-function solution(s) {
-  // 등장횟수를 기록합니다.
-  const obj = {};
-  [...s].forEach((letter) => {
-    if (obj[letter]) obj[letter] += 1;
-    else obj[letter] = 1;
-  });
-
-  const answer = [];
-  for (const key in obj) {
-    if (obj[key] == 1) answer.push(key);
-  }
-
-  return answer.sort().join("");
+function solution(array, n) {
+  return array.filter((num) => num === n).length;
 }
 
-console.log(solution("abcabcadc"), "d");
-console.log(solution("abdc"), "abcd");
-console.log(solution("hello"), "eho");
-console.log(solution("hheelloo"), "");
+console.log(solution([1, 1, 2, 3, 4, 5], 1, 2));
+console.log(solution([0, 2, 3, 4], 1, 0));
