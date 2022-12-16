@@ -227,3 +227,426 @@ console.log(solution("abdc"), "abcd");
 console.log(solution("hello"), "eho");
 console.log(solution("hheelloo"), "");
 ```
+
+# 369게임
+
+풀이: 2022.12.05.
+
+[369게임](https://school.programmers.co.kr/learn/courses/30/lessons/120891)
+
+```js
+function solution(order) {
+  return order
+    .toString()
+    .split("")
+    .map((num) => Number(num))
+    .filter((num) => num % 3 === 0 && num !== 0).length;
+}
+```
+
+```js
+function solution(order) {
+  var answer = [...order.toString().matchAll(/[3|6|9]/g)].length;
+  return answer;
+}
+```
+
+정규 표현식을 배우도록 합니다. 고차함수로 풀면 엣지케이스를 잘 처리할 수 없습니다. 0은 어느 숫자로도 나누어 떨어진 숫자입니다. 이런 경우를 고려하지 않기 위해 특정 문자열의 존재여부는 단순하게 판단하는 정규표현식더 효율적입니다. 코드 가독성도 더 우월합니다.
+
+# 2차원으로 만들기
+
+풀이: 2022.12.06.
+
+[2차원으로 만들기](https://school.programmers.co.kr/learn/courses/30/lessons/120842)
+
+```js
+/**
+ * @param {Array} num_list
+ * @param {Number} n
+ * @returns {Array}
+ */
+function solution(num_list, n) {
+  const column = [];
+  let row = [];
+  let count = 0;
+
+  // n 번째 원소마다
+  num_list.forEach((num) => {
+    count += 1;
+    row.push(num);
+    if (count === n) {
+      column.push(row);
+      count = 0;
+      row = [];
+    }
+  });
+
+  return column;
+}
+```
+
+커스텀 `splice` 만들지 맙시다.
+
+```js
+function solution(num_list, n) {
+  var answer = [];
+
+  while (num_list.length) {
+    answer.push(num_list.splice(0, n));
+  }
+
+  return answer;
+}
+```
+
+# 캐릭터의 좌표
+
+풀이: 2022.12.07.
+
+[캐릭터의 좌표](https://school.programmers.co.kr/learn/courses/30/lessons/120861)
+
+```js
+/**
+ *
+ * @param {Array} keyinput: 모든 원소는 문자열입니다.
+ * @param {Array} board: 모든 원소는 Number입니다.
+ * @returns {Array}
+ */
+function solution(keyinput, board) {
+  const location = [0, 0];
+  const [edgeX, edgeY] = [(board[0] - 1) / 2, (board[1] - 1) / 2];
+  // [0, 0]에서 시작합니다. [x, y]로 움직이고 x는 좌우 y는 상하이동합니다.
+  // 모서리 +-(board - 1)/2 보다 클수 없습니다. 범위를 초과하면 명령을 취소합니다.
+  keyinput.forEach((move) => {
+    if (move === "left") {
+      location[0] -= 1;
+      if (-edgeX > location[0] || location[0] > edgeX) location[0] += 1;
+    } else if (move === "right") {
+      location[0] += 1;
+      if (-edgeX > location[0] || location[0] > edgeX) location[0] -= 1;
+    } else if (move === "up") {
+      location[1] += 1;
+      if (-edgeY > location[1] || location[1] > edgeY) location[1] -= 1;
+    } else {
+      location[1] -= 1;
+      if (-edgeY > location[1] || location[1] > edgeY) location[1] += 1;
+    }
+  });
+  return location;
+```
+
+```js
+function solution(keyinput, board) {
+  let res = [0, 0];
+  for (let p of keyinput) {
+    switch (p) {
+      case "left":
+        if (-res[0] < board[0] / 2 - 1) res[0]--;
+        break;
+      case "right":
+        if (res[0] < board[0] / 2 - 1) res[0]++;
+        break;
+      case "up":
+        if (res[1] < board[1] / 2 - 1) res[1]++;
+        break;
+      case "down":
+        if (-res[1] < board[1] / 2 - 1) res[1]--;
+        break;
+    }
+  }
+  return res;
+}
+```
+
+# 겹치는 선분의 길이
+
+[겹치는 선분의 길이](https://school.programmers.co.kr/learn/courses/30/lessons/120876)
+
+풀이: 2022.12.09.
+
+시간 초과, 검색사용
+
+```js
+/**
+ * @param {Array} lines 3x2 행열입니다.
+ * @returns {Array}
+ */
+function solution(lines) {
+  const start = Math.min(...lines.flat());
+  const end = Math.max(...lines.flat());
+
+  const memo = {};
+  range([start, end]).forEach((elem, idx) => {
+    memo[elem] = 0;
+  });
+
+  lines.forEach((arr) => {
+    range(arr).forEach((elem) => {
+      memo[elem] += 1;
+    });
+  });
+
+  return Object.keys(
+    Object.fromEntries(Object.entries(memo).filter(([key, value]) => value > 1))
+  ).length;
+}
+
+function range(arr) {
+  return [...Array(arr[1] - arr[0]).keys()].map((elem) => elem + arr[0]);
+}
+```
+
+[[Javascript] 배열 중복 값 개수 구하기](https://hianna.tistory.com/459)
+
+```js
+const arr = ["a", "b", "a", "b", "c"];
+
+const result = {};
+arr.forEach((x) => {
+  result[x] = (result[x] || 0) + 1;
+});
+console.log(result); // {"a":2,"b":2,"c":1}
+```
+
+[JavaScript: filter() for Objects](https://stackoverflow.com/questions/5072136/javascript-filter-for-objects)
+
+```js
+let romNumbers = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
+
+const filteredByValue = Object.fromEntries(
+  Object.entries(romNumbers).filter(([key, value]) => value === 5)
+);
+console.log(filteredByValue); // {V: 5}
+```
+
+[[Javascript] 객체(Object) 속성(property) 개수 구하기](https://hianna.tistory.com/452)
+
+```js
+const obj = {
+  product: "book",
+  id: 123,
+  page: 23,
+};
+
+const count = Object.keys(obj).length;
+
+console.log(obj); // 3
+```
+
+여기까지 문제를 풀기 위해 동원한 검색입니다. 마지막 검색은 조금 부끄럽습니다. 그리고 아래는 정답입니다.
+
+```js
+function solution(lines) {
+  let line = new Array(200).fill(0);
+
+  lines.forEach(([a, b]) => {
+    for (; a < b; a++) line[a + 100]++;
+  });
+
+  return line.reduce((a, c) => (c > 1 ? a + 1 : a), 0);
+}
+```
+
+코드 퀄리티가 그냥 좋다기보단 최선으로 보입니다.
+
+# 안전지대
+
+[안전지대](https://school.programmers.co.kr/learn/courses/30/lessons/120866)
+
+풀이: 2022.12.13.
+
+검색사용, 시간초과
+
+```js
+/**
+ * @param {Array} board n*n 배열입니다.
+ * @returns {Number} 안전한 칸수를 반환합니다.
+ */
+function solution(board) {
+  // n*n의 n을 구합니다.
+  const n = board.length;
+
+  // 매설지대를 기록합니다.
+  const memo = {};
+  board.forEach((rowList, row) =>
+    rowList.forEach((value, column) => {
+      memo[`${row} ${column}`] = value;
+    })
+  );
+
+  // 좌표를 찾아냅니다.
+  const mineLocation = Object.keys(
+    Object.fromEntries(Object.entries(memo).filter(([key, value]) => value > 0))
+  ).map((loc) => loc.split(" ").map((loc) => Number(loc)));
+  // 위험지대주변 1칸은 기록합니다.
+  const dangerArea = [];
+  mineLocation.forEach((xy) => {
+    // 매설지대 + 1, - 1
+    const xArea = [...Array(3).keys()].map((num) => xy[0] + num - 1); // 0 1 2
+    const yArea = [...Array(3).keys()].map((num) => xy[1] + num - 1); // 0 1 2
+
+    // 예외를 처리합니다. 0미만 n초과
+    xArea.forEach((xElem) => {
+      yArea.forEach((yElem) => {
+        dangerArea.push([xElem, yElem]);
+      });
+    });
+  });
+
+  const dangerLocation = {};
+  board.forEach((rowList, row) =>
+    rowList.forEach((value, column) => {
+      dangerLocation[`${row} ${column}`] = 0;
+    })
+  );
+
+  dangerArea.forEach((xy) => {
+    dangerLocation[`${xy[0]} ${xy[1]}`] += 1;
+  });
+
+  // 1이상의 위험지대를 구합니다. 전체에서 위험지대만큼 뺍니다.
+  const answer =
+    n * n -
+    Object.keys(
+      Object.fromEntries(
+        Object.entries(dangerLocation).filter(([key, value]) => value > 0)
+      )
+    ).length;
+  return answer;
+}
+```
+
+```js
+function solution(board) {
+  let outside = [
+    [-1, 0],
+    [-1, -1],
+    [-1, 1],
+    [0, -1],
+    [0, 1],
+    [1, 0],
+    [1, -1],
+    [1, 1],
+  ];
+  let safezone = 0;
+
+  board.forEach((row, y, self) =>
+    row.forEach((it, x) => {
+      if (it === 1) return false;
+      return outside.some(([oy, ox]) => !!self[oy + y]?.[ox + x])
+        ? false
+        : safezone++;
+    })
+  );
+
+  return safezone;
+}
+```
+
+# 평행
+
+[평행](https://school.programmers.co.kr/learn/courses/30/lessons/120875)
+
+풀이: 2022.12.14.
+
+시간 준수
+
+```js
+/**
+ * @param {Array} dots [x, y] 4개를 갖는 배열입니다.
+ * @returns {Number} 안전한 칸수를 반환합니다.
+ */
+function solution(dots) {
+  // 모든 점을 비교합니다.
+  let firstDot = null;
+  const slopes = [];
+  while (dots.length > 1) {
+    firstDot = dots.pop();
+    dots.forEach((secondeDot) => {
+      slopes.push(slope(firstDot, secondeDot));
+    });
+  }
+  // 6개의 기울기 중 1개로도 값이 일치하면 1없으면 0
+  let firstSlope = null;
+  while (slopes.length > 1) {
+    firstSlope = slopes.pop();
+    // 일치를 발견하면 순회 중단
+    if (slopes.findIndex((slope) => slope === firstSlope) !== -1) {
+      return 1;
+    }
+    // -1이 아닌 것을 찾으면 중단
+  }
+  return 0;
+}
+
+/**
+ * 기울기를 구합니다.
+ * @param {Array} dot1
+ * @param {Array} dot2
+ */
+function slope(dot1, dot2) {
+  return (dot1[1] - dot2[1]) / (dot1[0] - dot2[0]);
+}
+```
+
+# [1차] 비밀지도
+
+[[1차] 비밀지도](https://school.programmers.co.kr/learn/courses/30/lessons/17681)
+
+풀이: 2022.12.16.
+
+시간 준수, 검색 사용
+
+```js
+/**
+ * @param {Array} strings
+ * @param {Number} n
+ * @returns {Array}
+ */
+function solution(n, arr1, arr2) {
+  return [...Array(n)].map((_, idx) => {
+    const firstByte = convertToBinary(arr1, n)[idx].split("");
+    const secondByte = convertToBinary(arr2, n)[idx].split("");
+    return [...Array(n)]
+      .map((_, idx) => {
+        return parseInt(firstByte[idx]) || parseInt(secondByte[idx])
+          ? "#"
+          : " ";
+      })
+      .join("");
+  });
+}
+
+/**
+ * @param {Number} num
+ * @param {Array} arr
+ * @returns {Array}
+ */
+function convertToBinary(arr, num) {
+  return arr
+    .map((number) => number.toString(2).split(""))
+    .map((binary) => {
+      const missingZero = [...Array(num - binary.length)].fill(0);
+      binary.unshift(...missingZero);
+      return binary.map((num) => num.toString()).join("");
+    });
+}
+```
+
+```js
+function solution(n, arr1, arr2) {
+  return arr1.map((v, i) =>
+    addZero(n, (v | arr2[i]).toString(2)).replace(/1|0/g, (a) =>
+      +a ? "#" : " "
+    )
+  );
+}
+
+const addZero = (n, s) => {
+  return "0".repeat(n - s.length) + s;
+};
+```
+
+정규표현식을 배웁시다.
+
+`|`은 무엇인가요?
