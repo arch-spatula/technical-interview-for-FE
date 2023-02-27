@@ -1,11 +1,18 @@
 /**
- * @param {Number} num
- * @returns
+ * @param {array} arr
+ * @param {number} num
+ * @returns {number}
  */
-function fib(num) {
-  if (num <= 2) return 1;
-  return fib(num - 1) + fib(num - 2);
+function linearSearch(arr, num) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === num) return i;
+  }
+  return -1;
 }
+
+// function linearSearch(arr, num) {
+//   return arr.indexOf(num);
+// }
 
 console.log(
   fib(4), // 3
