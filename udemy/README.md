@@ -1433,3 +1433,28 @@ indexOf는 아마 내부적으로 이렇게 구현되어 있을 가능성이 있
 다음은 선형탐색보다 복잡한 알고리즘을 다룹니다.
 
 선형탐색 빅오입니다. 최고의 경우는 $O(1)$ 입니다. 최악의 경우는 $O(n)$ 입니다. 평균도 $O(n)$ 입니다. 상수가 없기 때문에 이렇게 해당합니다. 정렬이 안된 자료를 다룰 때 최선입니다.
+
+## 이진탐색
+
+선형탐색에 비해 상당한 개선입니다. 하나의 요소를 제거하는 방식이 아닙니다. 원소 절반을 제거할 수 있습니다. 하지만 단점은 자료가 정렬되어야 합니다.
+
+술게임에서 병뚜껑 게임과 동일한 동작방식입니다.
+
+이진탐색은 가운데부터 항상 고릅니다. 그리고 찾는 값보다 크고 작음을 비교합니다.
+
+구현이 중요합니다. 핵심 아이디어는 분할 정복입니다. 왼쪽 오른쪽으로 쪼갭니다.
+
+이진탐색 의사코드입니다. 의외로 짧습니다.
+
+- This function accepts a sorted array and a value
+- Create a left pointer at the start of the array, and a right pointer at the end of the array
+- While the left pointer comes before the right pointer:
+  - Create a pointer in the middle
+  - If you find the value you want, return the index
+  - If the value is too small, move the left pointer up
+  - If the value is too large, move the right pointer down
+- If you never find the value, return -1
+
+```js
+// 함수
+```
