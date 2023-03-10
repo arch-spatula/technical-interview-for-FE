@@ -1500,3 +1500,12 @@ binarySearch([2, 5, 6, 9, 13, 15, 28, 30], 103);
 ## 나이브 문자열 탐색
 
 단순하게 선형탐색으로 문자열이 일치하면 다음 일치하는지 확인하는 탐색방법입니다. 정식 명칭은 아닙니다. 더 우아한 해결책이 존재합니다. 다음에 다루게 될 알고리즘은 명칭은 있습니다.
+
+아래는 의사코드입니다.
+
+- Loop over the longer string
+- Loop over the shorter string
+- If the characters don't match, break out of the inner loop
+- If the characters do match, keep going
+- If you complete the inner loop and find a match, increment the count of matches
+- Return the count

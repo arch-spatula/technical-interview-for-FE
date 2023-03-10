@@ -1,3 +1,4 @@
 export function solution(longString: string, target: string) {
-  return 0;
+  let count = 0;
+  return count;
 }
