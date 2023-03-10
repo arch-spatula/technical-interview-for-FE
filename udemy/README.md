@@ -1455,6 +1455,31 @@ indexOf는 아마 내부적으로 이렇게 구현되어 있을 가능성이 있
   - If the value is too large, move the right pointer down
 - If you never find the value, return -1
 
+```ts
+function binarySearch(arr: (number | string)[], target: number | string) {
+  let start = 0;
+  let last = arr.length - 1;
+  while (!(start === last)) {
+    let median = Math.round((start + last) / 2);
+    if (target === arr[median]) {
+      return median;
+    } else if (target > arr[median]) {
+      start = median;
+      continue;
+    } else if (target < arr[median]) {
+      last = median;
+      continue;
+    } else {
+      break;
+    }
+  }
+
+  return -1;
+}
+```
+
+여기서 단점은 포인터로 선택된 원소를 분할한 배열을 포함합니다.
+
 ```js
 function binarySearch(arr, elem) {
   var start = 0;
@@ -1509,3 +1534,86 @@ binarySearch([2, 5, 6, 9, 13, 15, 28, 30], 103);
 - If the characters do match, keep going
 - If you complete the inner loop and find a match, increment the count of matches
 - Return the count
+
+```ts
+export function solution(longString: string, subString: string) {
+  let count = 0;
+  for (let i = 0; i < longString.length; i++) {
+    let subCount = 0;
+    if (longString[i] === subString[0]) {
+      for (let j = 0; j < subString.length; j++) {
+        if (longString[i + j] === subString[j]) {
+          subCount += 1;
+        } else {
+          break;
+        }
+        if (subCount === subString.length) count += 1;
+      }
+    }
+  }
+  return count;
+}
+```
+
+제가 작성한 정답입니다.
+
+```js
+function naiveSearch(long, short) {
+  var count = 0;
+  for (var i = 0; i < long.length; i++) {
+    for (var j = 0; j < short.length; j++) {
+      if (short[j] !== long[i + j]) break;
+      if (j === short.length - 1) count++;
+    }
+  }
+  return count;
+}
+
+console.log(naiveSearch("lorie loled", "lo"));
+```
+
+나이브 탐색입니다.
+
+다음은 더 좋은 문자열 탐색 알고리즘을 공부할 것입니다.
+
+KNP 문자열 검색은 나중에 다시 다루겠습니다.
+
+# 정렬
+
+https://cs.slides.com/colt_steele/elementary-sorting-algorithms
+
+## 정렬 입문
+
+수업에서 많은 학생들이 어려워합니다. 하지만 이것은 비전공자 한정입니다.
+
+이것은 컴퓨터과학 필수 지식입니다. 코테 면접에서 따로 다룰 정도로 분량이 많기는 합니다.
+
+정렬알고리즘은 collection을 재구조화하는 절차입니다.
+
+숫자를 크고 작은 순서, 알파벳 순서로 정렬, 평점 기준으로 정렬
+
+비교 기준이 중요한 것은 아닙니다. 현재는 배열과 숫자 위주로 다룰 것입니다.
+
+여기는 정렬 입문입니다.
+
+정렬을 배워야 하는 이유는 무엇인가?
+
+정렬은 프로그래밍에서 흔한 것입니다. 언어의 내장함수를 사용해도 동작원리를 이해해야 적용을 언제 어떻게 해야할지 이해할 수 있습니다. 대부분의 데이터가 정렬되어 있으면 몇개만 정렬하면 되는 것이면 큇 정렬을 활용하면 되는 것과 동일합니다.
+
+https://www.youtube.com/watch?v=kPRA0W1kECg
+
+https://www.toptal.com/developers/sorting-algorithms
+
+면접질문에 너무 일반적입니다. 사고력을 많이 필요로 하고 소양을 측정하기 유용합니다.
+
+처음에는 버블 정렬, 선택정렬, 삽입정렬을 배웁니다. 입문용 정렬알고리즘입니다. 대부분의 경우 사용하지 않습니다.
+
+몇가지 아주 구체적이게 언제 성능이 좋은지 알아야 합니다.
+
+자바스크립트에는 내장 sort 함수입니다. 대부분의 언어는 정렬 함수를 갖고 있습니다.
+
+자바스크립트 내장 sort는 배열의 원소를 문자열의 유니코드를 기준으로 정렬합니다. 문자열로 작업하면 유용할 수 있지만 실제 세상에서는 숫자 정렬도 많이 필요합니다.
+
+대입하는 콜백함수로 정렬 기준을 정할 수 있습니다. 반환값의 양수 음수를 기준으로 어센딩 디센딩을 제어할 수 있습니다.
+
+## 버블 정렬
