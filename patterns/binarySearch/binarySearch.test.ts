@@ -36,3 +36,18 @@ describe("이진 탐색을 구현합니다.", () => {
     expect(solution).toBe(-1);
   });
 });
+
+describe("이진탐색 예외처리", () => {
+  test("1만 있는 배열에서 1을 찾습니다.", () => {
+    const solution = binarySearch([1], 1);
+    expect(solution).toBe(0);
+  });
+  test("1만 있는 배열에서 1을 찾습니다.", () => {
+    const solution = binarySearch([2], 1);
+    expect(solution).toBe(-1);
+  });
+  test("1만 있는 배열에서 1을 찾습니다.", () => {
+    const solution = binarySearch([1, 2], 1);
+    expect(solution).toBe(0);
+  });
+});

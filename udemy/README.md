@@ -1456,5 +1456,47 @@ indexOf는 아마 내부적으로 이렇게 구현되어 있을 가능성이 있
 - If you never find the value, return -1
 
 ```js
-// 함수
+function binarySearch(arr, elem) {
+  var start = 0;
+  var end = arr.length - 1;
+  var middle = Math.floor((start + end) / 2);
+  while (arr[middle] !== elem && start <= end) {
+    if (elem < arr[middle]) {
+      end = middle - 1;
+    } else {
+      start = middle + 1;
+    }
+    middle = Math.floor((start + end) / 2);
+  }
+  if (arr[middle] === elem) {
+    return middle;
+  }
+  return -1;
+}
 ```
+
+원래 해결책입니다.
+
+```js
+function binarySearch(arr, elem) {
+  var start = 0;
+  var end = arr.length - 1;
+  var middle = Math.floor((start + end) / 2);
+  while (arr[middle] !== elem && start <= end) {
+    if (elem < arr[middle]) end = middle - 1;
+    else start = middle + 1;
+    middle = Math.floor((start + end) / 2);
+  }
+  return arr[middle] === elem ? middle : -1;
+}
+
+binarySearch([2, 5, 6, 9, 13, 15, 28, 30], 103);
+```
+
+코드를 조금더 수정한 해결책입니다. 동작은 동일합니다.
+
+최고의 경우 시간복잡성은 $O(1)$ 입니다. 최악과 평균의 경우 $O(log N)$ 입니다.
+
+## 나이브 문자열 탐색
+
+단순하게 선형탐색으로 문자열이 일치하면 다음 일치하는지 확인하는 탐색방법입니다. 정식 명칭은 아닙니다. 더 우아한 해결책이 존재합니다. 다음에 다루게 될 알고리즘은 명칭은 있습니다.
