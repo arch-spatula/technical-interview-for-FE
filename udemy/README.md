@@ -1617,3 +1617,121 @@ https://www.toptal.com/developers/sorting-algorithms
 대입하는 콜백함수로 정렬 기준을 정할 수 있습니다. 반환값의 양수 음수를 기준으로 어센딩 디센딩을 제어할 수 있습니다.
 
 ## 버블 정렬
+
+전혀 성능이 좋지 않습니다. 일반적으로 사용하지 않습니다. 생각보다 재미있습니다. 최적화도 존재합니다. 또 사용하는 경우는 분명 존재합니다.
+
+버블 정렬이라고 부르는 이유입니다. 거품이 위로 상승합니다. 가장 작은 숫자에서 높은 숫자가 뒤로 정렬되기 때문입니다.
+
+https://visualgo.net/en/sorting
+
+정렬을 앞뒤로 비교하고 앞이 더 크면 자리를 교환합니다. 뒤가 더 크면 자리를 바꾸지 않습니다.
+
+침몰 정렬은 버블 정렬의 반대로 동작합니다.
+
+뒤로갈수록 자리를 바꿀 자료가 줄어듭니다.
+
+자바스크립트에서 자리를 바꾸는 방법입니다.
+
+```js
+function swap(arr, idx1, idx2) {
+  let temp = arr[idx1];
+  arr[idx1] = arr[idx2];
+  arr[idx2] = temp;
+}
+```
+
+옛날 문법입니다.
+
+```js
+const swap = (arr, idx1, idx2) => {
+  [arr[idx1], arr[idx2]] = [arr[idx2], arr[idx1]];
+};
+```
+
+현대적인 문법입니다.
+
+버블 정렬의 의사코드입니다.
+
+- Start looping from with a variable called i the end of the array towards the beginning
+- Start an inner loop with a variable called j from the beginning until i - 1
+- If arr[j] is greater than arr[j+1], swap those two values!
+- Return the sorted array
+
+```ts
+function swap(arr: number[], idx1: number, idx2: number) {
+  [arr[idx1], arr[idx2]] = [arr[idx2], arr[idx1]];
+}
+
+export function bubbleSort(arr: number[]) {
+  let swapStack = 1;
+  while (swapStack === 1) {
+    swapStack -= 1;
+    for (let i = 0; i < arr.length - 1; i++) {
+      if (arr[i] > arr[i + 1]) {
+        swap(arr, i, i + 1);
+        swapStack = 1;
+      }
+    }
+  }
+  return arr;
+}
+```
+
+제가 구현한 코드입니다.
+
+중첩 순회하고 최적화가 안된 버블 정렬을 배웁니다.
+
+```js
+// UNOPTIMIZED VERSION OF BUBBLE SORT
+function bubbleSort(arr) {
+  for (var i = arr.length; i > 0; i--) {
+    for (var j = 0; j < i - 1; j++) {
+      // console.log(arr, arr[j], arr[j + 1]);
+      if (arr[j] > arr[j + 1]) {
+        var temp = arr[j];
+        arr[j] = arr[j + 1];
+        arr[j + 1] = temp;
+      }
+    }
+  }
+  return arr;
+}
+```
+
+최적화가 안된 함수입니다. 가장 큰 숫자가 제일 뒤에 가면 불필요한 비교를 여러번 진행합니다.
+
+버블 정렬은 중첩순회를 하고 마지막 원소 뒷부분 부터 소거하고 비교를 처리합니다.
+
+1가지 최적화가 있습니다. 버블 정렬은 대부분 정렬 되어 있으면 계속 실행합니다. 계속 실행하려고 할 것입니다. 코드를 단축 평가를 하는 방법이 있습니다.
+
+```js
+// Optimized BubbleSort with noSwaps
+function bubbleSort(arr) {
+  var noSwaps;
+  for (var i = arr.length; i > 0; i--) {
+    noSwaps = true;
+    for (var j = 0; j < i - 1; j++) {
+      if (arr[j] > arr[j + 1]) {
+        var temp = arr[j];
+        arr[j] = arr[j + 1];
+        arr[j + 1] = temp;
+        noSwaps = false;
+      }
+    }
+    if (noSwaps) break;
+  }
+  return arr;
+}
+
+bubbleSort([8, 1, 2, 3, 4, 5, 6, 7]);
+```
+
+최적화 방법은 교환이 없으면 순회를 종료하게 만드는 것입니다. 작은 변화지만 많은 시간을 절약할 수 있습니다.
+
+while문은 아주 비효율적인 알고리즘입니다. 단순히 구현만 한 것 뿐입니다.
+
+버블 정렬은 대부분 정렬이 되었을 때 활용할지도 모르지만 사실 사용하지 않습니다. 사실은 교육용으로 활용하기만 합니다.
+
+버블 정렬의 시간 복잡성은 $O(n^2)$ 입니다. 중첩 순회를 하기 때문에 그렇습니다.
+
+이번 시간에 본 최적화는 고전적인 최적화의 예시입니다.
