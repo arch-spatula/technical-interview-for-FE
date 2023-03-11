@@ -3,15 +3,18 @@ function swap(arr: number[], idx1: number, idx2: number) {
 }
 
 export function bubbleSort(arr: number[]) {
-  let swapStack = 1;
-  while (swapStack === 1) {
-    swapStack -= 1;
-    for (let i = 0; i < arr.length - 1; i++) {
-      if (arr[i] > arr[i + 1]) {
-        swap(arr, i, i + 1);
-        swapStack = 1;
+  let isSwapped = true;
+  for (let i = arr.length - 1; i > -1; i--) {
+    isSwapped = false;
+    for (let j = -1; j < i; j++) {
+      if (arr[j] > arr[j + 1]) {
+        swap(arr, j, j + 1);
+        isSwapped = true;
       }
     }
+    if (!isSwapped) break;
   }
   return arr;
 }
+
+bubbleSort([5, 3, 4, 1, 2]);
