@@ -5,5 +5,5 @@
  * @returns {Number}
  */
 export function solution(array, n) {
-  return array.filter((num) => num === n).length;
+  return array.filter((item) => item % n === 0).sort();
 }
