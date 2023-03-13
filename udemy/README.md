@@ -1735,3 +1735,114 @@ while문은 아주 비효율적인 알고리즘입니다. 단순히 구현만 �
 버블 정렬의 시간 복잡성은 $O(n^2)$ 입니다. 중첩 순회를 하기 때문에 그렇습니다.
 
 이번 시간에 본 최적화는 고전적인 최적화의 예시입니다.
+
+## 선택 정렬
+
+버블 정렬과 유사합니다. 정렬된 데이터는 앞에서 누적 됩니다.
+
+```txt
+5, 3, 4, 1, 2
+^        ^  ^
+
+1, 3, 4, 5, 2
+   ^        ^
+
+1, 2, 4, 5, 3
+      ^     ^
+
+1, 2, 3, 5, 4
+         ^  ^
+
+1, 2, 3, 4, 5
+완성
+```
+
+가장 작은 원소를 찾고 앞에 위치랑 바꾸는 방법으로 동작합니다.
+
+- Store the first element as the smallest value you've seen so far.
+- Compare this item to the next item in the array until you find a smaller number.
+- If a smaller number is found, designate that smaller number to be the new "minimum" and continue until the end of the array.
+- If the "minimum" is not the value (index) you initially began with, swap the two values.
+- Repeat this with the next element until the array is sorted.
+
+```ts
+function swap(arr: number[], idx1: number, idx2: number) {
+  [arr[idx1], arr[idx2]] = [arr[idx2], arr[idx1]];
+}
+
+export function selectionSort(arr: number[]) {
+  for (let j = 0; j < arr.length; j++) {
+    let minElementVal = arr[j];
+    let minElementIdx = j;
+
+    for (let i = j; i < arr.length; i++) {
+      if (minElementVal > arr[i]) {
+        minElementVal = arr[i];
+        minElementIdx = i;
+      }
+    }
+    swap(arr, minElementIdx, j);
+  }
+  return arr;
+}
+
+selectionSort([5, 3, 4, 1, 2]);
+```
+
+제가 구현한 함수입니다. 가장 작은 값을 보관하고 있을 필여는 없었습니다. 구현하지 않은 부분이 있습니다. 첫 숫자랑 가장 작은 숫자가 동일한데 `swap`함수를 호출하게 됩니다. 그래서 강의를 잘 확인하도록 합니다.
+
+```js
+const swap = (arr, idx1, idx2) =>
+  ([arr[idx1], arr[idx2]] = [arr[idx2], arr[idx1]]);
+
+// ES2015 VERSION
+function selectionSort(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    let lowest = i;
+    for (let j = i + 1; j < arr.length; j++) {
+      if (arr[lowest] > arr[j]) {
+        lowest = j;
+      }
+    }
+    if (i !== lowest) swap(arr, i, lowest);
+  }
+
+  return arr;
+}
+
+selectionSort([0, 2, 34, 22, 10, 19, 17]);
+```
+
+중첩 순회부터 구현하는 것도 방법입니다. 조금식 창문을 줄여가는 것입니다.
+
+선택정렬의 시간복잡성은 상당히 낮습니다. 모든 원소를 비교해야 합니다. $O(n^2)$ 입니다. 버블정렬보다 성능이 좋기는 합니다. 버블 정렬은 자리를 바꾸는 횟수가 많습니다. 공간복잡성이 버블정렬보다는 좋습니다. 또 초심자 학습용 알고리즘에 좋습니다. 하지만 실무적으로 자주 작성하지 않습니다.
+
+## 삽입정렬
+
+마지막 기초적인 정렬입니다. 삽입정렬은 버블정렬과 선택정렬과 유사합니다. 몇가지 다른점이 있습니다. 학습차원만이 아니라 실무에서 활용하게 될 경우도 존재합니다.
+
+각 원소를 정렬된 부분에 배치합니다. 정렬된 부분이 있고 점진적으로 완성된 부분에 추가합니다.
+
+원소를 하나씩 받아 완성된 부분에 계속 삽입하는 방식으로 동작합니다.
+
+```txt
+5, 3, 4, 1, 2
+/  ^
+
+3, 5, 4, 1, 2
+/  /  ^
+
+3, 4, 5, 1, 2
+/  /  /  ^
+
+1, 3, 4, 5, 2
+/  /  /  /  ^
+
+1, 2, 3, 4, 5
+완성
+```
+
+- Start by picking the second element in the array
+- Now compare the second element with the one before it and swap if necessary.
+- Continue to the next element and if it is in the incorrect order, iterate through the sorted portion (i.e. the left side) to place the element in the correct place.
+- Repeat until the array is sorted.
