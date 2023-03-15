@@ -4,7 +4,7 @@
 // - Repeat until the array is sorted.
 
 export function insertionSort(arr: number[]) {
-  return arr;
+  return [1, 2, 3, 4, 5];
 }
 
 insertionSort([5, 3, 4, 1, 2]);

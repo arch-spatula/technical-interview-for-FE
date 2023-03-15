@@ -1883,6 +1883,8 @@ es6 문법이 아닌 코드로 풀었습니다.
 
 정렬은 프로그래밍에서 기초입니다. 면접 기본 질문 중 하나입니다. 버블, 선택, 삽입은 모두 성능이 비슷합니다. 빅세타 표기법으로 모두 제곱시간복잡성을 갖습니다. 더 복잡성이 높고 성능이 좋을 정렬 알고리즘은 바로 다음에 다룹니다.
 
+## 중급 알고리즘
+
 ## 병합정렬
 
 병합정렬부터 중급 알고리즘입니다. 직관적이지 않고 이해하기 더 어렵습니다. 하지만 성능은 더 좋습니다.
@@ -1898,3 +1900,251 @@ es6 문법이 아닌 코드로 풀었습니다.
 병합, 퀵, 지수 정렬을 모두 배울 것입니다.
 
 버블 정렬은 제곱시간 복잡성을 갖고 있지만 병합정렬은 훨씬더 성능이 좋습니다. 이런 성능이 좋은 알고리즘을 보고 $O(n^{2})$ 을 $O(n \cdot log \ n)$ 으로 개선됩니다. 일반인들이 주로 사고하는 방식이 아닙니다. 그래서 개발자가 아닌 사람으로서 직관적이지 못한 것이 많습니다.
+
+Jonathan Benjamin Ben Newman은 1948년 수학자가 최초의 병합정렬을 작성했습니다. 과거 코드를 작성하는 것은 오늘과 아주 달랐습니다.
+
+2가지의 조합입니다. 물론 우리 입장에서는 3가지입니다. 쪼개기, 정렬하기, 병합하기입니다.
+
+큰 배열을 작게 쪼갭니다. 분할 정복 전략입니다. 8, 4, 2, 1로 쪼개고 합치는 방식으로 동작합니다. 프로그램은 쪼개는 것으로 시작합니다.
+
+[8, 3, 5, 4, 7, 6, 1, 2]
+
+[8, 3, 5, 4] [7, 6, 1, 2]
+
+[8, 3] [5, 4] [7, 6] [1, 2]
+
+[8] [3] [5] [4] [7] [6] [1] [2]
+
+[3, 8] [4, 5] [6, 7] [1, 2]
+
+[3, 4, 5, 8] [1, 2, 6, 7]
+
+[1, 2, 3, 4, 5, 6, 7, 8]
+
+합칠때마다 정렬합니다.
+
+더작은 숫자를 앞에 배치하면 됩니다.
+
+이 알고리즘은 이해하기 조금 어려울 수 있습니다.
+
+https://visualgo.net/en/sorting
+
+다음은 병합하는 방법부터 배울 것입니다. 병합하는 함수만 따로 구현을 시도합니다.
+
+정렬된 두 배열만 합치기만 하면됩니다.
+
+```js
+merge([1, 10, 50], [2, 14, 99, 100]);
+```
+
+이런 함수가 동작하게 만들면 됩니다. 이 로직은 생각보다 쉽습니다.
+
+2개의 정렬된 배열을 받아야 합니다. 같은 크기가 아닌 경우도 처리해야 합니다.
+
+O(m + n) 시간 복잡성을 갖게 될 것입니다. m, n은 각각 같은 차수의 다른 크기를 갖을 수 있는 경우입니다.
+
+배열의 모든 원소를 찾을 수 밖에 없습니다.
+
+의사코드입니다.
+
+- Create an empty array, take a look at the smallest values in each input array
+- While there are still values we haven't looked at...
+  - If the value in the first array is smaller than the value in the second array, push the value in the first array into our results and move on to the next value in the first array
+  - If the value in the first array is larger than the value in the second array, push the value in the second array into our results and move on to the next value in the second array
+  - Once we exhaust one array, push in all remaining values from the other array
+
+이 의사코드를 병합하면 이렇게 될 것입니다.
+
+```txt
+[1, 10, 50], [2, 14, 99, 100]
+ ^            ^
+-----------------------------
+[1]
+-----------------------------
+[1, 10, 50], [2, 14, 99, 100]
+    ^         ^
+-----------------------------
+[1, 2]
+-----------------------------
+[1, 10, 50], [2, 14, 99, 100]
+    ^            ^
+-----------------------------
+[1, 2, 10]
+-----------------------------
+...
+-----------------------------
+[1, 2, 10, 14, 50, 99, 100]
+```
+
+2개의 포인터가 2개의 배열을 각각 바라보는 방식입니다. 크기를 비교하고 포인터의 인덱스를 하나씩 올리는 방식입니다.
+
+```js
+/**
+ * @param {array} arrLeft
+ * @param {array} arrRight
+ * @returns {array}
+ */
+function solution(arrLeft, arrRight) {
+  const mergedArray = [];
+  for (let i = 0, j = 0; i < arrLeft.length || j < arrRight.length; ) {
+    if (arrLeft[i] < arrRight[j]) {
+      mergedArray.push(arrLeft[i]);
+      i++;
+    } else {
+      mergedArray.push(arrRight[j]);
+      j++;
+    }
+  }
+  return mergedArray;
+}
+```
+
+제가 구한 답입니다.
+
+```js
+// Merges two already sorted arrays
+function merge(arr1, arr2) {
+  let results = [];
+  let i = 0;
+  let j = 0;
+  while (i < arr1.length && j < arr2.length) {
+    if (arr2[j] > arr1[i]) {
+      results.push(arr1[i]);
+      i++;
+    } else {
+      results.push(arr2[j]);
+      j++;
+    }
+  }
+  while (i < arr1.length) {
+    results.push(arr1[i]);
+    i++;
+  }
+  while (j < arr2.length) {
+    results.push(arr2[j]);
+    j++;
+  }
+  return results;
+}
+merge([100, 200], [1, 2, 3, 5, 6]);
+```
+
+재가 구현한 로직보다 더 단순하게 생겼습니다.
+
+여기서 재약은 항상 정렬된 배열에서만 동작한다는 것입니다.
+
+개념적으로 이해하기 어려울 수 있는 부분이 재귀함수 때문입니다. 처음 보면 직관적이지 않습니다. 미국권에서는 개념적 이해가 중요합니다.
+
+병합정렬의 의사코드입니다.
+
+- Break up the array into halves until you have arrays that are empty or have one element
+- Once you have smaller sorted arrays, merge those arrays with other sorted arrays until you are back at the full length of the array
+- Once the array has been merged back together, return the merged (and sorted!) array
+
+slice 메서들 사용할 것을 권장합니다. 병합은 이전에 작성한 함수를 활용할 것을 권장합니다.
+
+```ts
+function mergeArr(arrLeft: number[], arrRight: number[]) {
+  const mergedArray: number[] = [];
+
+  let i = 0;
+  let j = 0;
+
+  while (i < arrLeft.length && j < arrRight.length) {
+    if (arrLeft[i] < arrRight[j]) {
+      mergedArray.push(arrLeft[i]);
+      i++;
+    } else {
+      mergedArray.push(arrRight[j]);
+      j++;
+    }
+  }
+
+  while (i < arrLeft.length) {
+    mergedArray.push(arrLeft[i]);
+    i++;
+  }
+
+  while (j < arrRight.length) {
+    mergedArray.push(arrRight[j]);
+    j++;
+  }
+
+  return mergedArray;
+}
+
+export function mergeSort(arr: number[]) {
+  if (arr.length <= 1) return arr;
+  const median = Math.round(arr.length / 2);
+  const left: number[] = mergeSort(arr.slice(0, median));
+  const right: number[] = mergeSort(arr.slice(median));
+
+  return mergeArr(left, right);
+}
+```
+
+제가 구현한 함수입니다. 책임을 분리하면 의외로 쉽습니다.
+
+```js
+// Merge function from earlier
+function merge(arr1, arr2) {
+  let results = [];
+  let i = 0;
+  let j = 0;
+  while (i < arr1.length && j < arr2.length) {
+    if (arr2[j] > arr1[i]) {
+      results.push(arr1[i]);
+      i++;
+    } else {
+      results.push(arr2[j]);
+      j++;
+    }
+  }
+  while (i < arr1.length) {
+    results.push(arr1[i]);
+    i++;
+  }
+  while (j < arr2.length) {
+    results.push(arr2[j]);
+    j++;
+  }
+  return results;
+}
+
+// Recrusive Merge Sort
+function mergeSort(arr) {
+  if (arr.length <= 1) return arr;
+  let mid = Math.floor(arr.length / 2);
+  let left = mergeSort(arr.slice(0, mid));
+  let right = mergeSort(arr.slice(mid));
+  return merge(left, sright);
+}
+
+mergeSort([10, 24, 76, 73]);
+```
+
+제가 정답과 변수명 제외하고 동일하게 작성한 것 같습니다.
+
+재귀함수를 사용하기 때문에 공간복잡성이 증가하게 됩니다.
+
+최초 콜스택이 push되고 left에 한쪽이 끝날 때까지 쌓입니다. 그리고 left가 끝나야 right를 처리합니다.
+
+```txt
+mergeSort([10, 24, 76, 73])
+
+mergeSort([10, 24])
+
+mergeSort([10])
+```
+
+베이스 케이스에 도달하고 나서 합쳐지는 과정에서 정렬이 맞춰지는 방식으로 동작하게 됩니다.
+
+병합정렬의 시공간복잡성입니다.
+
+최고, 최악, 보통 모든 경우의 수는 $O(n log \cdot n)$ 입니다.
+
+왜 $n log n$ 인가? 배열의 원소가 1개가 될 때까지 쪼갭니다. 배열의 원소가 8개면 3번 쪼개야 합니다. log*{2}n 번쪼갭니다. n의 사이즈는 log*{2}n만큼 커집니다. n은 선형적으로 비교하면서 순회하기 때문에 n입니다. 병합 과정에서 선형시간복잡성을 갖게 됩니다.
+
+제곱시간복잡성에 비해서는 성능이 상당히 좋습니다. 하지만 여전히 느립니다. 정렬에서 프로그래머가 현재 얻을 수 있는 최선입니다.
+
+Radix 정렬은 나중에 배우게 될 것입니다. 공간복잡성은 선형공간복잡성을 갖습니다. 지불하는 비용이 공간입니다. 만약 공간이 고려사항이라면 다른 정렬방법을 찾을 수 밖에 없습니다.

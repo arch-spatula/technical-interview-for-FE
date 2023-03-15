@@ -1,20 +1,24 @@
-function swap(arr, idx1, idx2) {
-  [arr[idx1], arr[idx2]] = [arr[idx2], arr[idx1]];
-}
-
-function solution(arr) {
-  let swapStack = 1;
-  while (swapStack === 1) {
-    swapStack -= 1;
-    for (let i = 0; i < arr.length - 1; i++) {
-      if (arr[i] > arr[i + 1]) {
-        swap(arr, i, i + 1);
-        swapStack = 1;
-      }
+/**
+ *
+ * @param {array} arrLeft
+ * @param {array} arrRight
+ * @returns {array}
+ */
+function solution(arrLeft, arrRight) {
+  const mergedArray = [];
+  for (let i = 0, j = 0; i < arrLeft.length || j < arrRight.length; ) {
+    if (arrLeft[i] < arrRight[j]) {
+      mergedArray.push(arrLeft[i]);
+      i++;
+    } else {
+      mergedArray.push(arrRight[j]);
+      j++;
     }
   }
-
-  return arr;
+  return mergedArray;
 }
 
-console.log(solution([5, 3, 4, 1, 2]), [1, 2, 3, 4, 5]);
+console.log(
+  solution([1, 10, 50], [2, 14, 99, 100]),
+  [1, 2, 10, 14, 50, 99, 100]
+);
