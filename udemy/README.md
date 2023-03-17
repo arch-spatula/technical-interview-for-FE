@@ -2148,3 +2148,53 @@ mergeSort([10])
 제곱시간복잡성에 비해서는 성능이 상당히 좋습니다. 하지만 여전히 느립니다. 정렬에서 프로그래머가 현재 얻을 수 있는 최선입니다.
 
 Radix 정렬은 나중에 배우게 될 것입니다. 공간복잡성은 선형공간복잡성을 갖습니다. 지불하는 비용이 공간입니다. 만약 공간이 고려사항이라면 다른 정렬방법을 찾을 수 밖에 없습니다.
+
+## 퀵 정렬
+
+이름이 특이합니다. 상당히 유용합니다. 하지만 유용한 만큼 가르치기 어려운 개념입니다. 또 학생입장에서 복습이 많이 필요한 개념입니다.
+
+병합정렬과 유사합니다. 데이터를 분할하고 0, 1 정도의 원소에 도달할 때까지 계속 사용합니다. 하지만 다른 점이 있습니다. pivot 지점을 고르고 그 숫자를 기준으로 모두 옮깁니다. 작으면 왼쪽 크면 오른쪽으로 정리합니다.
+
+```txt
+[5, 2, 1, 8, 4, 7, 6, 3]
+ ^
+------------------------
+[3, 2, 1, 4, 5, 7, 6, 8]
+             ^
+------------------------
+[3, 2, 1, 4, 5, 7, 6, 8]
+ ^
+------------------------
+[2, 1, 3, 4, 5, 7, 6, 8]
+       ^
+------------------------
+[2, 1, 3, 4, 5, 7, 6, 8]
+ ^
+------------------------
+[1, 2, 3, 4, 5, 7, 6, 8]
+                ^
+------------------------
+[1, 2, 3, 4, 5, 6, 7, 8]
+```
+
+여기서 1, 2, 3, 4가 5보다 작다는 것을 압니다. 5가 있어야 할 인덱스로 옮깁니다.
+
+기준값으로 작으면 왼쪽 크면 오른쪽으로 계속 반복하는 방식으로 동작합니다. 최소한 기준값은 위치가 올바릅니다.
+
+pivot helper를 먼저 구현할 것입니다. 병합정렬과 유사하게 접근할 것입니다.
+
+pivot을 고르는 지점에 따라 성능이 달라집니다. 중앙값을 가장 잘 고르면 성능이 좋습니다. 첫, 중앙, 마지막, 난수값을 고를 수 있습니다. 단순하게 처리하기 위해서 첫번째 값만 고르도록 할 것입니다.
+
+순서는 사실 상관이 없습니다. 한쪽으로 몰아 넣는 것이 중요합니다.
+
+- It will help to accept three arguments: an array, a start index, and an end index (these can default to 0 and the array length minus 1, respectively)
+- Grab the pivot from the start of the array
+- Store the current pivot index in a variable (this will keep track of where the pivot should end up)
+- Loop through the array from the start until the end
+  - If the pivot is greater than the current element, increment the pivot index variable and then swap the current element with the element at the pivot index
+- Swap the starting element (i.e. the pivot) with the pivot index
+- Return the pivot index
+
+대소비교를 하면서 선형탐색을 합니다. pivot 원소를 기준으로 인덱스를 정하는 작업니다.
+
+작으면 인덱스를 계속 더합니다. 그 인덱스를 반환하면 됩니다. 의사코드는 너무 추상적일 수 있습니다.
