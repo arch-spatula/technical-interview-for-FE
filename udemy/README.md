@@ -2578,3 +2578,269 @@ k는 자릿수의 평균
 시간복잡성이 숫자가 메모리에 저장되는 방식에 따라 k는 logN에 해당합니다. 그래서 다른 정렬과 성능이 비슷합니다.
 
 기수정렬이 효율적으로 보이지만 한계가 존재합니다. 이론적으로 상당히 효율적이지만 실무적으로 merge sort랑 유사합니다. 하지만 개념적으로 흥미롭고 재미있는 알고리즘입니다.
+
+# 자료구조
+
+자료구조를 이야기합니다. 강의의 중요한 전환점입니다. 진행하기 전에 미리 알아둬야 할 것들입니다.
+
+ES6 클래스 문법도 배웁니다.
+
+왜 배워야 하고, 자료구조는 무엇이 있고, 왜 다양하고, 왜 이렇게 다른지 모두 배울 것입니다.
+
+다양한 자료구조들을 배웁니다. 하지만 모두 클래스로 정의해볼 것입니다. 배열 혹은 객체를 직접 구현해보는 것과 비슷합니다.
+
+자료구조를 자료구조로 만드는 것은 무엇인가? 자료의 모음이고 알고리즘과의 관계이고 데이터에 적용할 계산과 절차입니다.
+
+배열은 여러 값을 담고 순서도 정보를 담습니다. 추가, 삭제, 갱신, 읽기 등 다양한 처리가 가능합니다.
+
+단방향 링크드 리스트도 다룹니다.
+
+데이터의 묶음을 다루며 또 전용 메서드도 다룰 것입니다. 그래프, 트리, 힙 모두 동일합니다. 대부분의 경우 클래스로 구현합니다.
+
+이렇게 많은 이유는 각각 트레이드 오프가 있습니다. 자주 사용하는 것은 이미 제공해줍니다. 특수한 상황에는 직접 구현해야 하고 작성해야 합니다.
+
+언제 어떻게 쓸지 배우게 될 것입니다. 자료구조는 데이터를 보관하고 보관하는 관계를 만듭니다. 결과적으로 모두 데이터를 담지만 사용할 수 있는 효율적인 알고리즘은 모두 다릅니다.
+
+개발자로 생활하면서 이런 자료구조를 활용할 일이 많습니다.
+
+이미 많은 자료구조를 간접적으로 많이 배웠습니다. DOM 조작을 하면 이미 트리를 조작한 것입니다.
+
+그리고 제일 중요한 것은 코테와 인터뷰입니다.
+
+코테와 면접에서 안 나와도 가치가 큽니다.
+
+배열처럼 일반적으로 사용하는 경우도 있습니다. 하지만 상황에 따라 효율이 모두 다릅니다. 예를 들어 지도를 활용하면 그래프를 활용하면 편할 것입니다.
+
+정렬된 배열이 필요한데 처음 혹은 마지막에 생성, 삭제를 많이 하면 링크드 리스트를 활용할지도 모릅니다.
+
+크롤링, 스크레이핑을 하면 트리데이터를 활용할 가능성이 큽니다.
+
+스캐줄러를 작성해야 하면 이진힙을 사용하게 될 가능성이 큽니다.
+
+상황마다 유리한 것은 모두 다릅니다.
+
+자료구조만으로 엄청 많이 소화할 것이 많습니다.
+
+2주 동안 하루 10시간 공부해서 공부합니다.
+
+자료구조는 다른 자료구조 개념이 이미 있어야 공부할 수 있는 것들이 있습니다.
+
+시간을 충분히 갖고 복습을 잘 하도록 합니다.
+
+## 클래스 문법
+
+자료구조를 다룰 것입니다. 전통적인 것부터 복잡한 자료구조를 다룰 것입니다. 모두 구현할 것입니다. 자바스크립트는 모두 만들어야 합니다. es6 클래스 문법을 잘 활용해야 합니다.
+
+객체지향 프로그래밍을 잘 모르면 소화할 것이 많을 것입니다.
+
+목표입니다. 클래스는 무엇이고 자바스크립트가 어떻게 클래스를 구현하는지 배웁니다. 추상화, 다형성, 캡슐화 같은 개념을 배웁니다.
+
+클래스는 객체를 생성하는 청사진과 비슷합니다. 여러 개별 객체를 클래스로 인스턴스로 생성할 때가 많습니다.
+
+자바스크립트는 진짜 클래스를 갖고 있는 것은 아닙니다. 프로토타입 기반 상속을 구현하기 때문에 진짜 객체지향이 아닙니다. 클래스 같은 자료를 쉽게 만들 수 있게만 해줍니다.
+
+진정한 객체지향 프로그래밍이 아니라는 이유로 안 배울 이유는 없습니다.
+
+클래스 선언하는 방법입니다. 클래스는 관례적으로 파스칼 케이스로 작성합니다. 클래스는 코드를 정리하기 위한 하나의 방법에 불과합니다. 가독성을 위해 활용할 것입니다.
+
+constructor는 클래스만 갖는 특수 매서드입니다.
+
+```js
+class Student {
+  constructor(firstName, lastName) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
+}
+```
+
+이런 클래스가 있습니다. constructor에 있는 인자를 인스턴스 생성할 때 대입해야 합니다.
+
+```js
+class Student {
+  constructor(firstName, lastName, year) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.year = year;
+  }
+}
+
+const jake = new Student("Jake", "The Dog", 8);
+
+console.log(jake); // Student { firstName: 'Jake', lastName: 'The Dog', year: 8 }
+```
+
+클래스를 만들면 인스턴스를 생성해야 합니다. 그리고 그 인스턴스를 활용해야 합니다.
+
+여기서 의문이 생길 수 있습니다. this는 컨텍스트에 따라 바뀔 수 있습니다. constructor에 있으면 생성한 인스턴스 객체를 바라보게 됩니다.
+
+다른 언어의 self와 유사합니다.
+
+이제는 동적 메서드와 정적 메서드를 다룹니다. 다른 말로 인스턴스 메서드와 클래스 메서드입니다.
+
+인스턴스 메서드는 강의 대부분 활용할 것입니다. 클래스 메서드는 가끔 사용합니다. 생성한 인스턴스에서 접근할 수 있는 메서드는 인스턴스 메서드입니다.
+
+배열에서 push 같은 메서드는 리터럴 인스턴스에 달려있는 메서드입니다.
+
+```js
+class Student {
+  constructor(firstName, lastName, year) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.year = year;
+  }
+  fullName() {
+    return `Your full name is ${this.firstName} ${this.lastName}`;
+  }
+}
+
+const jake = new Student("Jake", "The Dog", 8);
+
+console.log(jake.fullName()); // Your full name is Jake The Dog
+```
+
+조금 더 다양한 로직들을 담아 볼 수 있습니다.
+
+```js
+class Student {
+  constructor(firstName, lastName, year) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.year = year;
+    this.tardies = 0;
+  }
+
+  fullName() {
+    return `Your full name is ${this.firstName} ${this.lastName}`;
+  }
+
+  markLate() {
+    this.tardies += 1;
+
+    return this.tardies >= 3
+      ? `${this.firstName} ${this.lastName} has been expelled!`
+      : `${this.firstName} ${this.lastName} has been late ${this.tardies} times`;
+  }
+}
+
+const jake = new Student("Jake", "The Dog", 8);
+
+console.log(jake.markLate()); // Jake The Dog has been late 1 times
+console.log(jake.markLate()); // Jake The Dog has been late 2 times
+console.log(jake.markLate()); // Jake The Dog has been expelled!
+```
+
+클래스의 생산자는 항상 클래스의 소비자를 생각해야 합니다. 클래스를 다루는 중요한 관례 중 하나는 직접 프로퍼티를 변형하지 않습니다. 제공된 메서드를 인터페이스로 활용해서 제어해야 합니다. 없으면 제어할 수 없다고 가정하도록 합니다.
+
+```js
+class Student {
+  constructor(firstName, lastName, year) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.year = year;
+    this.tardies = 0;
+    this.scores = [];
+  }
+
+  fullName() {
+    return `Your full name is ${this.firstName} ${this.lastName}`;
+  }
+
+  markLate() {
+    this.tardies += 1;
+
+    return this.tardies > 3
+      ? `${this.firstName} ${this.lastName} has been expelled!`
+      : `${this.firstName} ${this.lastName} has been late ${this.tardies} times`;
+  }
+
+  addScores(scores) {
+    this.scores.push(scores);
+    return this.scores;
+  }
+
+  getAverage() {
+    return this.scores.reduce((a, b) => a + b) / this.scores.length;
+  }
+}
+
+const jake = new Student("Jake", "The Dog", 8);
+
+console.log(jake.addScores(90));
+console.log(jake.addScores(100));
+console.log(jake.addScores(85)); // [ 90, 100, 85 ]
+console.log(jake.getAverage()); // 91.66666666666667
+```
+
+하나의 인스턴스를 생성하고 개별 인스턴스로 이렇게 활용합니다.
+
+이번에는 정적 메서드를 배웁니다. `static` 키워드를 활용합니다. 가끔 활용합니다. 인스턴스로 접근할 수 없고 클래스 함수에서 접근할 수 있고 보통 헬퍼 함수로 만듭니다.
+
+```js
+class Student {
+  constructor(firstName, lastName, year) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.year = year;
+    this.tardies = 0;
+    this.scores = [];
+  }
+
+  fullName() {
+    return `Your full name is ${this.firstName} ${this.lastName}`;
+  }
+
+  markLate() {
+    this.tardies += 1;
+
+    return this.tardies > 3
+      ? `${this.firstName} ${this.lastName} has been expelled!`
+      : `${this.firstName} ${this.lastName} has been late ${this.tardies} times`;
+  }
+
+  addScores(scores) {
+    this.scores.push(scores);
+    return this.scores;
+  }
+
+  getAverage() {
+    return this.scores.reduce((a, b) => a + b) / this.scores.length;
+  }
+
+  static enrollStudents(...students) {
+    return `Enrolling Students`;
+  }
+}
+
+const jake = new Student("Jake", "The Dog", 8);
+
+console.log(Student.enrollStudents()); // Enrolling Students
+```
+
+항상 기억하도록 합니다. 클래스는 코드를 정리하는 수단에 불과합니다.
+
+```js
+class Point {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  static distance(a, b) {
+    const dx = a.x - b.x;
+    const dy = a.y - b.y;
+    return Math.hypot(dx, dy);
+  }
+}
+
+const p1 = new Point(5, 5);
+const p2 = new Point(10, 10);
+
+console.log(Point.distance(p1, p2)); // 7.0710678118654755
+```
+
+이렇게 활용이 가능합니다.
+
+동적 메서드와 정적 메서드 모두 이렇게 다룰 수 있어야 합니다.
+
+항상 기억해야 할 것은 es6부터는 생성된 인스턴스에 항상 바라보게 됩니다.
