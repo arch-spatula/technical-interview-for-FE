@@ -294,6 +294,40 @@ console.log(solution("hello"), "eho");
 console.log(solution("hheelloo"), "");
 ```
 
+# 숨어있는 숫자의 덧셈 (1)
+
+[숨어있는 숫자의 덧셈 (1)](https://school.programmers.co.kr/learn/courses/30/lessons/120851)
+
+```js
+/**
+ *
+ * @param {string} myString
+ * @returns {number}
+ */
+export function solution(myString) {
+  var regex = /[^0-9]/g;
+  var result = myString.replace(regex, "");
+  return result
+    .split("")
+    .map((str) => parseInt(str))
+    .reduce((acc, curr) => acc + curr);
+}
+```
+
+```js
+import { solution } from "./playground";
+import { test, expect, describe } from "vitest";
+
+describe("안의 모든 자연수들의 합을 return하도록 solution 함수를 구현합니다.", () => {
+  test("'aAb1B2cC34oOp'안의 한자리 자연수는 1, 2, 3, 4 입니다. 따라서 1 + 2 + 3 + 4 = 10 을 return합니다.", () => {
+    expect(solution("aAb1B2cC34oOp")).toBe(10);
+  });
+  test("'1a2b3c4d123Z'안의 한자리 자연수는 1, 2, 3, 4, 1, 2, 3 입니다. 따라서 1 + 2 + 3 + 4 + 1 + 2 + 3 = 16 을 return합니다.", () => {
+    expect(solution("1a2b3c4d123")).toBe(16);
+  });
+});
+```
+
 # 369게임
 
 풀이: 2022.12.05.

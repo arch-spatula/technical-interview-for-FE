@@ -1,9 +1,13 @@
 /**
  *
- * @param {Array} array
- * @param {Number} n
- * @returns {Number}
+ * @param {string} myString
+ * @returns {number}
  */
-export function solution(array, n) {
-  return array.filter((item) => item % n === 0).sort();
+export function solution(myString) {
+  var regex = /[^0-9]/g;
+  var result = myString.replace(regex, "");
+  return result
+    .split("")
+    .map((str) => parseInt(str))
+    .reduce((acc, curr) => acc + curr);
 }
