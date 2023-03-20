@@ -25,7 +25,7 @@ describe("로그인 성공?", () => {
           ["programmer01", "1145"],
         ]
       )
-    ).toBe("wrong");
+    ).toBe("wrong pw");
   });
 
   test("로그인에 실패합니다.", () => {
