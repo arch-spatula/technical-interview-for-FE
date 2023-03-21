@@ -1,17 +1,28 @@
-class Point {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-
-  static distance(a, b) {
-    const dx = a.x - b.x;
-    const dy = a.y - b.y;
-    return Math.hypot(dx, dy);
+class Node {
+  constructor(val) {
+    this.val = val;
+    this.next = null;
   }
 }
 
-const p1 = new Point(5, 5);
-const p2 = new Point(10, 10);
+class SinglyLinkedList {
+  constructor() {
+    this.length = 0;
+    this.head = null;
+    this.tail = null;
+  }
+  push(val) {
+    this.length += 1;
+    if (!this.head) {
+      this.head = new Node(val);
+      this.tail = this.head;
+    }
+  }
+}
 
-console.log(Point.distance(p1, p2));
+const list = new SinglyLinkedList();
+
+list.push(80);
+list.push(80);
+
+console.log(list.head);

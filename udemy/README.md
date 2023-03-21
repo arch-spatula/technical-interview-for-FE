@@ -2844,3 +2844,1244 @@ console.log(Point.distance(p1, p2)); // 7.0710678118654755
 동적 메서드와 정적 메서드 모두 이렇게 다룰 수 있어야 합니다.
 
 항상 기억해야 할 것은 es6부터는 생성된 인스턴스에 항상 바라보게 됩니다.
+
+## 단일 연결 리스트
+
+https://cs.slides.com/colt_steele/singly-linked-lists
+
+Singly Linked Lists입니다. 첫번째로 공부하는 자료구조입니다. es6 클래스 문법을 받드시 숙지해야 합니다.
+
+모든 자료구조에 클래스 키워드를 활용하게 될 것입니다.
+
+단일 연결 리스트를 이해하고 내장 배열과 차이를 봅니다. 링크드 리스테 이런 저런 메서드를 추가합니다.
+
+링크드 리스트는 데이터를 저장하는 자료구조입니다. 특이한 점이 있습니다. 대부분의 배열은 인덱스를 갖고 있습니다. 하지만 링크드 리스트는 인덱스가 엄밀하게 없습니다. 각 원소를 보고 노드라고 합니다. 다음 노드를 참조하고 다음 노드가 없으면 null을 반환합니다. head로 시작해서 tail로 접근하게 됩니다.
+
+리스트에서 접근하기 위해서는 무조건 head부터 접근해야 합니다. 링크드 리스트는 다음 노드로 연결하는 자료구조입니다.
+
+단일 연결리스트는 방향이 단방향입니다. 이중 연결리스트는 양방향으로 접근이 가능합니다. 각각 장단점이 있습니다.
+
+삽입하는 방법은 비교적 쉽습니다. 새로운 head로 설정하고 이전 head에 포인터를 갖도록 합니다.
+
+링크드 리스트는 인덱스가 없고 원소에 대응하는 인덱스가 없습니다. head는 무조건 가져야 하고 tail은 선택적입니다. 무작위적인 접근은 불가능합니다. 하지만 링크드 리스트가 잘하는 것은 삽입과 삭제입니다.
+
+삽입삭제를 많이 하는 자료구조에는 링크리스트를 사용하는 것이 좋습니다.
+
+링크드 리스트는 노드의 묶음에 불과합니다. 값과 다음 값 포인터만 있으면 됩니다.
+
+```js
+class Node {
+  constructor(val) {
+    this.val = val;
+    this.next = null;
+  }
+}
+
+const first = new Node("hell");
+first.next = new Node("o");
+first.next.next = new Node("world");
+
+console.log(first.val); // hell
+console.log(first.next.val); // o
+console.log(first.next.next.val); // world
+```
+
+이렇게 저장하면 상당히 조작하기 어렵고 비효율적입니다. 유지보수하기 어렵습니다.
+
+```ts
+export class Node<T> {
+  public val: T;
+  public next: Node<T> | null;
+
+  constructor(val: T) {
+    this.val = val;
+    this.next = null;
+  }
+}
+
+export class SinglyLinkedList<T> {
+  public length: number;
+  public head: null | Node<T>;
+  public tail: null | Node<T>;
+  constructor() {
+    this.length = 0;
+    this.head = null;
+    this.tail = null;
+  }
+
+  push(val: T) {
+    this.length += 1;
+    if (!this.head) {
+      this.head = new Node(val);
+      this.tail = this.head;
+    }
+    if (this.head) {
+      this.tail = this.head;
+      this.head = new Node(val);
+      this.head.next = this.tail;
+    }
+  }
+}
+```
+
+제가 구현한 단방향 연결리스트입니다.
+
+```js
+class Node {
+  constructor(val) {
+    this.val = val;
+    this.next = null;
+  }
+}
+
+class SinglyLinkedList {
+  constructor() {
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
+  }
+  push(val) {
+    var newNode = new Node(val);
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+    this.length++;
+    return this;
+  }
+}
+
+var list = new SinglyLinkedList();
+// list.push("HELLO")
+// list.push("GOODBYE")
+```
+
+거의 비슷했습니다.
+
+가장 뒤에 온다는 것을 잊었습니다.
+
+```ts
+export class Node<T> {
+  public val: T;
+  public next: Node<T> | null;
+
+  constructor(val: T) {
+    this.val = val;
+    this.next = null;
+  }
+}
+
+export class SinglyLinkedList<T> {
+  public length: number;
+  public head: null | Node<T>;
+  public tail: null | Node<T>;
+  constructor() {
+    this.length = 0;
+    this.head = null;
+    this.tail = null;
+  }
+
+  push(val: T) {
+    this.length += 1;
+
+    const newNode = new Node(val);
+
+    if (!this.head || !this.tail) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+    return this;
+  }
+}
+```
+
+저는 이렇게 수정하겠습니다.
+
+- This function should accept a value
+- Create a new node using the value passed to the function
+- If there is no head property on the list, set the head and tail to be the newly created node
+- Otherwise set the next property on the tail to be the new node and set the tail property on the list to be the newly created node
+- Increment the length by one
+- Return the linked list
+
+pop메서드입니다. 마지막 링크드 리스트의 값을 반환하고 삭제합니다.
+
+tail까지 접근하고 삭제하는 방식으로 동작합니다. 삭제를 위해서는 선형탐색을 해야 합니다. 새로운 tail을 만들려면 마지막 직전의 tail이 바라보는 주소를 null로 하면 됩니다.
+
+트리버스는 간단합니다.
+
+- If there are no nodes in the list, return undefined
+- Loop through the list until you reach the tail
+- Set the next property of the 2nd to last node to be null
+- Set the tail to be the 2nd to last node
+- Decrement the length of the list by 1
+- Return the value of the node removed
+
+의사코드입니다.
+
+```ts
+export class Node<T> {
+  public val: T;
+  public next: Node<T> | null;
+
+  constructor(val: T) {
+    this.val = val;
+    this.next = null;
+  }
+}
+
+export class SinglyLinkedList<T> {
+  public length: number;
+  public head: null | Node<T>;
+  public tail: null | Node<T>;
+  constructor() {
+    this.length = 0;
+    this.head = null;
+    this.tail = null;
+  }
+
+  push(val: T) {
+    this.length += 1;
+
+    const newNode = new Node(val);
+
+    if (!this.head || !this.tail) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+    return this;
+  }
+
+  pop() {
+    if (!this.head || !this.tail) {
+      return null;
+    }
+    if (this.length === 1) {
+      const temp = this.tail.val;
+      this.tail = null;
+      this.head = this.tail;
+      return temp;
+    }
+    if (this.length > 1) {
+      const temp = this.tail.val;
+      let current: Node<T> | null = this.head;
+      // 삭제
+      while (current?.next?.next) {
+        current = current.next;
+      }
+      current.next = null;
+      this.tail = current;
+      return temp;
+    }
+  }
+}
+```
+
+제가 구현한 pop 메서드입니다. length를 구현하는 것을 잊었습니다.
+
+```js
+class Node {
+  constructor(val) {
+    this.val = val;
+    this.next = null;
+  }
+}
+
+class SinglyLinkedList {
+  constructor() {
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
+  }
+  push(val) {
+    var newNode = new Node(val);
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+    this.length++;
+    return this;
+  }
+  pop() {
+    if (!this.head) return undefined;
+    var current = this.head;
+    var newTail = current;
+    while (current.next) {
+      newTail = current;
+      current = current.next;
+    }
+    this.tail = newTail;
+    this.tail.next = null;
+    this.length--;
+    if (this.length === 0) {
+      this.head = null;
+      this.tail = null;
+    }
+    return current;
+  }
+}
+
+var list = new SinglyLinkedList();
+list.push("HELLO");
+list.push("GOODBYE");
+list.push("!");
+```
+
+논리적으로 유사합니다. 하지만 리팩토링할 지점을 보여줍니다.
+
+노드 그자체를 반환합니다.
+
+나중에 리팩토링을 또 진행하게 될 것입니다.
+
+```ts
+export class Node<T> {
+  public val: T;
+  public next: Node<T> | null;
+
+  constructor(val: T) {
+    this.val = val;
+    this.next = null;
+  }
+}
+
+export class SinglyLinkedList<T> {
+  public length: number;
+  public head: null | Node<T>;
+  public tail: null | Node<T>;
+  constructor() {
+    this.length = 0;
+    this.head = null;
+    this.tail = null;
+  }
+
+  push(val: T) {
+    this.length += 1;
+
+    const newNode = new Node(val);
+
+    if (!this.head || !this.tail) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+    return this;
+  }
+
+  pop() {
+    if (!this.head) return null;
+    var current = this.head;
+    var newTail = current;
+    while (current.next) {
+      newTail = current;
+      current = current.next;
+    }
+    this.tail = newTail;
+    this.tail.next = null;
+    this.length--;
+    if (this.length === 0) {
+      this.head = null;
+      this.tail = null;
+    }
+    return current.val;
+  }
+
+  shift(val: T) {
+    const newNode = new Node(val);
+    this.length += 1;
+    if (!this.head || !this.tail) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      const temp = this.head;
+      this.head = newNode;
+      this.head.next = temp;
+    }
+  }
+}
+```
+
+제가 구현한 shift입니다. head에 있는 Node를 삭제하는 메서드입니다.
+
+```ts
+export class Node<T> {
+  public val: T;
+  public next: Node<T> | null;
+
+  constructor(val: T) {
+    this.val = val;
+    this.next = null;
+  }
+}
+
+export class SinglyLinkedList<T> {
+  public length: number;
+  public head: null | Node<T>;
+  public tail: null | Node<T>;
+  constructor() {
+    this.length = 0;
+    this.head = null;
+    this.tail = null;
+  }
+
+  push(val: T) {
+    this.length += 1;
+
+    const newNode = new Node(val);
+
+    if (!this.head || !this.tail) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+    return this;
+  }
+
+  pop() {
+    if (!this.head) return null;
+    var current = this.head;
+    var newTail = current;
+    while (current.next) {
+      newTail = current;
+      current = current.next;
+    }
+    this.tail = newTail;
+    this.tail.next = null;
+    this.length--;
+    if (this.length === 0) {
+      this.head = null;
+      this.tail = null;
+    }
+    return current.val;
+  }
+
+  shift() {
+    if (!this.head || !this.tail) return null;
+    this.length -= 1;
+    if (this.length === 0) {
+      this.head = null;
+      this.tail = null;
+    }
+    const temp = this.head;
+    this.head = this.head.next;
+    return temp.val;
+  }
+
+  usshift(val: T) {
+    const newNode = new Node(val);
+    this.length += 1;
+    if (!this.head || !this.tail) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      const temp = this.head;
+      this.head = newNode;
+      this.head.next = temp;
+    }
+  }
+}
+```
+
+shift와 unshift를 모두 구현했습니다.
+
+```js
+    shift(){
+        if(!this.head) return undefined;
+        var currentHead = this.head;
+        this.head = currentHead.next;
+        this.length--;
+        if(this.length === 0){
+            this.tail = null;
+        }
+        return currentHead;
+    }
+```
+
+unshift는 header에 노드를 추가하는 방법입니다.
+
+```js
+    unshift(val){
+        var newNode = new Node(val);
+        if(!this.head) {
+            this.head = newNode;
+            this.tail = this.head;
+        } else {
+            newNode.next = this.head;
+            this.head = newNode;
+        }
+        this.length++;
+        return this;
+    }
+```
+
+이렇게 구현이 가능합니다. 더 간결한 점이 좋습니다.
+
+포인터만 갱신하면 되기 때문에 간단합니다.
+
+모든 인덱스의 갱신이 없어서 상당히 간단합니다.
+
+get 메서드는 인덱스를 받고 그 해당하는 값을 반환하는 메서드입니다. 숫자를 받고 Node를 순회하고 해당하는 값을 반환합니다.
+
+검색시간이 선형 시간복잡성을 갖습니다.
+
+- This function should accept an index
+- If the index is less than zero or greater than or equal to the length of the list, return null
+- Loop through the list until you reach the index and return the node at that specific index
+
+```ts
+export class Node<T> {
+  public val: T;
+  public next: Node<T> | null;
+
+  constructor(val: T) {
+    this.val = val;
+    this.next = null;
+  }
+}
+
+export class SinglyLinkedList<T> {
+  public length: number;
+  public head: null | Node<T>;
+  public tail: null | Node<T>;
+  constructor() {
+    this.length = 0;
+    this.head = null;
+    this.tail = null;
+  }
+
+  push(val: T) {
+    this.length += 1;
+
+    const newNode = new Node(val);
+
+    if (!this.head || !this.tail) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+    return this;
+  }
+
+  pop() {
+    if (!this.head) return null;
+    var current = this.head;
+    var newTail = current;
+    while (current.next) {
+      newTail = current;
+      current = current.next;
+    }
+    this.tail = newTail;
+    this.tail.next = null;
+    this.length--;
+    if (this.length === 0) {
+      this.head = null;
+      this.tail = null;
+    }
+    return current.val;
+  }
+
+  shift() {
+    if (!this.head || !this.tail) return null;
+    const temp = this.head;
+    this.head = temp.next;
+    this.length -= 1;
+    if (this.length === 0) {
+      this.head = null;
+      this.tail = null;
+    }
+    return temp.val;
+  }
+
+  usshift(val: T) {
+    const newNode = new Node(val);
+    this.length += 1;
+    if (!this.head || !this.tail) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      newNode.next = this.head;
+      this.head = newNode;
+    }
+    return this;
+  }
+
+  get(idx: number): null | T {
+    if (idx < 0 || idx > this.length - 1 || !this.head) {
+      return null;
+    }
+    let current: Node<T> | null = this.head;
+    for (let i = 0; i < idx; i++) {
+      if (current?.next) current = current?.next;
+    }
+    return current?.val;
+  }
+}
+```
+
+제가 구현한 get 메서드입니다.
+
+```js
+get(index){
+    if(index < 0 || index >= this.length) return null;
+    var counter = 0;
+    var current = this.head;
+    while(counter !== index){
+        current = current.next;
+        counter++;
+    }
+    return current;
+}
+```
+
+강의에서 만든 코드가 가독성이 더 좋습니다.
+
+set은 인덱스와 갱신할 값을 받는 메서드입니다.
+
+get 메서들 재사용하는 것도 가능합니다. 존재하는지 확인하고 값을 갱신합니다. 존재하지 않으면 false를 반환하고 존재하면 true를 반환합니다.
+
+- This function should accept a value and an index
+- Use your get function to find the specific node.
+- If the node is not found, return false
+- If the node is found, set the value of that node to be the value passed to the function and return true
+
+```ts
+export class Node<T> {
+  public val: T;
+  public next: Node<T> | null;
+
+  constructor(val: T) {
+    this.val = val;
+    this.next = null;
+  }
+}
+
+export class SinglyLinkedList<T> {
+  public length: number;
+  public head: null | Node<T>;
+  public tail: null | Node<T>;
+  constructor() {
+    this.length = 0;
+    this.head = null;
+    this.tail = null;
+  }
+
+  push(val: T) {
+    this.length += 1;
+
+    const newNode = new Node(val);
+
+    if (!this.head || !this.tail) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+    return this;
+  }
+
+  pop() {
+    if (!this.head) return null;
+    var current = this.head;
+    var newTail = current;
+    while (current.next) {
+      newTail = current;
+      current = current.next;
+    }
+    this.tail = newTail;
+    this.tail.next = null;
+    this.length--;
+    if (this.length === 0) {
+      this.head = null;
+      this.tail = null;
+    }
+    return current;
+  }
+
+  shift() {
+    if (!this.head || !this.tail) return null;
+    const temp = this.head;
+    this.head = temp.next;
+    this.length -= 1;
+    if (this.length === 0) {
+      this.head = null;
+      this.tail = null;
+    }
+    return temp.val;
+  }
+
+  usshift(val: T) {
+    const newNode = new Node(val);
+    this.length += 1;
+    if (!this.head || !this.tail) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      newNode.next = this.head;
+      this.head = newNode;
+    }
+    return this;
+  }
+
+  get(idx: number) {
+    if (idx < 0 || idx >= this.length) return null;
+    var counter = 0;
+    var current = this.head;
+    while (counter !== idx) {
+      if (current) {
+        current = current?.next;
+        counter++;
+      }
+    }
+    return current;
+  }
+
+  set(idx: number, val: T) {
+    const node = this.get(idx);
+    if (node) {
+      node.val = val;
+      return true;
+    }
+    return false;
+  }
+}
+```
+
+제가 구현한 메서드입니다.
+
+```js
+set(index, val){
+    var foundNode = this.get(index);
+    if(foundNode){
+        foundNode.val = val;
+        return true;
+    }
+    return false;
+}
+```
+
+변수명 빼고 동일합니다. 적절하게 구현에 성공했습니다.
+
+이제는 삽입입니다. set과 유사합니다. 하지만 노드의 값을 갱신하는 것이 아니라 중간에 Node를 생성하고 넣는 작업입니다.
+
+2개의 인자를 받습니다. 인덱스와 새로운 노드가 갖는 값입니다. 인덱스는 삽입하려는 바로 직전 노드를 접근합니다.
+
+삽입에 성공하면 true를 반환하고 실패하면 false를 반환하게 만들면 됩니다.
+
+- If the index is less than zero or greater than the length, return false
+- If the index is the same as the length, push a new node to the end of the list
+- If the index is 0, unshift a new node to the start of the list
+- Otherwise, using the get method, access the node at the index - 1
+- Set the next property on that node to be the new node
+- Set the next property on the new node to be the previous next
+- Increment the length
+- Return true
+
+```ts
+export class Node<T> {
+  public val: T;
+  public next: Node<T> | null;
+
+  constructor(val: T) {
+    this.val = val;
+    this.next = null;
+  }
+}
+
+export class SinglyLinkedList<T> {
+  public length: number;
+  public head: null | Node<T>;
+  public tail: null | Node<T>;
+  constructor() {
+    this.length = 0;
+    this.head = null;
+    this.tail = null;
+  }
+
+  push(val: T) {
+    this.length += 1;
+
+    const newNode = new Node(val);
+
+    if (!this.head || !this.tail) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+    return this;
+  }
+
+  pop() {
+    if (!this.head) return null;
+    var current = this.head;
+    var newTail = current;
+    while (current.next) {
+      newTail = current;
+      current = current.next;
+    }
+    this.tail = newTail;
+    this.tail.next = null;
+    this.length--;
+    if (this.length === 0) {
+      this.head = null;
+      this.tail = null;
+    }
+    return current;
+  }
+
+  shift() {
+    if (!this.head || !this.tail) return null;
+    const temp = this.head;
+    this.head = temp.next;
+    this.length -= 1;
+    if (this.length === 0) {
+      this.head = null;
+      this.tail = null;
+    }
+    return temp.val;
+  }
+
+  unshift(val: T) {
+    const newNode = new Node(val);
+    this.length += 1;
+    if (!this.head || !this.tail) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      newNode.next = this.head;
+      this.head = newNode;
+    }
+    return this;
+  }
+
+  get(idx: number) {
+    if (idx < 0 || idx >= this.length) return null;
+    var counter = 0;
+    var current = this.head;
+    while (counter !== idx) {
+      if (current) {
+        current = current?.next;
+        counter++;
+      }
+    }
+    return current;
+  }
+
+  set(idx: number, val: T) {
+    const node = this.get(idx);
+    if (node) {
+      node.val = val;
+      return true;
+    }
+    return false;
+  }
+
+  insert(idx: number, val: T) {
+    const node = this.get(idx - 1);
+    const newNode = new Node(val);
+
+    if (this.length === 0) {
+      this.unshift(val);
+      return true;
+    }
+
+    if (idx === this.length) {
+      this.push(val);
+      return true;
+    }
+
+    if (node) {
+      this.length += 1;
+      node.next = newNode;
+      newNode.next = this.get(idx);
+      return true;
+    }
+    return false;
+  }
+}
+```
+
+제가 구현 insert 메서드입니다.
+
+```js
+insert(index, val){
+    if(index < 0 || index > this.length) return false;
+    if(index === this.length) return !!this.push(val);
+    if(index === 0) return !!this.unshift(val);
+
+    var newNode = new Node(val);
+    var prev = this.get(index - 1);
+    var temp = prev.next;
+    prev.next = newNode;
+    newNode.next = temp;
+    this.length++;
+    return true;
+}
+```
+
+당연히 가독성이 더 좋습니다.
+
+remove 메서드입니다. 마지막 삭제랑 다르게 중간삭제를 합니다. 삽입과 짝이되는 메서드입니다.
+
+- If the index is less than zero or greater than the length, return undefined
+- If the index is the same as the length-1, pop
+- If the index is 0, shift
+- Otherwise, using the get method, access the node at the index - 1
+- Set the next property on that node to be the next of the next node
+- Decrement the length
+- Return the value of the node removed
+
+```ts
+export class Node<T> {
+  public val: T;
+  public next: Node<T> | null;
+
+  constructor(val: T) {
+    this.val = val;
+    this.next = null;
+  }
+}
+
+export class SinglyLinkedList<T> {
+  public length: number;
+  public head: null | Node<T>;
+  public tail: null | Node<T>;
+  constructor() {
+    this.length = 0;
+    this.head = null;
+    this.tail = null;
+  }
+
+  push(val: T) {
+    this.length += 1;
+
+    const newNode = new Node(val);
+
+    if (!this.head || !this.tail) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+    return this;
+  }
+
+  pop() {
+    if (!this.head) return null;
+    var current = this.head;
+    var newTail = current;
+    while (current.next) {
+      newTail = current;
+      current = current.next;
+    }
+    this.tail = newTail;
+    this.tail.next = null;
+    this.length--;
+    if (this.length === 0) {
+      this.head = null;
+      this.tail = null;
+    }
+    return current;
+  }
+
+  shift() {
+    if (!this.head || !this.tail) return null;
+    const temp = this.head;
+    this.head = temp.next;
+    this.length -= 1;
+    if (this.length === 0) {
+      this.head = null;
+      this.tail = null;
+    }
+    return temp;
+  }
+
+  unshift(val: T) {
+    const newNode = new Node(val);
+    this.length += 1;
+    if (!this.head || !this.tail) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      newNode.next = this.head;
+      this.head = newNode;
+    }
+    return this;
+  }
+
+  get(idx: number) {
+    if (idx < 0 || idx >= this.length) return null;
+    var counter = 0;
+    var current = this.head;
+    while (counter !== idx) {
+      if (current) {
+        current = current?.next;
+        counter++;
+      }
+    }
+    return current;
+  }
+
+  set(idx: number, val: T) {
+    const node = this.get(idx);
+    if (node) {
+      node.val = val;
+      return true;
+    }
+    return false;
+  }
+
+  insert(idx: number, val: T) {
+    if (idx < 0 || idx > this.length) return false;
+    if (idx === this.length) return !!this.push(val);
+    if (idx === 0) return !!this.unshift(val);
+
+    const newNode = new Node(val);
+    const prev = this.get(idx - 1);
+    if (prev?.next) {
+      const temp = prev.next;
+      prev.next = newNode;
+      newNode.next = temp;
+      this.length += 1;
+    }
+    return true;
+  }
+
+  remove(idx: number) {
+    if (idx < 0 || idx > this.length - 1) return null;
+    if (idx === this.length - 1) return this.pop();
+    if (idx === 0) return this.shift();
+
+    const temp = this.get(idx);
+    const prev = this.get(idx - 1);
+    if (prev?.next?.next) {
+      prev.next = this.get(idx + 1);
+    }
+    this.length -= 1;
+
+    return temp;
+  }
+}
+```
+
+제가 구현한 remove 입니다.
+
+```js
+remove(index){
+    if(index < 0 || index >= this.length) return undefined;
+    if(index === 0) return this.shift();
+    if(index === this.length - 1) return this.pop();
+    var previousNode = this.get(index - 1);
+    var removed = previousNode.next;
+    previousNode.next = removed.next;
+    this.length--;
+    return removed;
+}
+```
+
+이제는 Reverse 메서드를 구현합니다. 코테 질문의 고전이지만 실무에 자주 활용하지 않습니다. 참고로 구현할 때 복사를 금지하면서 구현할 것을 요청할 것입니다.
+
+- Swap the head and tail
+- Create a variable called next
+- Create a variable called prev
+- Create a variable called node and initialize it to the head property
+- Loop through the list
+- Set next to be the next property on whatever node is
+- Set the next property on the node to be whatever prev is
+- Set prev to be the value of the node variable
+- Set the node variable to be the value of the next variable
+- Once you have finished looping, return the list
+
+저는 구현할줄 몰랐습니다.
+
+```ts
+export class Node<T> {
+  public val: T;
+  public next: Node<T> | null;
+
+  constructor(val: T) {
+    this.val = val;
+    this.next = null;
+  }
+}
+
+export class SinglyLinkedList<T> {
+  public length: number;
+  public head: null | Node<T>;
+  public tail: null | Node<T>;
+  constructor() {
+    this.length = 0;
+    this.head = null;
+    this.tail = null;
+  }
+
+  push(val: T) {
+    this.length += 1;
+
+    const newNode = new Node(val);
+
+    if (!this.head || !this.tail) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+    return this;
+  }
+
+  pop() {
+    if (!this.head) return null;
+    var current = this.head;
+    var newTail = current;
+    while (current.next) {
+      newTail = current;
+      current = current.next;
+    }
+    this.tail = newTail;
+    this.tail.next = null;
+    this.length--;
+    if (this.length === 0) {
+      this.head = null;
+      this.tail = null;
+    }
+    return current;
+  }
+
+  shift() {
+    if (!this.head || !this.tail) return null;
+    const temp = this.head;
+    this.head = temp.next;
+    this.length -= 1;
+    if (this.length === 0) {
+      this.head = null;
+      this.tail = null;
+    }
+    return temp;
+  }
+
+  unshift(val: T) {
+    const newNode = new Node(val);
+    this.length += 1;
+    if (!this.head || !this.tail) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      newNode.next = this.head;
+      this.head = newNode;
+    }
+    return this;
+  }
+
+  get(idx: number) {
+    if (idx < 0 || idx >= this.length) return null;
+    var counter = 0;
+    var current = this.head;
+    while (counter !== idx) {
+      if (current) {
+        current = current?.next;
+        counter++;
+      }
+    }
+    return current;
+  }
+
+  set(idx: number, val: T) {
+    const node = this.get(idx);
+    if (node) {
+      node.val = val;
+      return true;
+    }
+    return false;
+  }
+
+  insert(idx: number, val: T) {
+    if (idx < 0 || idx > this.length) return false;
+    if (idx === this.length) return !!this.push(val);
+    if (idx === 0) return !!this.unshift(val);
+
+    const newNode = new Node(val);
+    const prev = this.get(idx - 1);
+    if (prev?.next) {
+      const temp = prev.next;
+      prev.next = newNode;
+      newNode.next = temp;
+      this.length += 1;
+    }
+    return true;
+  }
+
+  remove(idx: number) {
+    if (idx < 0 || idx >= this.length) return null;
+    if (idx === this.length - 1) return this.pop();
+    if (idx === 0) return this.shift();
+
+    let previousNode = this.get(idx - 1);
+    let removed: Node<T> | null = null;
+    if (previousNode?.next) {
+      removed = previousNode.next;
+      previousNode.next = removed.next;
+    }
+
+    this.length -= 1;
+
+    return removed;
+  }
+
+  reverse() {
+    if (this.length === 0) return null;
+
+    let node = this.head;
+    this.head = this.tail;
+    this.tail = node;
+    let next;
+    let prev: Node<T> | null = null;
+    for (let i = 0; i < this.length; i++) {
+      if (node) {
+        next = node?.next;
+        node.next = prev;
+        prev = node;
+        node = next;
+      }
+    }
+
+    return this;
+  }
+}
+```
+
+이렇게 구현이 가능합니다. 처음 보면 이해가 잘 되는 것은 아닙니다.
+
+단일 연결 리스트의 빅오표기법입니다.
+
+삽입시간이 상수시간 복잡성입니다.
+
+삭제시간은 상수시간에서 선형시간 복잡성이 됩니다.
+
+탐색시간은 선형시간 복잡성입니다.
+
+갱신시간도 선형시간 복잡성을 갖습니다.
+
+배열은 삽입 삭제만 우위를 갖고 있습니다.
+
+링크드 리스트는 다른 자료구조를 구현하기 전에 이해가 필요한 기본 개념이 됩니다.
