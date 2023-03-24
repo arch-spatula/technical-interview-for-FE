@@ -1,13 +1,11 @@
 /**
  *
- * @param {string} myString
+ * @param {array} box
+ * @param {number} n
  * @returns {number}
  */
-export function solution(myString) {
-  var regex = /[^0-9]/g;
-  var result = myString.replace(regex, "");
-  return result
-    .split("")
-    .map((str) => parseInt(str))
-    .reduce((acc, curr) => acc + curr);
+export function solution(box, n) {
+  return box
+    .map((num) => Math.floor(num / n))
+    .reduce((acc, curr) => acc * curr);
 }
