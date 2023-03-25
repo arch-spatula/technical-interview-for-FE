@@ -1,5 +1,7 @@
 # 앞으로 진도
 
+[피자 나눠 먹기 (2)](https://school.programmers.co.kr/learn/courses/30/lessons/120815)
+
 [피자 나눠 먹기 (1)](https://school.programmers.co.kr/learn/courses/30/lessons/120814)
 
 # 정리 중
