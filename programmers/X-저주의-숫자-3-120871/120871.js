@@ -1,11 +1,11 @@
 /**
  *
- * @param {number} n
+ * @param {number} num
  * @returns {boolean}
  */
-export function isUseThree(n) {
-  if (n % 3 === 0) return true;
-  if (n.toString().includes("3")) return true;
+export function isUseThree(num) {
+  if (num % 3 === 0) return true;
+  if (num.toString().includes("3")) return true;
   return false;
 }
 
@@ -13,7 +13,10 @@ export function isUseThree(n) {
  * @param {number} n
  * @returns {number}
  */
-export function solution(n) {
-  const arr = [...Array(200).keys()].filter((elem) => !isUseThree(elem));
-  return arr[n - 1];
+function solution(n) {
+  return [...Array(200).keys()]
+    .map((num) => num + 1)
+    .filter((num) => !isUseThree(num))[n - 1];
 }
+
+export default solution;

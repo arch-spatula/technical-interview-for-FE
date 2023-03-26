@@ -1,4 +1,4 @@
-import { solution } from "./120815";
+import solution from "./120815";
 import { test, expect, describe } from "vitest";
 
 describe("주문한 피자를 남기지 않고 모두 같은 수의 피자 조각을 먹어야 한다면 최소 몇 판을 시켜야 하는지", () => {
