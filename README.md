@@ -57,6 +57,8 @@
 
 # 오버해드
 
+[How To Get Into Software | Prime Reacts](https://www.youtube.com/watch?v=ijQvgERWKjA)
+
 이 장은 오컴의 면도날에 위배됩니다.
 
 보통 무엇인가 확실하게 만들고 싶으면 의도적으로 오버해드를 발생시킵니다. 당연한 말이지만 오버해드가 존재한다는 것 자체가 비효율적입니다.
