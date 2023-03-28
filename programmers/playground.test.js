@@ -1,32 +1,28 @@
-import { solution, createMemo, shallowCompare } from "./playground";
+import solution from "./playground";
 import { test, expect, describe } from "vitest";
 
-describe("영어 소문자로 바꾼 문자열을 return", () => {
-  test('"olleh"의 순서를 바꾸면 "hello"를 만들 수 있습니다.', () => {
-    expect(solution("olleh", "hello")).toBe(1);
+describe("i부터 j까지 k가 몇 번 등장하는지 return", () => {
+  test("3, 10, 28 중 20과 가장 가까운 수는 28입니다.", () => {
+    expect(solution([3, 10, 28], 20)).toBe(28);
   });
 
-  test('"allpe"의 순서를 바꿔도 "apple"을 만들 수 없습니다.', () => {
-    expect(solution("allpe", "apple")).toBe(0);
-  });
-});
-
-describe("createMemo", () => {
-  test("aab는 {a:2, b:1}", () => {
-    expect(createMemo("aab")).toEqual({ a: 2, b: 1 });
+  test("10, 11, 12 중 13과 가장 가까운 수는 12입니다.", () => {
+    expect(solution([10, 11, 12], 13)).toBe(12);
   });
 
-  test("olleh { h: 1, o: 1, e: 1, l: 2 }", () => {
-    expect(createMemo("olleh")).toEqual({ h: 1, o: 1, e: 1, l: 2 });
-  });
-});
-
-describe("shallowCompare", () => {
-  test("얕은 비교로 같은경우", () => {
-    expect(shallowCompare({ a: 2, b: 1 }, { b: 1, a: 2 })).toBe(true);
+  test("1, 2, 3 중 2과 가장 가까운 수는 2입니다.", () => {
+    expect(solution([1, 2, 3], 2)).toBe(2);
   });
 
-  test("얕은 비교로 다른경우", () => {
-    expect(shallowCompare({ a: 2, c: 1 }, { b: 1, a: 2 })).toBe(false);
+  test("-1, -2, -3 중 2과 가장 가까운 수는 -1입니다.", () => {
+    expect(solution([-1, -2, -3], 2)).toBe(-1);
+  });
+
+  test("-1, -2, -3 중 -2과 가장 가까운 수는 -2입니다.", () => {
+    expect(solution([-1, -2, -3], -2)).toBe(-2);
+  });
+
+  test("n=0 일때 -1, 1 중에 -1 이 반환되어야합니다", () => {
+    expect(solution([1, -1], 0)).toBe(-1);
   });
 });
