@@ -4085,3 +4085,49 @@ export class SinglyLinkedList<T> {
 배열은 삽입 삭제만 우위를 갖고 있습니다.
 
 링크드 리스트는 다른 자료구조를 구현하기 전에 이해가 필요한 기본 개념이 됩니다.
+
+## 이중 연결 리스트
+
+노드가 양방향으로 참조합니다. 작성하는 메서드의 차이가 커집니다. 단일과 이중 연결리스트를 모두 비교할 것입니다.
+
+물론 링크드리스트라 비슷합니다. 구조적으로 조금 다릅니다.
+
+단일 연결 리스트랑 다르게 tail에서 뒤로 움직이는 것이 가능합니다. 역으로 출력하는 것은 비교적 쉽습니다.
+
+단일 연결 리스트를 역으로 출력하는 방법은 엄청나게 비효율적입니다.
+
+이중 연결리스트는 포인터가 2개라서 더 복잡합니다. 하지만 극단적으로 복잡하지 않습니다.
+
+단일 연결리스트보다 유연함을 얻을 수 있지만 공간복잡성을 비용으로 지불합니다.
+
+노드를 활용하는 것은 동일하지만 노드에는 포인터가 2개입니다.
+
+로직은 모두 달라질 것입니다. 하지만 생성자 함수는 비슷합니다.
+
+```ts
+export class Node<T> {
+  public val: T;
+  public next: Node<T> | null;
+  public prev: Node<T> | null;
+
+  constructor(val: T) {
+    this.val = val;
+    this.next = null;
+    this.prev = null;
+  }
+}
+
+export class DoublyLinkedList<T> {
+  public head: Node<T> | null;
+  public tail: Node<T> | null;
+  public length: number;
+
+  constructor() {
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
+  }
+}
+```
+
+시작은 비슷합니다.
