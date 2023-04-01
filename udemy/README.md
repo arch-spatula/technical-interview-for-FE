@@ -4088,6 +4088,8 @@ export class SinglyLinkedList<T> {
 
 ## 이중 연결 리스트
 
+https://cs.slides.com/colt_steele/doubly-linked-lists
+
 노드가 양방향으로 참조합니다. 작성하는 메서드의 차이가 커집니다. 단일과 이중 연결리스트를 모두 비교할 것입니다.
 
 물론 링크드리스트라 비슷합니다. 구조적으로 조금 다릅니다.
@@ -4131,3 +4133,59 @@ export class DoublyLinkedList<T> {
 ```
 
 시작은 비슷합니다.
+
+```ts
+const firstNode = new Node<>(30);
+firstNode.next = new Node(20);
+firstNode.next.prev = firstNode;
+```
+
+이런식으로 사용할 수 있습니다.
+
+- Create a new node with the value passed to the function
+- If the head property is null set the head and tail to be the newly created node
+- If not, set the next property on the tail to be that node
+- Set the previous property on the newly created node to be the tail
+- Set the tail to be the newly created node
+- Increment the length
+- Return the Doubly Linked List
+
+위와 같은 의사코드 제가 작성한 메서드입니다.
+
+```ts
+  push(val: T) {
+    this.length += 1;
+    const newNode = new Node<T>(val);
+
+    if (!this.head && !this.tail) {
+      this.head = newNode;
+      this.tail = newNode;
+    }
+
+    if (this.head !== null && this.tail !== null) {
+      this.tail.next = newNode;
+      this.tail.next.prev = this.tail;
+      this.tail = newNode;
+    }
+
+    return this;
+  }
+```
+
+```js
+    push(val){
+        var newNode = new Node(val);
+        if(this.length === 0){
+            this.head = newNode;
+            this.tail = newNode;
+        } else {
+            this.tail.next = newNode;
+            newNode.prev = this.tail;
+            this.tail = newNode;
+        }
+        this.length++;
+        return this;
+    }
+```
+
+단일 연결리스트를 참고했습니다. 단일 연결리스트에서 구현한 것과 상당히 비슷합니다.
