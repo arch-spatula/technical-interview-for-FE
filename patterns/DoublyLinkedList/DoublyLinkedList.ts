@@ -38,4 +38,22 @@ export class DoublyLinkedList<T> {
 
     return this;
   }
+
+  pop() {
+    if (this.length === 0) {
+      return null;
+    }
+    const popped = this.tail;
+
+    if (this.length === 1 && popped) {
+      this.tail = null;
+      this.head = this.tail;
+    } else if (popped) {
+      this.tail = popped.prev;
+      if (this.tail?.next) this.tail.next = null;
+      popped.prev = null;
+    }
+    this.length -= 1;
+    return popped;
+  }
 }

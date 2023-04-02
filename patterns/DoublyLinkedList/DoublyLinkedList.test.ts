@@ -49,3 +49,31 @@ describe("push", () => {
     expect(a).toBe(b);
   });
 });
+
+describe("pop", () => {
+  // - Update the tail to be the previous Node.
+  // - Set the newTail's next to null
+  // - Decrement the length
+  // - Return the value removed
+
+  test("If there is no head, return null", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    expect(doublyLinkedList.pop()).toBeNull();
+  });
+
+  test("If the length is 1, set the head and tail to be null", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.push(10);
+    expect(doublyLinkedList.length).toBe(1);
+    doublyLinkedList.pop();
+    expect(doublyLinkedList.tail).toBeNull();
+  });
+
+  test("If the length is 2, set the new tail's next to be null", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.push(10).push(20);
+    expect(doublyLinkedList.length).toBe(2);
+    doublyLinkedList.pop();
+    expect(doublyLinkedList.tail?.val).toBe(10);
+  });
+});

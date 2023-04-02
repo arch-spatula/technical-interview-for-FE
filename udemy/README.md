@@ -4189,3 +4189,68 @@ firstNode.next.prev = firstNode;
 ```
 
 단일 연결리스트를 참고했습니다. 단일 연결리스트에서 구현한 것과 상당히 비슷합니다.
+
+단일 연결리스트에서 pop은 오히려 쉽습니다. 바로 tail 접근할 수 있습니다.
+
+- If there is no head, return undefined
+- Store the current tail in a variable to return later
+- If the length is 1, set the head and tail to be null
+- Update the tail to be the previous Node.
+- Set the newTail's next to null
+- Decrement the length
+- Return the value removed
+
+삭제할 때는 이중으로 되어 있는 next, prev 모두 참조를 null로 바꿔줘야 합니다.
+
+그리고 반환하는 값은 Node입니다.
+
+```ts
+  pop() {
+    if (this.length === 0) {
+      return null;
+    }
+    const popped = this.tail;
+
+    if (this.length === 1 && popped) {
+      this.tail = null;
+      this.head = this.tail;
+      this.length -= 1;
+
+      popped.prev = null;
+      return popped;
+    }
+
+    if (this.length > 1 && this.tail && popped) {
+      this.tail = popped.prev;
+      if (this.tail?.next) this.tail.next = null;
+      popped.prev = null;
+      this.length -= 1;
+      return popped;
+    }
+  }
+```
+
+제가 만든 pop입니다.
+
+```js
+    pop(){
+        if(!this.head) return undefined;
+        var poppedNode = this.tail;
+
+        if(this.length === 1){
+            this.head = null;
+            this.tail = null;
+        } else {
+            this.tail = poppedNode.prev;
+            this.tail.next = null;
+            poppedNode.prev = null;
+        }
+
+        this.length--;
+        return poppedNode;
+    }
+```
+
+로직의 중복이 덜합니다.
+
+확실히 제어가 더 쉽습니다. 여기서 주의할 점은 popped한 Node의 prev가 null를 바라보도록 해야 합니다. 그렇게 해서 접근 가능성을 막아버려야 합니다. 또 메모리 누수가능성도 있습니다.
