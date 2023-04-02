@@ -1,3 +1,9 @@
+# 런타임 에러
+
+https://help.acmicpc.net/judge/rte
+
+---
+
 https://www.acmicpc.net/problem/10926
 
 이 문제는 부조리해서 작성합니다.
