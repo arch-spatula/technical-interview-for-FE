@@ -87,4 +87,36 @@ export class DoublyLinkedList<T> {
     this.length += 1;
     return this;
   }
+
+  get(idx: number) {
+    if (idx < 0 || idx > this.length - 1 || this.length === 0) {
+      return null;
+    }
+
+    if (idx <= this.length / 2) {
+      let currentNode = this.head!;
+      let count = 0;
+      while (idx !== count) {
+        currentNode = currentNode.next as Node<T>;
+        count += 1;
+      }
+      return currentNode;
+    } else {
+      let currentNode = this.tail!;
+      let count = this.length - 1;
+      while (idx !== count) {
+        currentNode = currentNode.prev as Node<T>;
+        count -= 1;
+      }
+      return currentNode;
+    }
+  }
+
+  set(idx: number, val: T) {
+    if (this.get(idx) === null) {
+      return false;
+    }
+    this.get(idx)!.val = val;
+    return true;
+  }
 }

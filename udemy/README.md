@@ -4355,3 +4355,103 @@ unshift는 shift의 역입니다.
 ```
 
 여기서 제가 한 실수는 `this.head.prev`를 설정하지 않았습니다. 코드에 대해서 잘 자각하고 있었다고 착각하고 있었습니다.
+
+get은 숫자를 받고 그 인덱스에 해당하는 값을 반환합니다. get을 위한 최적화가 존재합니다. head 혹은 tail 모두 어느쪽이든 접근할 수 있습니다.
+
+현재 length를 보고 어느쪽에 가까운지 비교하고 선형탐색을 진행할 것입니다.
+
+- If the index is less than 0 or greater or equal to the length, return null
+- If the index is less than or equal to half the length of the list
+  - Loop through the list starting from the head and loop towards the middle
+  - Return the node once it is found
+- If the index is greater than half the length of the list
+  - ​Loop through the list starting from the tail and loop towards the middle
+  - Return the node once it is found
+
+```ts
+  get(idx: number) {
+    if (idx < 0 || idx > this.length - 1 || this.length === 0) {
+      return null;
+    }
+
+    const mid = Math.floor(this.length / 2);
+
+    if (idx <= mid) {
+      let targetNode = this.head!;
+      for (let i = 0; i < idx; i++) {
+        targetNode = targetNode.next as Node<T>;
+      }
+      return targetNode;
+    }
+
+    if (idx > mid) {
+      let targetNode = this.tail!;
+      for (let i = 0; i < this.length - idx - 1; i++) {
+        targetNode = targetNode.prev as Node<T>;
+      }
+      return targetNode;
+    }
+  }
+```
+
+제가 구현한 get입니다.
+
+```js
+    get(index){
+        if(index < 0 || index >= this.length) return null;
+        var count, current;
+        if(index <= this.length/2){
+            count = 0;
+            current = this.head;
+            while(count !== index){
+                current = current.next;
+                count++;
+            }
+        } else {
+            count = this.length - 1;
+            current = this.tail;
+            while(count !== index){
+                current = current.prev;
+                count--;
+            }
+        }
+        return current;
+```
+
+if-else 문에서 상호배타적이라는 점을 잊고 있었습니다.
+
+또 while이 가독성이 더 좋습니다.
+
+그리고 중간 index를 반올림할 필요가 없었습니다.
+
+set은 index와 값을 모두 받습니다. 로직은 get과 유사합니다. 그래서 get 메서드를 내부에서 재사용합니다.
+
+- Create a variable which is the result of the get method at the index passed to the function
+  - If the get method returns a valid node, set the value of that node to be the value passed to the function
+  - Return true
+- Otherwise, return false
+
+```ts
+set(idx: number, val: T) {
+    if (this.get(idx) === null) {
+      return false;
+    }
+    this.get(idx)!.val = val;
+    return true;
+  }
+```
+
+아주 궈여운 저의 set입니다.
+
+```js
+    set(index, val){
+        var foundNode = this.get(index);
+        if(foundNode != null){
+            foundNode.val = val;
+            return true;
+        }
+        return false;
+    }
+```
+
+강의 코드랑 유사합니다.

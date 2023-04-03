@@ -115,3 +115,41 @@ describe("unshift", () => {
     expect(doublyLinkedList.head?.val).toBe(20);
   });
 });
+
+describe("get", () => {
+  test("If the index is less than 0 or greater or equal to the length, return null", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.push(10).push(20).push(30).push(40).push(50);
+    expect(doublyLinkedList.get(-1)).toBe(null);
+    expect(doublyLinkedList.get(5)).toBe(null);
+  });
+
+  test("If the index is less than or equal to half the length of the list return the node once it is found", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.push(10).push(20).push(30).push(40).push(50);
+    expect(doublyLinkedList.get(2)?.val).toBe(30);
+  });
+
+  test("If the index is greater than half the length of the list return the node once it is found", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.push(10).push(20).push(30).push(40).push(50).push(60);
+    expect(doublyLinkedList.get(5)?.val).toBe(60);
+    expect(doublyLinkedList.get(4)?.val).toBe(50);
+    expect(doublyLinkedList.get(3)?.val).toBe(40);
+  });
+});
+
+describe("set", () => {
+  test("index 범위를 초과하면 false를 반환", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.push(10).push(20).push(30).push(40).push(50).push(60);
+    expect(doublyLinkedList.set(7, 20)).toBe(false);
+  });
+
+  test("index 범위 내에 있으면 값을 갱신하고 true를 반환", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.push(10).push(20).push(30).push(40).push(50).push(60);
+    expect(doublyLinkedList.set(2, 420)).toBe(true);
+    expect(doublyLinkedList.get(2)?.val).toBe(420);
+  });
+});
