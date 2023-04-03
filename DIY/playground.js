@@ -14,5 +14,7 @@ function solution(n) {
     );
 }
 
+export default solution;
+
 console.log(solution(10), [2, 3, 5, 7]);
 console.log(solution(5), [2, 3, 5]);
