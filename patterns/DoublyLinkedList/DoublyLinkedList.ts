@@ -75,14 +75,14 @@ export class DoublyLinkedList<T> {
   }
 
   unshift(val: T) {
-    const unsiftedNode = new Node<T>(val);
+    const unshiftedNode = new Node<T>(val);
     if (this.length === 0) {
-      this.head = unsiftedNode;
+      this.head = unshiftedNode;
       this.tail = this.head;
     } else if (this.head?.prev) {
-      this.head.prev = unsiftedNode;
-      unsiftedNode.next = this.head;
-      this.head = unsiftedNode;
+      this.head.prev = unshiftedNode;
+      unshiftedNode.next = this.head;
+      this.head = unshiftedNode;
     }
     this.length += 1;
     return this;
