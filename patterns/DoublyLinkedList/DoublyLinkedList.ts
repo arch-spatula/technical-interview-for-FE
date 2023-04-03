@@ -43,17 +43,48 @@ export class DoublyLinkedList<T> {
     if (this.length === 0) {
       return null;
     }
-    const popped = this.tail;
+    const poppedNode = this.tail;
 
-    if (this.length === 1 && popped) {
+    if (this.length === 1 && poppedNode) {
       this.tail = null;
       this.head = this.tail;
-    } else if (popped) {
-      this.tail = popped.prev;
+    } else if (poppedNode) {
+      this.tail = poppedNode.prev;
       if (this.tail?.next) this.tail.next = null;
-      popped.prev = null;
+      poppedNode.prev = null;
     }
     this.length -= 1;
-    return popped;
+    return poppedNode;
+  }
+
+  shift() {
+    if (this.length === 0) {
+      return null;
+    }
+    const shiftedNode = this.head;
+    if (this.length === 1 && shiftedNode) {
+      this.head = null;
+      this.tail = this.head;
+    } else if (shiftedNode) {
+      this.head = shiftedNode.next;
+      if (this.head?.prev) this.head.prev = null;
+      shiftedNode.next = null;
+    }
+    this.length -= 1;
+    return shiftedNode;
+  }
+
+  unshift(val: T) {
+    const unsiftedNode = new Node<T>(val);
+    if (this.length === 0) {
+      this.head = unsiftedNode;
+      this.tail = this.head;
+    } else if (this.head?.prev) {
+      this.head.prev = unsiftedNode;
+      unsiftedNode.next = this.head;
+      this.head = unsiftedNode;
+    }
+    this.length += 1;
+    return this;
   }
 }

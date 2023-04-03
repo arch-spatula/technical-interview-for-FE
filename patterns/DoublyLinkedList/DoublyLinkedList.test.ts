@@ -51,11 +51,6 @@ describe("push", () => {
 });
 
 describe("pop", () => {
-  // - Update the tail to be the previous Node.
-  // - Set the newTail's next to null
-  // - Decrement the length
-  // - Return the value removed
-
   test("If there is no head, return null", () => {
     const doublyLinkedList = new DoublyLinkedList<number>();
     expect(doublyLinkedList.pop()).toBeNull();
@@ -75,5 +70,48 @@ describe("pop", () => {
     expect(doublyLinkedList.length).toBe(2);
     doublyLinkedList.pop();
     expect(doublyLinkedList.tail?.val).toBe(10);
+  });
+});
+
+describe("shift", () => {
+  test("If length is 0, return null", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    expect(doublyLinkedList.length).toBe(0);
+    expect(doublyLinkedList.shift()).toBeNull();
+  });
+
+  test("If the length is one set the head and tail to be null", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.push(10);
+    expect(doublyLinkedList.length).toBe(1);
+    expect(doublyLinkedList.shift()?.val).toBe(10);
+    expect(doublyLinkedList.head).toBeNull();
+    expect(doublyLinkedList.tail).toBeNull();
+  });
+
+  test("If the length is more then one set the next of the head to be the head", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.push(10).push(20);
+    expect(doublyLinkedList.length).toBe(2);
+    doublyLinkedList.shift();
+    expect(doublyLinkedList.tail?.val).toBe(20);
+  });
+});
+
+describe("unshift", () => {
+  test("If the length is 0", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    expect(doublyLinkedList.length).toBe(0);
+    doublyLinkedList.unshift(10);
+    expect(doublyLinkedList.head?.val).toBe(doublyLinkedList.tail?.val);
+    expect(doublyLinkedList.head).toBe(doublyLinkedList.tail);
+  });
+
+  test("If the length is more then 0", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.unshift(10).unshift(20);
+    expect(doublyLinkedList.length).toBe(2);
+    expect(doublyLinkedList.tail?.val).toBe(10);
+    expect(doublyLinkedList.head?.val).toBe(20);
   });
 });

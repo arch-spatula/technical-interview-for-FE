@@ -4254,3 +4254,104 @@ firstNode.next.prev = firstNode;
 로직의 중복이 덜합니다.
 
 확실히 제어가 더 쉽습니다. 여기서 주의할 점은 popped한 Node의 prev가 null를 바라보도록 해야 합니다. 그렇게 해서 접근 가능성을 막아버려야 합니다. 또 메모리 누수가능성도 있습니다.
+
+shift입니다. shift는 시작하는 Node를 제거합니다. pop과 상당히 유사합니다.
+
+- If length is 0, return undefined
+- Store the current head property in a variable (we'll call it old head)
+- If the length is one
+- set the head to be null
+- set the tail to be null
+- Update the head to be the next of the old head
+- Set the head's prev property to null
+- Set the old head's next to null
+- Decrement the length
+- Return old head
+
+```ts
+  shift() {
+    if (this.length === 0) {
+      return null;
+    }
+    const shiftedNode = this.head;
+    if (this.length === 1 && shiftedNode) {
+      this.head = null;
+      this.tail = this.head;
+    } else if (shiftedNode) {
+      this.head = shiftedNode.next;
+      if (this.head?.prev) this.head.prev = null;
+      shiftedNode.next = null;
+    }
+    this.length -= 1;
+    return shiftedNode;
+  }
+```
+
+저의 shift입니다.
+
+```js
+    shift(){
+        if(this.length === 0) return undefined;
+        var oldHead = this.head;
+        if(this.length === 1){
+            this.head = null;
+            this.tail = null;
+        }else{
+            this.head = oldHead.next;
+            this.head.prev = null;
+            oldHead.next = null;
+        }
+        this.length--;
+        return oldHead;
+    }
+```
+
+pop과 비슷하기 때문에 저랑 비슷한 코드를 갖고 있습니다.
+
+unshift는 shift의 역입니다.
+
+- Create a new node with the value passed to the function
+- If the length is 0
+  - Set the head to be the new node
+  - Set the tail to be the new node
+- Otherwise
+  - Set the prev property on the head of the list to be the new node
+  - Set the next property on the new node to be the head property
+  - Update the head to be the new node
+- Increment the length
+- Return the list
+
+```ts
+  unshift(val: T) {
+    const unsiftedNode = new Node<T>(val);
+    if (this.length === 0) {
+      this.head = unsiftedNode;
+      this.tail = this.head;
+    } else {
+      unsiftedNode.next = this.head;
+      this.head = unsiftedNode;
+    }
+    this.length += 1;
+    return this;
+  }
+
+```
+
+제가 구현한 unshift입니다.
+
+```js
+    unshift(val){
+        var newNode = new Node(val);
+        if(this.length === 0) {
+            this.head = newNode;
+            this.tail = newNode;
+        } else {
+            this.head.prev = newNode;
+            newNode.next = this.head;
+            this.head = newNode;
+        }
+        this.length++;
+        return this;
+```
+
+여기서 제가 한 실수는 `this.head.prev`를 설정하지 않았습니다. 코드에 대해서 잘 자각하고 있었다고 착각하고 있었습니다.
