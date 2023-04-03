@@ -2,28 +2,17 @@ const fs = require("fs");
 const filePath =
   process.platform === "linux" ? "/dev/stdin" : __dirname + "/input.txt";
 let input = fs.readFileSync(filePath).toString().split("\n");
-const [a, b] = input[0].split(" ").map((item) => parseInt(item));
-const c = parseInt(input[1]);
+const a = parseInt(input);
 
 /**
- * @param {number} h
- * @param {number} m
- * @returns {string}
+ * @param {number} num
+ * @returns {number}
  */
-function solution(h, m, t) {
-  let minute = m + t;
-  let hours = h;
-  if (minute >= 60) {
-    [hours, minute] = [(hours += parseInt(minute / 60)), minute % 60];
-  }
-  if (hours >= 24) {
-    hours -= 24;
-  }
-
-  return `${hours} ${minute}`;
+function solution(num) {
+  return parseInt((num * (num + 1)) / 2);
 }
 
-console.log(solution(a, b, c));
+console.log(solution(a));
 
 module.exports = {
   solution,
