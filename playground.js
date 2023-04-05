@@ -1,14 +1,12 @@
-const arr = [1, 2, 3];
-
-/**
- * @param {number[]} arr
- * @returns {number[]}
- */
-function addNum(arr, add = 0) {
-  arr.push(add);
-  return arr;
+function* generator() {
+  yield 1;
+  yield 2;
+  yield 3;
 }
 
-console.log(addNum(arr, 4)); // [1, 2, 3]
-console.log(addNum(arr, 5)); // [1, 2, 3]
-console.log(addNum(arr, 6)); // [1, 2, 3]
+const gen = generator(); // "Generator { }"
+
+console.log(gen);
+console.log(gen.next().value); // 1
+console.log(gen.next().value); // 2
+console.log(gen.next().value); // 3
