@@ -4455,3 +4455,127 @@ set(idx: number, val: T) {
 ```
 
 강의 코드랑 유사합니다.
+
+이중 연결리스트의 insert입니다. 단일연결리스트와 유사합니다. 중간에 시작하는 최적화가 가능합니다. 이미 작성한 get 메서드를 재사용하는 것으로 편안한 수정이 가능합니다.
+
+서로 연결하는 포인터를 많이 갱신해야 하는 번거로움이 있기는 합니다.
+
+insert에 대한 의사코드입니다.
+
+- If the index is less than zero or greater than or equal to the length return false
+- If the index is 0, unshift
+- If the index is the same as the length, push
+- Use the get method to access the index -1
+- Set the next and prev properties on the correct nodes to link everything together
+- Increment the length
+- Return true
+
+```ts
+  insert(idx: number, val: T) {
+    if (idx === this.length) {
+      this.push(val);
+      return true;
+    }
+
+    if (idx === 0) {
+      this.unshift(val);
+      return true;
+    }
+
+    if (this.get(idx) === null) return false;
+
+    const newNode = new Node(val);
+    const prevNode = this.get(idx - 1);
+    const nextNode = prevNode?.next;
+    if (prevNode && nextNode) {
+      prevNode.next = newNode;
+      newNode.prev = prevNode;
+      nextNode.prev = newNode;
+      newNode.next = nextNode;
+    }
+    this.length += 1;
+    return true;
+  }
+```
+
+제가 작성한 insert입니다.
+
+```js
+    insert(index, val){
+        if(index < 0 || index > this.length) return false;
+        if(index === 0) return !!this.unshift(val);
+        if(index === this.length) return !!this.push(val);
+
+        var newNode = new Node(val);
+        var beforeNode = this.get(index-1);
+        var afterNode = beforeNode.next;
+
+        beforeNode.next = newNode, newNode.prev = beforeNode;
+        newNode.next = afterNode, afterNode.prev = newNode;
+        this.length++;
+        return true;
+    }
+```
+
+정리가 더 잘되어 있고 구조는 비슷합니다.
+
+체이닝을 하지않고 식별자에 Node를 담는 것이 가독성이 더 좋습니다.
+
+Remove는 해당 인덱스에 있는 Node를 삭제합니다. get을 간단히 재사용하면 됩니다.
+
+- If the index is less than zero or greater than or equal to the length return undefined
+- If the index is 0, shift
+- If the index is the same as the length-1, pop
+- Use the get method to retrieve the item to be removed
+- Update the next and prev properties to remove the found node from the list
+- Set next and prev to null on the found node
+- Decrement the length
+- Return the removed node.
+
+```ts
+  remove(idx: number) {
+    if (idx < 0 || idx >= this.length) return null;
+    if (idx === 0) return this.shift();
+    if (idx === this.length - 1) return this.pop();
+
+    const removedNode = this.get(idx);
+    const prevNode = removedNode?.prev;
+    const nextNode = removedNode?.next;
+    if (prevNode && nextNode) {
+      (prevNode.next = nextNode), (nextNode.prev = prevNode);
+      (removedNode.next = null), (removedNode.prev = null);
+    }
+    this.length -= 1;
+    return removedNode;
+  }
+```
+
+제가 작성한 remove입니다.
+
+```js
+remove(index){
+  if(index < 0 || index >= this.length) return false;
+  if(index === 0) return this.shift();
+  if(index === this.length) return this.pop();
+  var removedNode = this.get(index);
+  removedNode.prev.next = removedNode.next;
+  removedNode.next.prev = removedNode.prev;
+  removedNode.next = null;
+  removedNode.prev = null;
+  this.length --;
+  return removedNode
+}
+```
+
+이중연결리스트의 시간복잡성입니다. 대부분 비슷합니다.
+
+삽입시간 - O(1)
+삭제시간 - O(1)
+탐색시간 - O(N)
+접근시간 - O(N)
+
+삭제시간이 더 효율적입니다.
+
+물론 탐색시간은 O(N/2)으로 더 효율적이기는 합니다. 하지만 자료의 사이즈가 커지면서 미미해지면서 선형시간복잡성을 갖습니다.
+
+이중연결리스트는 단일연결리스트보다 포인터가 1개가 더 있어서 역으로 순회를 해야 할 때 편리합니다. 브라우저 히스토리는 이중연결리스트 자료구조의 대표적인 예시입니다. 이전 이후로 이동할 때 활용합니다. 또 탐색이 더 효율적입니다. 물론 공간복잡성이 더커지기는 하지만 대부분의 경우 지불하고자 합니다.

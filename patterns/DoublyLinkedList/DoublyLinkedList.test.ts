@@ -153,3 +153,64 @@ describe("set", () => {
     expect(doublyLinkedList.get(2)?.val).toBe(420);
   });
 });
+
+describe("insert", () => {
+  test("If the index is less than zero or greater than or equal to the length return false", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.push(10).push(20).push(30).push(40).push(50).push(60);
+    expect(doublyLinkedList.insert(7, 70)).toBe(false);
+  });
+
+  test("If the index is 0, unshift", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.push(10).push(20).push(30).push(40).push(50).push(60);
+    expect(doublyLinkedList.insert(0, 70)).toBe(true);
+    expect(doublyLinkedList.get(0)?.val).toBe(70);
+    expect(doublyLinkedList.length).toBe(7);
+  });
+
+  test("If the index is the same as the length, push", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.push(10).push(20).push(30).push(40).push(50).push(60);
+    expect(doublyLinkedList.insert(doublyLinkedList.length, 70)).toBe(true);
+    expect(doublyLinkedList.get(6)?.val).toBe(70);
+    expect(doublyLinkedList.length).toBe(7);
+  });
+
+  test("insert in the middle", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.push(10).push(20).push(30).push(40).push(50).push(60);
+    expect(doublyLinkedList.insert(3, 35)).toBe(true);
+    expect(doublyLinkedList.get(3)?.val).toBe(35);
+  });
+});
+
+describe("remove", () => {
+  test("If the index is less than zero or greater than or equal to the length return null", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.push(10).push(20).push(30).push(40).push(50).push(60);
+    expect(doublyLinkedList.remove(-1)).toBe(null);
+    expect(doublyLinkedList.remove(7)).toBe(null);
+  });
+
+  test("If the index is 0, shift", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.push(10).push(20).push(30).push(40).push(50).push(60);
+    expect(doublyLinkedList.remove(0)?.val).toBe(10);
+    expect(doublyLinkedList.length).toBe(5);
+  });
+
+  test("If the index is the same as the length-1, pop", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.push(10).push(20).push(30).push(40).push(50).push(60);
+    expect(doublyLinkedList.remove(doublyLinkedList.length - 1)?.val).toBe(60);
+    expect(doublyLinkedList.length).toBe(5);
+  });
+
+  test("remove in the middle", () => {
+    const doublyLinkedList = new DoublyLinkedList<number>();
+    doublyLinkedList.push(10).push(20).push(30).push(40).push(50).push(60);
+    expect(doublyLinkedList.remove(3)?.val).toBe(40);
+    expect(doublyLinkedList.length).toBe(5);
+  });
+});

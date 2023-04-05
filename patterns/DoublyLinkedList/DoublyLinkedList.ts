@@ -89,7 +89,7 @@ export class DoublyLinkedList<T> {
   }
 
   get(idx: number) {
-    if (idx < 0 || idx > this.length - 1 || this.length === 0) {
+    if (idx < 0 || idx >= this.length || this.length === 0) {
       return null;
     }
 
@@ -118,5 +118,37 @@ export class DoublyLinkedList<T> {
     }
     this.get(idx)!.val = val;
     return true;
+  }
+
+  insert(idx: number, val: T) {
+    if (idx < 0 || idx > this.length) return false;
+    if (idx === this.length) return !!this.push(val);
+    if (idx === 0) return !!this.unshift(val);
+
+    const newNode = new Node(val);
+    const prevNode = this.get(idx - 1);
+    const nextNode = prevNode?.next;
+    if (prevNode && nextNode) {
+      (prevNode.next = newNode), (newNode.prev = prevNode);
+      (nextNode.prev = newNode), (newNode.next = nextNode);
+    }
+    this.length += 1;
+    return true;
+  }
+
+  remove(idx: number) {
+    if (idx < 0 || idx >= this.length) return null;
+    if (idx === 0) return this.shift();
+    if (idx === this.length - 1) return this.pop();
+
+    const removedNode = this.get(idx);
+    const prevNode = removedNode?.prev;
+    const nextNode = removedNode?.next;
+    if (prevNode && nextNode) {
+      (prevNode.next = nextNode), (nextNode.prev = prevNode);
+      (removedNode.next = null), (removedNode.prev = null);
+    }
+    this.length -= 1;
+    return removedNode;
   }
 }
