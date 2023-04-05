@@ -1,16 +1,9 @@
 import { solution } from "./playground";
 import { test, expect, describe } from "vitest";
 
-describe("입출력 방식이 느리면 여러 줄을 입력받거나 출력할 때 시간초과가 날 수 있다는 점", () => {
-  test("첫 줄에 읽는 개수 그 후로 몇개까지 읽기", () => {
-    expect(
-      solution(5, [
-        [1, 1],
-        [12, 34],
-        [5, 500],
-        [40, 60],
-        [1000, 1000],
-      ])
-    ).toEqual([2, 46, 505, 100, 2000]);
+describe("첫째 줄에는 별 1개, 둘째 줄에는 별 2개, N번째 줄에는 별 N개를 찍는 문제", () => {
+  test("첫째 줄부터 N번째 줄까지 차례대로 별을 출력한다.", () => {
+    const str = "*\n" + "**\n" + "***\n" + "****\n" + "*****";
+    expect(solution(5)).toEqual(str);
   });
 });
