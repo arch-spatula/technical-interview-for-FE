@@ -4579,3 +4579,176 @@ remove(index){
 물론 탐색시간은 O(N/2)으로 더 효율적이기는 합니다. 하지만 자료의 사이즈가 커지면서 미미해지면서 선형시간복잡성을 갖습니다.
 
 이중연결리스트는 단일연결리스트보다 포인터가 1개가 더 있어서 역으로 순회를 해야 할 때 편리합니다. 브라우저 히스토리는 이중연결리스트 자료구조의 대표적인 예시입니다. 이전 이후로 이동할 때 활용합니다. 또 탐색이 더 효율적입니다. 물론 공간복잡성이 더커지기는 하지만 대부분의 경우 지불하고자 합니다.
+
+## Stack & Queue
+
+스택과 큐입니다. 많은 과정에서 스택과 큐를 같이 연결해서 가르칩니다. 생각보다 코드량이 많지 않을 단원입니다.
+
+목표들입니다.
+
+- Define what a stack is
+- Understand use cases for a stack
+- Implement operations on a stack data structure
+
+### Stack
+
+Stack과 Queue는 모두 추상화된 자료구조입니다. Stack은 LIFO입니다. Queue는 FIFO입니다. 펜케익이 Stack에 해당합니다. 가장 최근에 추가한 데이터를 가장 빠르게 접근할 수 있습니다.
+
+자바스크립트의 콜 스택도 스택 자료구조에 해당하는 것이 맞습니다.
+
+- 스택은 함수 호출을 제어합니다. 많은 프로그램언어가 이런 방식을 지원합니다.
+- Undo / Redo
+- 브라우저 히스토리
+
+트리와 그래프도 사실 Stack과 Queue를 활용할 수 있습니다.
+
+중간 자료구조로 중요한 역할을 할 것입니다.
+
+간단한 구현 방법과 제대로 된 구현방법 모두 다룰 것입니다.
+
+스택은 LIFO 자료구조이고 이런 자료구조를 만드는 방법은 다양합니다. 실제 구현하는 전략은 다양합니다. 이런 특징을 지키는 원칙에 가깝습니다.
+
+가장 쉬운 방법은 array를 활용하는 것입니다.
+
+```js
+const stack = [];
+stack.push(1);
+stack.push(2);
+stack.push(3);
+stack.pop();
+```
+
+배열에 push, pop만 활용하면 stack에 해당합니다.
+
+물론 shift, unshift를 짝으로 활용할 수 있습니다. 하지만 당연히 선형시간 복잡성을 갖습니다.
+
+하지만 링크드 리스트를 활용해서 구현하는 것이 더 좋습니다. 부적절한 메소드를 접근할 가능성이 있기 때문에 그렇습니다.
+
+Stack은 LIFO 원칙에 불과합니다.
+
+직업 만드는 Stack 클래스를 활용할 것입니다. 연결리스트를 활용할 것입니다.
+
+출발은 이렇게 할 수있습니다.
+
+```js
+class Stack {
+  constructor() {
+    this.first = null;
+    this.last = null;
+    this.size = 0;
+  }
+}
+
+class Node {
+  constructor(val) {
+    this.val = val;
+    this.next = null;
+  }
+}
+```
+
+연결 리스트와 사실상 같습니다.
+
+하지만 문제가 있습니다. 단일 연결리스트의 pop은 선형시간 복잡성을 갖습니다. 그래서 LIFO를 지킬 수 있게 메서드 이름만 shift를 pop으로 바꾸면 됩니다.
+
+단일연결리스트에서 앞에 추가와 삭제를 하면 상수시간이 됩니다. 또 이중연결리스트는 마지막에 생성과 삭제를 하면 상수시간이 됩니다.
+
+push의 의사코드입니다.
+
+- The function should accept a value
+- Create a new node with that value
+- If there are no nodes in the stack, set the first and last property to be the newly created node
+- If there is at least one node, create a variable that stores the current first property on the stack
+- Reset the first property to be the newly created node
+- Set the next property on the node to be the previously created variable
+- Increment the size of the stack by 1
+
+```ts
+export class Node<T> {
+  public val: T;
+  public next: Node<T> | null;
+
+  constructor(val: T) {
+    this.val = val;
+    this.next = null;
+  }
+}
+
+export class Stack<T> {
+  protected first: null | Node<T>;
+  protected last: null | Node<T>;
+  protected size: number;
+
+  constructor() {
+    this.first = null;
+    this.last = null;
+    this.size = 0;
+  }
+  push(val: T) {
+    const newNode = new Node<T>(val);
+    if (!this.first) {
+      this.first = newNode;
+      this.last = newNode;
+    } else {
+      const temp = this.first;
+      this.first = newNode;
+      this.first.next = temp;
+    }
+    this.size += 1;
+    return this.size;
+  }
+  pop() {
+    if (!this.first) return null;
+    const temp = this.first;
+    if (this.first === this.last) {
+      this.last = null;
+    }
+    this.first = this.first.next;
+    this.size -= 1;
+    return temp;
+  }
+}
+```
+
+```js
+class Node {
+  constructor(value) {
+    this.value = value;
+    this.next = null;
+  }
+}
+
+class Stack {
+  constructor() {
+    this.first = null;
+    this.last = null;
+    this.size = 0;
+  }
+  push(val) {
+    var newNode = new Node(val);
+    if (!this.first) {
+      this.first = newNode;
+      this.last = newNode;
+    } else {
+      var temp = this.first;
+      this.first = newNode;
+      this.first.next = temp;
+    }
+    return ++this.size;
+  }
+  pop() {
+    if (!this.first) return null;
+    var temp = this.first;
+    if (this.first === this.last) {
+      this.last = null;
+    }
+    this.first = this.first.next;
+    this.size--;
+    return temp.value;
+  }
+}
+```
+
+삭제, 삽입은 상수시간입니다. 삭제, 삽입이 중요한 경우이기 때문에 적절합니다. 그리고 탐색, 접근시간은 선형시간복잡성을 갖습니다. 이 계산은 애초에 필요하지 않습니다.
+
+Stack은 LIFO 구조입니다. 페이지 히스토리, 다른언어의 함수 실행 순서에 많이 활용합니다. Stack은 이번 예제는 실무용입니다. 면접 코테용으로는 배열을 활용하는 방향으로 작성합니다.
