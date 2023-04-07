@@ -4752,3 +4752,154 @@ class Stack {
 삭제, 삽입은 상수시간입니다. 삭제, 삽입이 중요한 경우이기 때문에 적절합니다. 그리고 탐색, 접근시간은 선형시간복잡성을 갖습니다. 이 계산은 애초에 필요하지 않습니다.
 
 Stack은 LIFO 구조입니다. 페이지 히스토리, 다른언어의 함수 실행 순서에 많이 활용합니다. Stack은 이번 예제는 실무용입니다. 면접 코테용으로는 배열을 활용하는 방향으로 작성합니다.
+
+### Queue
+
+큐는 자매 자료구조입니다. 추가 삭제는 동일하지만 순서만 다릅니다. FIFO 자료구조입니다.
+
+- Define what a queue is
+- Understand use cases for a queue
+- Implement operations on a queue data structure
+
+프로그램에서 굉장히 자주 사용합니다. 예를 들어 접속하는 유저를 받아들이는 순서도 큐로 활용합니다. 프린터도 큐에 해당합니다. 순서대로 출력할 수 있습니다.
+
+배열과 링크드 리스트 모두 활용할 수 있습니다.
+
+생성은 enqueue이고 삭제는 dequeue입니다.
+
+```js
+const queue = [];
+queue.push(1);
+queue.push(2);
+queue.push(3);
+queue.shift(); // 1
+queue.shift(); // 2
+queue.shift(); // 3
+```
+
+이렇게 되면 선형시간복잡성을 갖습니다. 지난 시간처럼 자체적으로 만드는 자료구조가 확실히 좋습니다. 성능 문제를 해결하기 위한 방법입니다.
+
+개념적으로 Queue에 해당하는 경우가 맞습니다.
+
+tail에 추가하고 head에서 삭제하는 전략과 반대로 head에 추가하고 tail에 삭제하는 전략이 있습니다. 단일 연결리스트의 경우 pop은 비효율적인 것처럼 tail에 추가하고 head를 삭제하는 전략이 더 효율적입니다.
+
+Queue의 enqueue 메서드의 의사코드입니다.
+
+- This function accepts some value
+- Create a new node using that value passed to the function
+- If there are no nodes in the queue, set this node to be the first and last property of the queue
+- Otherwise, set the next property on the current last to be that node, and then set the last property of the queue to be that node
+- Increment the size of the queue by 1
+
+이것은 dequeue 메서드의 의사코드입니다.
+
+- If there is no first property, just return null
+- Store the first property in a variable
+- See if the first is the same as the last (check if there is only 1 node). If so, set the first and last to be null
+- If there is more than 1 node, set the first property to be the next property of first
+- Decrement the size by 1
+- Return the value of the node dequeued
+
+```ts
+export class Node<T> {
+  public val: T;
+  public next: Node<T> | null;
+
+  constructor(val: T) {
+    this.val = val;
+    this.next = null;
+  }
+}
+
+export class Queue<T> {
+  private first: Node<T> | null;
+  private last: Node<T> | null;
+  private size: number;
+  constructor() {
+    this.first = null;
+    this.last = null;
+    this.size = 0;
+  }
+
+  enqueue(val: T) {
+    const newNode = new Node<T>(val);
+
+    if (this.first === null) {
+      this.first = newNode;
+      this.last = this.first;
+    }
+
+    const oldTail = this.last;
+    if (oldTail) oldTail.next = newNode;
+    this.last = newNode;
+
+    this.size += 1;
+    return this.size;
+  }
+
+  dequeue() {
+    if (this.size === 0) return null;
+
+    const temp = this.first;
+    if (this.first === this.last) {
+      this.first = null;
+      this.last = null;
+    }
+    this.first = this.first?.next!;
+    if (temp) temp.next = null;
+
+    this.size -= 1;
+    return temp;
+  }
+}
+```
+
+제가 구현한 Queue입니다.
+
+```js
+class Node {
+  constructor(value) {
+    this.value = value;
+    this.next = null;
+  }
+}
+
+class Queue {
+  constructor() {
+    this.first = null;
+    this.last = null;
+    this.size = 0;
+  }
+  enqueue(val) {
+    var newNode = new Node(val);
+    if (!this.first) {
+      this.first = newNode;
+      this.last = newNode;
+    } else {
+      this.last.next = newNode;
+      this.last = newNode;
+    }
+    return ++this.size;
+  }
+
+  dequeue() {
+    if (!this.first) return null;
+
+    var temp = this.first;
+    if (this.first === this.last) {
+      this.last = null;
+    }
+    this.first = this.first.next;
+    this.size--;
+    return temp.value;
+  }
+}
+```
+
+강의에 해당하는 Queue입니다.
+
+구조는 State과 동시에 유사합니다.
+
+큐의 빅오표기법입니다. 삽입, 삭제는 상수시간복잡성을 갖습니다. 탐색, 접근은 선형시간복잡성을 갖고 있고 별로 중요하지 않습니다.
+
+Queue는 입출력 순서가 동일해야 할 때 많이 활용합니다. 테스크 제어에도 많이 효율적이고 다른 알고리즘에도 많이 활용합니다. 아주 중요한 기반이 될 것입니다.
