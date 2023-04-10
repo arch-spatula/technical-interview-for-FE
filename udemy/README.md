@@ -5028,3 +5028,175 @@ tree.root.left.right = new Node(9);
 ```
 
 강의인 자바스크립트로는 이렇게 구현하는 것도 가능합니다.
+
+이번에는 삽입을 다루겠습니다. 삽입을 하면서 올바른 위치에 속하도록 만들 것입니다.
+
+재귀적으로든 반복적으로든 어느쪽으로든 해결할 수 있습니다.
+
+while loop를 활용하고 찾을 때까지 진행하도록 합니다.
+
+- Create a new node
+- Starting at the root
+  - Check if there is a root, if not - the root now becomes that new node!
+  - If there is a root, check if the value of the new node is greater than or less than the value of the root
+  - If it is greater
+    - Check to see if there is a node to the right
+      - If there is, move to that node and repeat these steps
+      - If there is not, add that node as the right property
+  - If it is less
+    - Check to see if there is a node to the left
+      - If there is, move to that node and repeat these steps
+      - If there is not, add that node as the left property
+
+```ts
+insert(val: T) {
+    const newNode = new Node<T>(val);
+    if (this.root === null) {
+      this.root = newNode;
+    } else {
+      let current = this.root;
+      while (true) {
+        if (newNode.val > current.val) {
+          if (current.right !== null) {
+            current = current.right;
+            continue;
+          } else {
+            current.right = newNode;
+            break;
+          }
+        }
+        if (newNode.val < current.val) {
+          if (current.left !== null) {
+            current = current.left;
+            continue;
+          } else {
+            current.left = newNode;
+            break;
+          }
+        }
+        break;
+      }
+    }
+    return this;
+  }
+```
+
+제가 작성합 삽입입니다.
+
+```js
+    insert(value){
+        var newNode = new Node(value);
+        if(this.root === null){
+            this.root = newNode;
+            return this;
+        }
+        var current = this.root;
+        while(true){
+            if(value === current.value) return undefined;
+            if(value < current.value){
+                if(current.left === null){
+                    current.left = newNode;
+                    return this;
+                }
+                current = current.left;
+            } else {
+                if(current.right === null){
+                    current.right = newNode;
+                    return this;
+                }
+                current = current.right;
+            }
+        }
+    }
+```
+
+강의에서 작성한 삽입입니다. 동작이 동일한데 코드가 더 간소합니다. 또 값이 동일할 때 처리할 예외처리도 되었습니다.
+
+중첩 조건문은 어떻게할 수 없는 것 같습니다.
+
+find 메서드입니다. 해당하는 값이 존재하는지 이진탐색처럼 찾는 메서드입니다. 트리의 반을 제거할 수 있습니다.
+
+왼쪽 오른쪽 Node를 찾으면 탐색합니다. 찾을 때랑 못찾을 때가 존재합니다.
+
+삽입할 때 구조화가 되어 있어서 수월하게 찾는 것이 목적입니다.
+
+반복문을 활용하고 current처럼 현재 위치를 참조하는 변수도 활용해야 합니다.
+
+- Starting at the root
+  - Check if there is a root, if not - we're done searching!
+  - If there is a root, check if the value of the new node is the value we are looking for. If we found it, we're done!
+  - If not, check to see if the value is greater than or less than the value of the root
+  - If it is greater
+    - Check to see if there is a node to the right
+      - If there is, move to that node and repeat these steps
+      - If there is not, we're done searching!
+  - If it is less
+    - Check to see if there is a node to the left
+      - If there is, move to that node and repeat these steps
+      - If there is not, we're done searching!
+
+```ts
+find(val: T) {
+    if (this.root === null) {
+      return null;
+    }
+    if (this.root.val === val) return true;
+    let current: Node<T> | null = this.root;
+    while (current !== null) {
+      if (val === current.val) {
+        return true;
+      } else if (val < current.val) {
+        current = current.left;
+      } else if (val > current.val) {
+        current = current.right;
+      }
+    }
+    return null;
+  }
+```
+
+제가 작성한 find 메서드입니다. 해당하는 Node를 반환하도록 강의에 지시가 없었습니다. 하지만 Node를 반환하는 것이 좋을 것입니다.
+
+```js
+    find(value){
+        if(this.root === null) return false;
+        var current = this.root,
+            found = false;
+        while(current && !found){
+            if(value < current.value){
+                current = current.left;
+            } else if(value > current.value){
+                current = current.right;
+            } else {
+                found = true;
+            }
+        }
+        if(!found) return undefined;
+        return current;
+    }
+    contains(value){
+        if(this.root === null) return false;
+        var current = this.root,
+            found = false;
+        while(current && !found){
+            if(value < current.value){
+                current = current.left;
+            } else if(value > current.value){
+                current = current.right;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+```
+
+2가지 버전으로 만들어졌습니다. 존재여부와 찾고 반환하는 것입니다.
+
+제가 작성한 코드가 더 마음에 들기는 합니다.
+
+이진탐색트리의 삽입과 탐색의 시간복잡성입니다. 이진탐색트리의 자료가 커지면 삽입과 탐색은 모두 $O(logN)$ 입니다. 평우과 최고 모두 동일합니다. 삽입시간이 꽤 성능이 좋습니다. 삽입과 탐색이 사실상 동일합니다. 이진탐색으로 삽입을 하고 이진탐색으로 탐색하기 때문에 상당히 간소합니다.
+
+하지만 확정은 아닙니다. $O(logN)$ 은 최악의 경우는 다릅니다. 자료가 편향적이라서 한쪽으로만 계속커지면 $O(N)$ 시간복잡성을 갖습니다.
+
+이런 이유로 자료가 고르면 성능이 꽤 괜찮은 자료구조에 속합니다.
