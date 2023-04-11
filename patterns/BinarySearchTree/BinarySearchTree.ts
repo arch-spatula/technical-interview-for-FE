@@ -1,7 +1,7 @@
-export class Node<T> {
+export class TreeNode<T> {
   public val: T;
-  public left: Node<T> | null;
-  public right: Node<T> | null;
+  public left: TreeNode<T> | null;
+  public right: TreeNode<T> | null;
   constructor(val) {
     this.val = val;
     this.left = null;
@@ -10,13 +10,13 @@ export class Node<T> {
 }
 
 export class BinarySearchTree<T> {
-  private root: Node<T> | null;
+  private root: TreeNode<T> | null;
   constructor() {
     this.root = null;
   }
 
   insert(val: T) {
-    const newNode = new Node<T>(val);
+    const newNode = new TreeNode<T>(val);
     if (this.root === null) {
       this.root = newNode;
       return this;
@@ -46,7 +46,7 @@ export class BinarySearchTree<T> {
     if (this.root === null) {
       return null;
     }
-    let current: Node<T> | null = this.root;
+    let current: TreeNode<T> | null = this.root;
     if (this.root.val === val) return current;
     while (current !== null) {
       if (val === current.val) {
@@ -58,5 +58,34 @@ export class BinarySearchTree<T> {
       }
     }
     return null;
+  }
+
+  BFS() {
+    const queue: TreeNode<T>[] = [],
+      visited: T[] = [];
+    let node = this.root;
+    if (node === null) return visited;
+    queue.push(node);
+    while (queue.length) {
+      node = queue.shift()!;
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
+      visited.push(node.val);
+    }
+    return visited;
+  }
+
+  DFSPreOrder() {
+    const visited: T[] = [];
+    let current = this.root;
+    if (current === null) return [];
+    const traverse = (current: TreeNode<T> | null) => {
+      if (!current) return null;
+      visited.push(current.val);
+      if (current.left) traverse(current.left);
+      if (current.right) traverse(current.right);
+    };
+    traverse(current);
+    return visited;
   }
 }

@@ -5200,3 +5200,185 @@ find(val: T) {
 하지만 확정은 아닙니다. $O(logN)$ 은 최악의 경우는 다릅니다. 자료가 편향적이라서 한쪽으로만 계속커지면 $O(N)$ 시간복잡성을 갖습니다.
 
 이런 이유로 자료가 고르면 성능이 꽤 괜찮은 자료구조에 속합니다.
+
+## 트리 순회
+
+이번에는 트리 순회를 다룹니다. 어떤 트리든 사용할 수 있습니다. 모든 트리를 방문하는 방법입니다.
+
+링크드 리스트는 선형적이기 때문에 그냥하면 됩니다.
+
+트리는 순회하는 방법이 다양합니다. 접근하는 방법이 있습니다. 4가지 자주 접근하는 방법입니다. 참고로 재귀함수를 활용해야 합니다. 참신할지 어려울지는 재귀함수를 얼마나 잘 아는가의 문제입니다.
+
+BFS, DFS가 존재합니다. BFS는 가로로 브랜치별로 탐색하는 방법입니다. DFS는 위에서 아래로 탐색하는 방법입니다.
+
+DFS pre-order, post-order도 존재합니다. 트리를 탐색할 수도 있지만 사실 순회입니다.
+
+이진탐색트리랑 독립적으로 적용할 수 있지만 이진탐색트리를 재사용할 것입니다. 귀찮습니다.
+
+BFS, DFS는 일반적인 방향을 말합니다.
+
+BFS는 모든 자매 노드부터 접근하려고 합니다.
+
+```text
+  ---> 10
+      ↙   ↘
+---> 6 --> 15
+    ↙ ↘      ↘
+-> 3 > 8 ---> 20
+```
+
+이렇게 가지부터 탐색합니다. 중요한 것은 가지부터 탐색한다는 것입니다. 활용법은 나중에 배웁니다. 다른 알고리즘에 기반이 될 것입니다. 링크드 리스트가 기반이 된 것처럼 복잡할 수 있습니다.
+
+다양한 접근과 전략은 자료구조의 분배와 구조에 따라 다릅니다.
+
+구현은 어떻게 하는가? 큐부터 구현합니다. Queue는 중간 매개체입니다.
+
+- Create a queue (this can be an array) and a variable to store the values of nodes visited
+- Place the root node in the queue
+- Loop as long as there is anything in the queue
+  - Dequeue a node from the queue and push the value of the node into the variable that stores the nodes
+  - If there is a left property on the node dequeued - add it to the queue
+  - If there is a right property on the node dequeued - add it to the queue
+- Return the variable that stores the values
+
+위는 의사코드이지만 더 시각적이고 분명한 예시가 더 좋을 것입니다.
+
+```text
+  ---> 10
+      ↙   ↘
+---> 6 --> 15
+    ↙ ↘      ↘
+-> 3 > 8 ---> 20
+```
+
+이런 트리에 BFS를 진행할 것입니다.
+
+> 큐: `[]`
+> 방문: `[]`
+
+여기서 루트를 Enqueue로 넣습니다.
+
+> 큐: `[10]`
+> 방문: `[]`
+
+현재 큐가 비어있지 않는 동안 함수는 계속 실행될 것입니다.
+
+다음은 큐를 Dequeue합니다. Dequeue를 하면서 자식 노드의 존재를 확인합니다. 존재하면 각각 Enqueue합니다. 편의상 왼쪽부터 추가합시다.
+
+> 큐: `[6, 15]`
+> 방문: `[10]`
+
+동일하게 `6`을 담은 노드를 Dequeue하고 자식들을 모두 추가합니다.
+
+> 큐: `[15, 3, 8]`
+> 방문: `[10, 6]`
+
+`15`를 담은 노드를 Dequeue하고 하면 리프들만 남습니다.
+
+> 큐: `[3, 8, 20]`
+> 방문: `[10, 6, 15]`
+
+리프들은 자식이 없으니 Dequeue할 때 Enqueue가 될 노드들이 없습니다.
+
+> 큐: `[]`
+> 방문: `[10, 6, 15, 3, 8, 20]`
+
+모든 방문한 순서의 배열을 반환하고 메서드를 종료시키면 됩니다.
+
+```ts
+  BFS() {
+    const queue: TreeNode<T>[] = [];
+    const visited = [];
+    if (this.root === null) return visited;
+
+    queue.push(this.root as never);
+    while (queue.length !== 0) {
+      const dequeuedNode = queue.shift()!;
+      if (dequeuedNode.left) queue.push(dequeuedNode.left);
+      if (dequeuedNode.right) queue.push(dequeuedNode.right);
+      visited.push(dequeuedNode.val as never);
+    }
+    return visited;
+  }
+```
+
+여기 강의에서 구현한 Queue를 활용했을 때 시간이 너무 오래걸렸습니다. 그래서 강의에서 요구한대로 일단 배열로 만들었습니다.
+
+```js
+    BFS(){
+        var node = this.root,
+            data = [],
+            queue = [];
+        queue.push(node);
+
+        while(queue.length){
+           node = queue.shift();
+           data.push(node.value);
+           if(node.left) queue.push(node.left);
+           if(node.right) queue.push(node.right);
+        }
+        return data;
+    }
+```
+
+강의에서 구현한 것과 유사합니다. 하지만 while 문 내에서 새로운 변수 선언을 하지 않는 부분이 다릅니다.
+
+이번에는 DFS를 다룹니다. 수직으로 자식 노드부터 접근합니다. 노드의 가장 아래 리프를 먼저 접근합니다.
+
+```text
+     10
+ |  ↙   ↘
+ | 6 --> 15
+ V↙ ↘      ↘
+ 3 > 8 ---> 20
+```
+
+DFS pre-order는 먼저 탐색한 노드를 추가하 리프노드를 접근하는 것입니다.
+
+`[10, 6, 3, 8, 15, 20]` 이 순서의 배열을 반환하게 됩니다.
+
+pre-order, post-order, in-order 3가지 종류가 존재합니다.
+
+여기서는 재귀함수를 활용해야 합니다.
+
+- Create a variable to store the values of nodes visited
+- Store the root of the BST in a variable called current
+- Write a helper function which accepts a node
+  - Push the value of the node to the variable that stores the values
+  - If the node has a left property, call the helper function with the left property on the node
+  - If the node has a right property, call the helper function with the right property on the node
+- Invoke the helper function with the current variable
+- Return the array of values
+
+```ts
+  DFS() {
+    const visited: T[] = [];
+    let current = this.root;
+    if (current === null) return [];
+    const pushVisited = (current: TreeNode<T> | null) => {
+      if (!current) return null;
+      visited.push(current.val);
+      if (current.left) pushVisited(current.left);
+      if (current.right) pushVisited(current.right);
+    };
+    pushVisited(current);
+    return visited;
+  }
+```
+
+제가 작성한 코드입니다. 한번에 통과시켰습니다.
+
+```js
+    DFSPreOrder(){
+        var data = [];
+        function traverse(node){
+            data.push(node.value);
+            if(node.left) traverse(node.left);
+            if(node.right) traverse(node.right);
+        }
+        traverse(this.root);
+        return data;
+    }
+```
+
+함수명은 traverse가 더 적절했습니다. 로직은 비슷합니다. 타입 지정만했습니다.
