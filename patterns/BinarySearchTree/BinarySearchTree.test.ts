@@ -153,3 +153,53 @@ describe("BST - DFS pre-order", () => {
     expect(BST.DFSPreOrder()).toEqual([10, 6, 3, 8, 15, 20]);
   });
 });
+
+describe("BST - DFS post-order", () => {
+  test("빈 BST는 []을 반환합니다.", () => {
+    const BST = new BinarySearchTree();
+    expect(BST.DFSPostOrder()).toEqual([]);
+  });
+
+  test("루트만 존재하면 루트만 반환합니다.", () => {
+    const BST = new BinarySearchTree();
+    BST.insert(50);
+    expect(BST.DFSPostOrder()).toEqual([50]);
+  });
+
+  test("1단계까지 모두 보기", () => {
+    const BST = new BinarySearchTree();
+    BST.insert(50)?.insert(25)?.insert(75);
+    expect(BST.DFSPostOrder()).toEqual([25, 75, 50]);
+  });
+
+  test("2단계까지 모두 보기", () => {
+    const BST = new BinarySearchTree();
+    BST.insert(10)?.insert(6)?.insert(15)?.insert(3)?.insert(8)?.insert(20);
+    expect(BST.DFSPostOrder()).toEqual([3, 8, 6, 20, 15, 10]);
+  });
+});
+
+describe("BST - DFS in-order", () => {
+  test("빈 BST는 []을 반환합니다.", () => {
+    const BST = new BinarySearchTree();
+    expect(BST.DFSInOrder()).toEqual([]);
+  });
+
+  test("루트만 존재하면 루트만 반환합니다.", () => {
+    const BST = new BinarySearchTree();
+    BST.insert(50);
+    expect(BST.DFSInOrder()).toEqual([50]);
+  });
+
+  test("1단계까지 모두 보기", () => {
+    const BST = new BinarySearchTree();
+    BST.insert(50)?.insert(25)?.insert(75);
+    expect(BST.DFSInOrder()).toEqual([25, 50, 75]);
+  });
+
+  test("2단계까지 모두 보기", () => {
+    const BST = new BinarySearchTree();
+    BST.insert(10)?.insert(6)?.insert(15)?.insert(3)?.insert(8)?.insert(20);
+    expect(BST.DFSInOrder()).toEqual([3, 6, 8, 10, 15, 20]);
+  });
+});

@@ -88,4 +88,32 @@ export class BinarySearchTree<T> {
     traverse(current);
     return visited;
   }
+
+  DFSPostOrder() {
+    const visited: T[] = [];
+    let current = this.root;
+    if (current === null) return [];
+    const traverse = (current: TreeNode<T> | null) => {
+      if (!current) return null;
+      if (current.left) traverse(current.left);
+      if (current.right) traverse(current.right);
+      visited.push(current.val);
+    };
+    traverse(current);
+    return visited;
+  }
+
+  DFSInOrder() {
+    const visited: T[] = [];
+    let current = this.root;
+    if (current === null) return [];
+    const traverse = (current: TreeNode<T> | null) => {
+      if (!current) return null;
+      if (current.left) traverse(current.left);
+      visited.push(current.val);
+      if (current.right) traverse(current.right);
+    };
+    traverse(current);
+    return visited;
+  }
 }

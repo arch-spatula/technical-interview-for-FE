@@ -5382,3 +5382,262 @@ pre-order, post-order, in-order 3가지 종류가 존재합니다.
 ```
 
 함수명은 traverse가 더 적절했습니다. 로직은 비슷합니다. 타입 지정만했습니다.
+
+이번에는 DFS post-order를 구현합니다.
+
+pre-order는 노드를 먼저 방문하고 탐색하는 순서입니다. Post는 탐색을 먼저하고 다음에 노드를 방문합니다. 루트가 마지막으로 방문하게 될 것입니다.
+
+코드자체는 비슷한데 순서만 변경하면 구현할 수 있습니다. 좌우 탐색하고 없으면 큐에 넣도록 합니다.
+
+[3, 8, 6, 20, 15, 10]
+
+```ts
+
+  DFSPostOrder() {
+    const visited: T[] = [];
+    let current = this.root;
+    if (current === null) return [];
+    const traverse = (current: TreeNode<T> | null) => {
+      if (!current) return null;
+      if (current.left) traverse(current.left);
+      if (current.right) traverse(current.right);
+      visited.push(current.val);
+    };
+    traverse(current);
+    return visited;
+  }
+```
+
+간단하게 구현했습니다.
+
+```js
+    DFSPostOrder(){
+        var data = [];
+        function traverse(node){
+            if(node.left) traverse(node.left);
+            if(node.right) traverse(node.right);
+            data.push(node.value);
+        }
+        traverse(this.root);
+        return data;
+    }
+```
+
+로직의 순서만 변경하는 것으로 원하는 결과를 얻을 수 있습니다.
+
+DFS에서 in-order도 있습니다. 왼쪽을 모두 방문하고 오른쪽을 방문하는 순서입니다. 이렇게 되면 반환하는 배열이 정렬 되어 있습니다.
+
+[3, 6, 8, 10, 15, 20]
+
+이런 배열을 반환하게 될 것입니다.
+
+```ts
+  DFSInOrder() {
+    const visited: T[] = [];
+    let current = this.root;
+    if (current === null) return [];
+    const traverse = (current: TreeNode<T> | null) => {
+      if (!current) return null;
+      if (current.left) traverse(current.left);
+      visited.push(current.val);
+      if (current.right) traverse(current.right);
+    };
+    traverse(current);
+    return visited;
+  }
+```
+
+InOrder DFS를 이렇게 구현할 수 있습니다. 상당히 가치있습니다.
+
+```js
+    DFSInOrder(){
+        var data = [];
+        function traverse(node){
+            if(node.left) traverse(node.left);
+            data.push(node.value);
+            if(node.right) traverse(node.right);
+        }
+        traverse(this.root);
+        return data;
+```
+
+DFS는 세로로 접근하는 것은 모두 같습니다.
+
+당연히 DFS, BFS는 맥락의 문제입니다.
+
+활용은 트리에 따라 다릅니다. 시간복잡성은 DFS, BFS 동일합니다. 하지만 공간복잡성에 차이는 있습니다.
+
+넓은 트리에와 깊은 트리에 따라 다릅니다. 깊으면 콜스택으로 공간복잡성이 쌓입니다. 반면 넓으면 큐에 쌓이는 공간복잡성이 커집니다.
+
+트리의 구조를 기준으로 어떻게 사용할지 결정해야 합니다.
+
+DFS의 다양한 활용이 있는데 각각 어디에 사용하는가? in-order를 사용하면 정렬된 배열을 받을 수 있습니다. Pre-order는 트리를 복제하거나 저장할 때 유용하게 사용할 수 있습니다. 루트를 알 수 있기 때문에 활용할 수 있습니다.
+
+물론 엄청난 가변성을 잃는 것은 아닙니다.
+
+## 힙 자료구조
+
+개인적으로 힙을 좋아합니다. 좋아하기 쉬운 이유를 알게 될 것입니다.
+
+힙도 트리의 종류입니다. 트리에 적용되는 것은 힙에도 적용됩니다. 이번에는 이진힙을 배웁니다.
+
+이번에는 힙을 정의해볼 것입니다. 최소힙과 최대힙을 비교합니다. 기본적인 메서드를 구현해볼 것입니다. 현실의 활용법과 다른 자료구조에 어떻게 적용하는지 공부할 것입니다.
+
+Max이진 힙은 부모가 자식보다 큽니다. Min이진힙은 역입니다. 하지만 이진트리랑 다르게 순서가 없습니다.
+
+```text
+     41
+    ↙   ↘
+   39    33
+  ↙ ↘      ↘
+ 18  27     12
+```
+
+이렇게 생겼습니다. 이진탐색트리랑 다르게 자식의 순서가 없습니다.
+
+```text
+      33
+    ↙    ↘
+   18     41
+  ↙  ↘   ↙
+ 12  27 39
+```
+
+동일한 숫자를 이진탐색트리로 구성한다면 이런 형태가 될 것입니다. 이것은 힙이 아닙니다. Max힙은 부모가 항상 더 커야 합니다.
+
+최대이진힙(Max Binary Heap)
+
+- 자식수는 0, 1, 2개 중 하나입니다.
+- 자식보다 부모의 값이 항상더 큽니다.
+- 자식간 대소비교는 딱히 하지 않습니다.
+- 이진힙은 가장 적은 공간만 찾이하려고 합니다.
+- 왼쪽자식부터 채우기시작합니다.
+
+힙을 알아야 하는 이유는 무엇인가? 우선순위 큐를 만들 때 활용합니다. 자주 사용하는 자료구조입니다. 큐의 우선순위를 배정하고 배치할 때 많이 사용합니다. 그래프 순회할 때 힙도 상당히 유용하게 활용할 수 있습니다.
+
+구현할 때 내장된 배열을 활용해서 구현할 수 있습니다.
+
+[100]
+[100, 19, 36]
+[100, 19, 36, 17, 12, 25, 5]
+
+2n+1, 2n+2 자식의 인덱스는 이렇게 배치합니다.
+
+이 인덱스를 활용하면 부모를 역을 알아내는 것도 가능합니다.
+
+Max를 Min으로 바꾸는 것은 쉽습니다. 그래서 Max만 다루겠습니다. Node자료구조가 필요하지 않습니다. 그냥 빈 배열이면 충분합니다.
+
+인덱스를 활용해서 모델링을 하면 됩니다. 삽입이 이진탐색트리보다는 어려워도 가능은 합니다.
+
+2개의 단계로 처리합니다. 처음에는 끝에 추가합니다. 다음은 버블링 즉 부모와 비교합니다.
+
+```text
+      41
+    ↙    ↘
+   18     33
+  ↙  ↘   ↙
+ 12  27 39
+```
+
+이렇게 배열이 있습니다. `[41, 18, 33, 12, 27, 39]`가 될 것입니다. `insert` 메서드로 `55`를 추가하면 다음처럼 동작해야 합니다.
+
+```text
+      41
+    ↙    ↘
+   18     33
+  ↙  ↘   ↙  ↘
+ 12  27 39  55
+```
+
+`[41, 18, 33, 12, 27, 39, 55]` 이렇게 추가합니다. 이것은 1단계입니다.
+
+```text
+      41
+    ↙    ↘
+   18     55
+  ↙  ↘   ↙  ↘
+ 12  27 39  33
+```
+
+`[41, 18, 55, 12, 27, 39, 33]` 이제 버블링을 합니다. 부모보다 더 크기 때문에 자리를 교체합니다.
+
+```text
+      55
+    ↙    ↘
+   18     41
+  ↙  ↘   ↙  ↘
+ 12  27 39  33
+```
+
+`[55, 18, 41, 12, 27, 39, 33]` 버블링은 부모랑 비교를 하고 올바른 자리를 계속 찾을 때까지 진행합니다.
+
+의사 코드입니다.
+
+- Push the value into the values property on the heap
+- Bubble Up:
+  - Create a variable called index which is the length of the values property - 1
+  - Create a variable called parentIndex which is the floor of (index-1)/2
+  - Keep looping as long as the values element at the parentIndex is less than the values element at the child index
+    - Swap the value of the values element at the parentIndex with the value of the element property at the child index
+    - Set the index to be the parentIndex, and start over!
+
+```ts
+  insert(val: T) {
+    this.values.push(val);
+    let childIdx = this.values.indexOf(val);
+    while (childIdx !== 0) {
+      let parentIdx = Math.round(
+        childIdx % 2 === 0 ? (childIdx - 2) / 2 : (childIdx - 1) / 2
+      );
+
+      if (this.values[parentIdx] < this.values[childIdx]) {
+        [this.values[parentIdx], this.values[childIdx]] = [
+          this.values[childIdx],
+          this.values[parentIdx],
+        ];
+        childIdx = parentIdx;
+      } else {
+        break;
+      }
+    }
+
+    // 예외처리: 동일한 값 추가
+  }
+```
+
+제가 구현한 insert 메서드입니다.
+
+```js
+class MaxBinaryHeap {
+  constructor() {
+    this.values = [];
+  }
+  insert(element) {
+    this.values.push(element);
+    this.bubbleUp();
+  }
+  bubbleUp() {
+    let idx = this.values.length - 1;
+    const element = this.values[idx];
+    while (idx > 0) {
+      let parentIdx = Math.floor((idx - 1) / 2);
+      let parent = this.values[parentIdx];
+      if (element <= parent) break;
+      this.values[parentIdx] = element;
+      this.values[idx] = parent;
+      idx = parentIdx;
+    }
+  }
+}
+
+let heap = new MaxBinaryHeap();
+heap.insert(41);
+heap.insert(39);
+heap.insert(33);
+heap.insert(18);
+heap.insert(27);
+heap.insert(12);
+heap.insert(55);
+```
+
+강의는 이렇게 책임을 분리했습니다.
