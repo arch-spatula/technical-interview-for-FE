@@ -2,21 +2,38 @@ const fs = require("fs");
 const filePath =
   process.platform === "linux" ? "/dev/stdin" : __dirname + "/input.txt";
 const input = fs.readFileSync(filePath).toString().split("\n");
-const [num, arr] = [
-  parseInt(input[0]),
-  input[1].split(" ").map((str) => parseInt(str)),
-];
+const basketSize = parseInt(input[0].split(" ")[0]);
+const basketCaseSize = parseInt(input[0].split(" ")[1]);
+const basketCase = input
+  .slice(1, basketCaseSize + 1)
+  .map((str) => str.split(" ").map((str) => parseInt(str)));
 
 /**
- * @param {number} num
  * @param {number[]} arr
- * @returns {[number, number]}
+ * @param {number} idx1
+ * @param {number} idx2
  */
-function solution(num, arr) {
-  return [Math.min(...arr.slice(0, num)), Math.max(...arr.slice(0, num))];
+function swap(arr, idx1, idx2) {
+  idx1 -= 1;
+  idx2 -= 1;
+  [arr[idx1], arr[idx2]] = [arr[idx2], arr[idx1]];
 }
 
-console.log(solution(num, arr).join(" "));
+/**
+ * @param {number} arrSize
+ * @param {number} caseSize
+ * @param {[number, number][]} caseArr
+ * @returns {number[]}
+ */
+function solution(arrSize, caseSize, caseArr) {
+  const arr = Array.from({ length: arrSize }, (_, i) => i + 1);
+  caseArr.slice(0, caseSize).forEach((elem) => {
+    swap(arr, elem[0], elem[1]);
+  });
+  return arr;
+}
+
+console.log(solution(basketSize, basketCaseSize, basketCase).join(" "));
 
 module.exports = {
   solution,
