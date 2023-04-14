@@ -26,7 +26,47 @@ export class MaxBinaryHeap<T> {
     }
   }
 
-  getValues() {
-    return [...this.values];
+  private swap(idx1: number, idx2: number) {
+    [this.values[idx1], this.values[idx2]] = [
+      this.values[idx2],
+      this.values[idx1],
+    ];
+  }
+
+  extractMax() {
+    if (this.values.length === 0) return null;
+    this.swap(0, this.values.length - 1);
+    const oldRoot = this.values.pop();
+
+    let idx = 0;
+    const getLeftChild = (idx: number) => 2 * idx + 1;
+    const getRightChild = (idx: number) => 2 * idx + 2;
+
+    while (
+      (this.values[idx] < this.values[getLeftChild(idx)] ||
+        this.values[idx] < this.values[getRightChild(idx)]) &&
+      idx < this.values.length
+    ) {
+      let leftChildIdx = getLeftChild(idx),
+        rightChildIdx = getRightChild(idx),
+        leftChildValue = this.values[leftChildIdx],
+        rightChildValue = this.values[rightChildIdx];
+
+      if (leftChildValue > rightChildValue) {
+        this.swap(idx, leftChildIdx);
+        idx = leftChildIdx;
+      }
+
+      if (leftChildValue < rightChildValue) {
+        this.swap(idx, rightChildIdx);
+        idx = rightChildIdx;
+      }
+    }
+
+    return oldRoot;
+  }
+
+  get heapValues() {
+    return this.values;
   }
 }

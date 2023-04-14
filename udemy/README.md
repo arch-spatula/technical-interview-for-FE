@@ -5534,42 +5534,42 @@ Max를 Min으로 바꾸는 것은 쉽습니다. 그래서 Max만 다루겠습니
 ```text
       41
     ↙    ↘
-   18     33
+   27     33
   ↙  ↘   ↙
- 12  27 39
+ 12  18 39
 ```
 
-이렇게 배열이 있습니다. `[41, 18, 33, 12, 27, 39]`가 될 것입니다. `insert` 메서드로 `55`를 추가하면 다음처럼 동작해야 합니다.
+이렇게 배열이 있습니다. `[41, 27, 33, 12, 18, 39]`가 될 것입니다. `insert` 메서드로 `55`를 추가하면 다음처럼 동작해야 합니다.
 
 ```text
       41
     ↙    ↘
-   18     33
+   27     33
   ↙  ↘   ↙  ↘
- 12  27 39  55
+ 12  18 39  55
 ```
 
-`[41, 18, 33, 12, 27, 39, 55]` 이렇게 추가합니다. 이것은 1단계입니다.
+`[41, 27, 33, 12, 18, 39, 55]` 이렇게 추가합니다. 이것은 1단계입니다.
 
 ```text
       41
     ↙    ↘
-   18     55
+   27     55
   ↙  ↘   ↙  ↘
- 12  27 39  33
+ 12  18 39  33
 ```
 
-`[41, 18, 55, 12, 27, 39, 33]` 이제 버블링을 합니다. 부모보다 더 크기 때문에 자리를 교체합니다.
+`[41, 27, 55, 12, 18, 39, 33]` 이제 버블링을 합니다. 부모보다 더 크기 때문에 자리를 교체합니다.
 
 ```text
       55
     ↙    ↘
-   18     41
+   27     41
   ↙  ↘   ↙  ↘
- 12  27 39  33
+ 12  18 39  33
 ```
 
-`[55, 18, 41, 12, 27, 39, 33]` 버블링은 부모랑 비교를 하고 올바른 자리를 계속 찾을 때까지 진행합니다.
+`[55, 27, 41, 12, 18, 39, 33]` 버블링은 부모랑 비교를 하고 올바른 자리를 계속 찾을 때까지 진행합니다.
 
 의사 코드입니다.
 
@@ -5641,3 +5641,167 @@ heap.insert(55);
 ```
 
 강의는 이렇게 책임을 분리했습니다.
+
+이번에는 삽입의 역을 만들어봅니다. 우선순위 큐에서 가장 우선순위가 높은 것은 가장 높은 숫자입니다. 삽입과 유사하기는 합니다.
+
+최대힙에서 루트를 삭제하는 것은 bubble-down하는 방식으로 동작합니다. 가장 작은 값을 루트에 넣고 아래로 떨어지도록 동작시킵니다.
+
+```text
+      41
+    ↙    ↘
+   39     33
+  ↙  ↘   ↙
+ 18  27 12
+```
+
+`[41, 39, 33, 18, 27, 12]`이렇게 시작합니다.
+
+```text
+      12
+    ↙    ↘
+   39     33
+  ↙  ↘
+ 18  27
+```
+
+`41`을 뽑고 `[12, 39, 33, 18, 27]`이 됩니다. 이제 올바른 힙으로 만들기 위해서 bubble-down합니다.
+
+```text
+      39
+    ↙    ↘
+   12     33
+  ↙  ↘
+ 18  27
+```
+
+2개의 자식을 비교하고 더 큰쪽을 교환합니다.
+
+```text
+      39
+    ↙    ↘
+   27     33
+  ↙  ↘
+ 18  12
+```
+
+2개의 자식을 또 비교하고 더 큰쪽을 올립니다.
+
+extractMax라는 메소드 이름을 붙이도록 합니다. 다음은 의사코드입니다.
+
+- Swap the first value in the values property with the last one
+- Pop from the values property, so you can return the value at the end.
+- Have the new root "sink down" to the correct spot...​
+  - Your parent index starts at 0 (the root)
+  - Find the index of the left child: $ 2 \cdot index + 1 $ (make sure its not out of bounds)
+  - Find the index of the right child: $ 2 \cdot index + 2 $ (make sure its not out of bounds)
+  - If the left or right child is greater than the element...swap. If both left and right children are larger, swap with the largest child.
+  - The child index you swapped to now becomes the new parent index.
+  - Keep looping and swapping until neither child is larger than the element.
+  - Return the old root!
+
+```ts
+  private swap(idx1: number, idx2: number) {
+    [this.values[idx1], this.values[idx2]] = [
+      this.values[idx2],
+      this.values[idx1],
+    ];
+  }
+
+  extractMax() {
+    if (this.values.length === 0) return null;
+    this.swap(0, this.values.length - 1);
+    const oldRoot = this.values.pop();
+
+    let idx = 0;
+    const getLeftChild = (idx: number) => 2 * idx + 1;
+    const getRightChild = (idx: number) => 2 * idx + 2;
+
+    while (
+      (this.values[idx] < this.values[getLeftChild(idx)] ||
+        this.values[idx] < this.values[getRightChild(idx)]) &&
+      idx < this.values.length
+    ) {
+      let leftChildIdx = getLeftChild(idx),
+        rightChildIdx = getRightChild(idx),
+        leftChildValue = this.values[leftChildIdx],
+        rightChildValue = this.values[rightChildIdx];
+
+      if (leftChildValue > rightChildValue) {
+        this.swap(idx, leftChildIdx);
+        idx = leftChildIdx;
+      }
+
+      if (leftChildValue < rightChildValue) {
+        this.swap(idx, rightChildIdx);
+        idx = rightChildIdx;
+      }
+    }
+
+    return oldRoot;
+  }
+```
+
+일단 이렇게 돌아가는 코드를 작성했습니다.
+
+```js
+extractMax() {
+  const max = this.value[0]
+  const end = this.value.pop();
+  if (this.values.length > 0) {
+    this.values[0] = end;
+    this.sinkDown();
+  }
+  return max
+}
+
+sinkDown() {
+  let idx = 0;
+  const length = this.values.length;
+  const element = this.values[0]
+  while (true) {
+    let leftChildIdx = 2 * idx + 1;
+    let rightChildIdx = 2 * idx + 2;
+    let leftChild, rightChild;
+    let swap = null;
+
+    if (leftChildIdx < length) {
+      leftChild = this.values[leftChildIdx]
+      if (leftChild > element) {
+        swap = leftChildIdx;
+      }
+    }
+
+    if (rightChildIdx < length) {
+      rightChild = this.values[rightChildIdx]
+      if ((swap === null && rightChild > element) || (swap !== null && rightChild > leftChild))
+      swap = rightChildIdx
+    }
+
+    if (swap === null) break;
+    this.values[idx] = this.values[swap]
+    this.values[element] = element;
+    idx = swap
+  }
+}
+```
+
+생각보다 제가 작성한 코드가 그렇게 나쁜지 잘 모르겠습니다.
+
+이진힙은 대부분 컴퓨터과학 과정에서 가르치기도합니다. 코테를 위해 반드시 알아야 하기도 합니다. 하지만 우선순위 큐의 기반이 됩니다.
+
+현재까지 코드를 작성한 것을 조금 변형하면 됩니다.
+
+우선순위가 있는 자료구조가 우선순위 큐입니다. 예를 들어 응급실에서 각자 상황과 생존가능성이 다릅니다. 이럴 경우 각각 다양한 우선순위가 필요한 경우 활용할 수 있습니다.
+
+컴퓨터에서 다양한 프로세스를 처리하는 것을 `ps`로 볼 수 있습니다. 운영체제의 기반기술을 이해할 때 알아야하기도 합니다.
+
+우선순위큐는 힙과 별개로 만들 수 있습니다. 배열로도 만드는 것이 가능합니다. 배열은 선형탐색하고 가장 작은 숫자를 dequeue하는 방식으로 구현합니다. 하지만 단점은 선형탐색을 하기 때문에 아주 비효율적입니다. 구현은 간단하지만 성능개선이 필요합니다. 이런 이유로 힙을 활용해야 합니다.
+
+최소힙, 최대힙은 크게 상관없습니다. 루트에 뭘 넣야할지 고려해야 합니다. logN 시간복잡성을 갖는 삽입삭제를 갖습니다. 우선순위 큐는 추상화 된 개념입니다. 많은 경우 힙으로 구현하지만 무조건 그렇게 할 필요는 없습니다.
+
+PriorityQueue를 클래스명으로 하고 프로퍼티는 values로 배열을 담습니다. 구조적으로 필요한 것은 이렇게 됩니다. 다른 것은 숫자만 저장하지 않습니다. 다른 Node 클래스를 활용하면 됩니다. value, priority를 갖으면 됩니다. 최소힙으로 구현하는 것이 좋습니다. 갖은 값이 더 중요하기 때문에 처리하기 좋습니다.
+
+- Write a Min Binary Heap - lower number means higher priority.
+- Each Node has a val and a priority. Use the priority to build the heap.
+- Enqueue method accepts a value and priority, makes a new node, and puts it in the right spot based off of its priority.
+- Dequeue method removes root element, returns it, and rearranges heap using priority.
