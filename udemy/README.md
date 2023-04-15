@@ -5779,7 +5779,7 @@ sinkDown() {
 
     if (swap === null) break;
     this.values[idx] = this.values[swap]
-    this.values[element] = element;
+    this.values[swap] = element;
     idx = swap
   }
 }
@@ -5805,3 +5805,209 @@ PriorityQueue를 클래스명으로 하고 프로퍼티는 values로 배열을 �
 - Each Node has a val and a priority. Use the priority to build the heap.
 - Enqueue method accepts a value and priority, makes a new node, and puts it in the right spot based off of its priority.
 - Dequeue method removes root element, returns it, and rearranges heap using priority.
+
+```ts
+Dequeue() {
+    if (this.values.length === 0) return null;
+    const max = this.values[0];
+    const end = this.values.pop()!;
+    if (this.values.length > 0) {
+      this.values[0] = end;
+      this.sinkDown();
+    }
+    return max.val;
+  }
+
+  private sinkDown() {
+    let idx = 0;
+    let parentNode = this.values[0];
+
+    while (true) {
+      let leftChildIdx = 2 * idx + 1;
+      let rightChildIdx = 2 * idx + 2;
+      let leftChildNode, rightChildNode;
+      let swapIdx: null | number = null;
+
+      if (leftChildIdx < this.values.length) {
+        leftChildNode = this.values[leftChildIdx];
+        if (parentNode.priority < leftChildNode.priority)
+          swapIdx = leftChildIdx;
+      }
+
+      if (rightChildIdx < this.values.length) {
+        rightChildNode = this.values[rightChildIdx];
+        if (
+          (swapIdx === null && parentNode.priority < rightChildNode.priority) ||
+          (swapIdx !== null && rightChildNode.priority < leftChildNode.priority)
+        )
+          swapIdx = rightChildIdx;
+      }
+
+      if (swapIdx === null) break;
+
+      this.swap(idx, swapIdx);
+      idx = swapIdx;
+    }
+  }
+```
+
+1차 시도
+
+```ts
+Dequeue() {
+    if (this.values.length === 0) return null;
+    this.swap(0, this.values.length - 1);
+    const oldRoot = this.values.pop();
+    this.sinkDown();
+    return oldRoot?.val;
+  }
+
+  private sinkDown() {
+    let idx = 0;
+
+    while (idx < this.values.length) {
+      let parentNode = this.values[idx];
+      let leftChildIdx = 2 * idx + 1,
+        rightChildIdx = 2 * idx + 2;
+      let leftChildNode = this.values[leftChildIdx];
+      let rightChildNode = this.values[rightChildIdx];
+
+      if (
+        (parentNode.priority > leftChildNode.priority &&
+          parentNode.priority > rightChildNode.priority) ||
+        leftChildIdx >= this.values.length ||
+        rightChildIdx >= this.values.length
+      )
+        break;
+
+      if (leftChildNode.priority < rightChildNode.priority) {
+        this.swap(idx, leftChildIdx);
+        idx = leftChildIdx;
+      }
+
+      if (leftChildNode.priority > rightChildNode.priority) {
+        this.swap(idx, rightChildIdx);
+        idx = rightChildIdx;
+      }
+    }
+  }
+```
+
+2차 시도에 구현 성공했습니다.
+
+```js
+class PriorityQueue {
+  constructor() {
+    this.values = [];
+  }
+  enqueue(val, priority) {
+    let newNode = new Node(val, priority);
+    this.values.push(newNode);
+    this.bubbleUp();
+  }
+  bubbleUp() {
+    let idx = this.values.length - 1;
+    const element = this.values[idx];
+    while (idx > 0) {
+      let parentIdx = Math.floor((idx - 1) / 2);
+      let parent = this.values[parentIdx];
+      if (element.priority >= parent.priority) break;
+      this.values[parentIdx] = element;
+      this.values[idx] = parent;
+      idx = parentIdx;
+    }
+  }
+  dequeue() {
+    const min = this.values[0];
+    const end = this.values.pop();
+    if (this.values.length > 0) {
+      this.values[0] = end;
+      this.sinkDown();
+    }
+    return min;
+  }
+  sinkDown() {
+    let idx = 0;
+    const length = this.values.length;
+    const element = this.values[0];
+    while (true) {
+      let leftChildIdx = 2 * idx + 1;
+      let rightChildIdx = 2 * idx + 2;
+      let leftChild, rightChild;
+      let swap = null;
+
+      if (leftChildIdx < length) {
+        leftChild = this.values[leftChildIdx];
+        if (leftChild.priority < element.priority) {
+          swap = leftChildIdx;
+        }
+      }
+      if (rightChildIdx < length) {
+        rightChild = this.values[rightChildIdx];
+        if (
+          (swap === null && rightChild.priority < element.priority) ||
+          (swap !== null && rightChild.priority < leftChild.priority)
+        ) {
+          swap = rightChildIdx;
+        }
+      }
+      if (swap === null) break;
+      this.values[idx] = this.values[swap];
+      this.values[swap] = element;
+      idx = swap;
+    }
+  }
+}
+
+class Node {
+  constructor(val, priority) {
+    this.val = val;
+    this.priority = priority;
+  }
+}
+
+let ER = new PriorityQueue();
+ER.enqueue("common cold", 5);
+ER.enqueue("gunshot wound", 1);
+ER.enqueue("high fever", 4);
+ER.enqueue("broken arm", 2);
+ER.enqueue("glass in foot", 3);
+```
+
+강의에서 구현한 우선순위 큐입니다.
+
+우선순위 큐의 문제 중 하나는 자매 단위로는 순서를 보장할 수 없습니다. 우선순위가 같다면 온 순서와 나가는 순서가 갖을 것으로 예상하지만 예상한 것처럼 동작하지 않을 수 있습니다.
+
+이진힙의 빅오표기법입니다. 최대, 최소 힙 모두 삽입, 삭제는 $O(logN)$ 입니다. 탐색시간은 $O(N)$ 입니다.
+
+인덱스가 $2N + 1$ 혹은 $2N + 2$ 단위로 움직이기 때문에 $O(logN)$ 삽입, 삭제 시간복잡성을 갖습니다.
+
+이진검색트리는 한쪽만 계속 존재해서 선형시간복잡성을 갖을 수 있습니다. 하지만 처음부터 이상한 트리 구조를 갖을 수 없습니다. 최악의 경우도 $O(logN)$ 입니다. 하지만 탐색시간은 선형시간복잡성을 갖습니다. 탐색을 자주 해야 한다면 애초에 자료구조 선택을 이상하게 한 것입니다. 삽입 삭제를 잘하는 자료구조에게 탐색을 기대하는 것입니다.
+
+힙이기 위한 전제들이 있습니다. 자식은 일관되게 부모보다 작거나 큽니다. 왼쪽에서 오른쪽으로 채웁니다.
+
+참고로 배열이 아닌 방법으로도 구현할 수 있습니다.
+
+## 해쉬테이블
+
+https://cs.slides.com/colt_steele/hash-tables
+
+해쉬테이블 자료구조입니다. 다른 말로는 해쉬맵이라고도 합니다. 대부분 프로그래밍 언어에서 기본적으로 제공해줍니다. 사실 만들 필요는 없습니다.
+
+하지만 전용 버전을 만들 것이지만 그냥 기본으로 제공하는 자료형을 활용하면 됩니다.
+
+해쉬테이블을 이해하고 해쉬알고리즘을 구현하고 좋은 해쉬알고리즘은 무엇인지 알아봅니다. 충돌의 경우 어떻게 처리하는지도 배웁니다. 개별 체이닝과 선형 침탐을 알아봅니다.
+
+해쉬테이블은 대부분의 경우 사용해봤을 가능성이 있습니다. 키와 값이 있고 해쉬테이블은 순서가 없습니다. 생성, 삭제가 빠릅니다.
+
+속도가 빨라서 자주 사용합니다. 연속된 데이터는 배열을 활용하면 됩니다. 하지만 많은 경우에는 그렇지 않을 때도 있습니다.
+
+파이썬은 딕셔너리, 자바스크립트는 객체와 맵, Java와 Golang과 Scala는 맵, Ruby는 해쉬 자료형을 갖고 있습니다.
+
+사용할 때는 특정 값에 이름을 붙여서 묶어둘 때 프로그래머가 제어하기 더 좋기는 합니다.
+
+컴퓨터는 숫자가 아닌 것을 인덱스로 활용하기 어려워합니다. 해쉬테이블은 내부적으로 무슨 현상이 있는 것인지 파악합니다. 하지만 배열을 활용할 것입니다.
+
+배열에서 문자열을 받아 숫자로 변환할 수 있어야 합니다. 이 기능을 갖은 함수는 해쉬함수라고 합니다. 해쉬함수는 여러 곳에서 활용합니다. 보안과 암호학 분야에서 애용합니다.
+
+해쉬테이블은 대입하는 값이 같으면 반환하는 값이 같아 순수함수처럼 동작해야 합니다.
