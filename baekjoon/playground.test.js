@@ -1,20 +1,11 @@
 import { solution } from "./playground";
 import { test, expect, describe } from "vitest";
 
-describe("공을 어떻게 넣을지가 주어졌을 때, M번 공을 넣은 이후에 각 바구니에 어떤 공이 들어 있는지 구하는 프로그램", () => {
-  test("1번 바구니부터 N번 바구니에 들어있는 공의 번호", () => {
-    expect(
-      solution(5, 4, [
-        [1, 2],
-        [3, 4],
-        [1, 4],
-        [2, 2],
-      ])
-    ).toEqual([3, 1, 4, 2, 5]);
-    // 5    -> [1, 2, 3, 4, 5]
-    // 1, 2 -> [2, 1, 3, 4, 5]
-    // 3, 4 -> [2, 1, 4, 3, 5]
-    // 1, 4 -> [3, 1, 4, 2, 5]
-    // 2, 2 -> [3, 1, 4, 2, 5] <- 여기까지 4번 교환
+describe("단어 S와 정수 i가 주어졌을 때, S의 i번째 글자를 출력하는 프로그램", () => {
+  test("글자를 출력", () => {
+    expect(solution("pulljima")).toBe(8);
+  });
+  test("글자를 출력", () => {
+    expect("pulljima".length).toBe(8);
   });
 });
