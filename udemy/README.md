@@ -6098,3 +6098,245 @@ function hash(key, arrayLen) {
 두번째 방법은 선형 침탐입니다. 충돌이 발생하면 다음 비어있는 인덱스에 접근합니다. 물론 인덱스를 이전으로 설정하는 것도 방법입니다.
 
 우리는 개별 체이닝 전략을 구현할 것입니다. 선형침탐은 더 복잡하고 난이도가 높습니다. 또 공간이 금방 부족해집니다.
+
+- set
+- Accepts a key and a value
+- Hashes the key
+- Stores the key-value pair in the hash table array via separate chaining
+
+- get
+- Accepts a key
+- Hashes the key
+- Retrieves the key-value pair in the hash table
+- If the key isn't found, returns undefined
+
+```ts
+export class HashTable<T> {
+  private keyMap: [string, T][][];
+  constructor(size = 53) {
+    this.keyMap = new Array(size).fill([]);
+  }
+
+  private hash(key) {
+    let total = 0;
+    let weirdPrime = 31;
+    for (let i = 0; i < Math.min(key.length, 100); i++) {
+      let char = key[i];
+      let value = char.charCodeAt(0) - 96;
+      total = (total * weirdPrime + value) % this.keyMap.length;
+    }
+    return total;
+  }
+```
+
+여기서 이렇게 시작합니다.
+
+```ts
+export class HashTable<T> {
+  private keyMap: [string, T][][];
+  constructor(size = 53) {
+    this.keyMap = Array.from({ length: size }, () => []);
+  }
+
+  private hash(key: string) {
+    let total = 0;
+    let weirdPrime = 31;
+    for (let i = 0; i < Math.min(key.length, 100); i++) {
+      let char = key[i];
+      let value = char.charCodeAt(0) - 96;
+      total = (total * weirdPrime + value) % this.keyMap.length;
+    }
+    return total;
+  }
+
+  set(key: string, value: T) {
+    this.keyMap[this.hash(key)].push([key, value]);
+  }
+
+  get(key: string) {
+    return this.keyMap[this.hash(key)].find((elem) => elem[0] === key)?.[1];
+  }
+}
+```
+
+일단 이렇게 구현했습니다.
+
+```js
+class HashTable {
+  constructor(size = 53) {
+    this.keyMap = new Array(size);
+  }
+
+  _hash(key) {
+    let total = 0;
+    let WEIRD_PRIME = 31;
+    for (let i = 0; i < Math.min(key.length, 100); i++) {
+      let char = key[i];
+      let value = char.charCodeAt(0) - 96;
+      total = (total * WEIRD_PRIME + value) % this.keyMap.length;
+    }
+    return total;
+  }
+  set(key, value) {
+    let index = this._hash(key);
+    if (!this.keyMap[index]) {
+      this.keyMap[index] = [];
+    }
+    this.keyMap[index].push([key, value]);
+  }
+  get(key) {
+    let index = this._hash(key);
+    if (this.keyMap[index]) {
+      for (let i = 0; i < this.keyMap[index].length; i++) {
+        if (this.keyMap[index][i][0] === key) {
+          return this.keyMap[index][i][1];
+        }
+      }
+    }
+    return undefined;
+  }
+}
+
+let ht = new HashTable(17);
+ht.set("maroon", "#800000");
+ht.set("yellow", "#FFFF00");
+ht.set("olive", "#808000");
+ht.set("salmon", "#FA8072");
+ht.set("lightcoral", "#F08080");
+ht.set("mediumvioletred", "#C71585");
+ht.set("plum", "#DDA0DD");
+```
+
+```js
+  set(key, value) {
+    let index = this._hash(key);
+    if (!this.keyMap[index]) {
+      this.keyMap[index] = [];
+    }
+    this.keyMap[index].push([key, value]);
+  }
+```
+
+강의에서 문제가 안된 이유는 해당하는 값이 존재하지 않으면 배열을 추가하고 push하는 방식으로 동작합니다.
+
+```js
+  get(key) {
+    let index = this._hash(key);
+    if (this.keyMap[index]) {
+      for (let i = 0; i < this.keyMap[index].length; i++) {
+        if (this.keyMap[index][i][0] === key) {
+          return this.keyMap[index][i][1];
+        }
+      }
+    }
+    return undefined;
+  }
+```
+
+선형탐색을 하고 없으면 `undefined`을 반환합니다.
+
+```ts
+export class HashTable<T> {
+  private keyMap: [string, T][][];
+  constructor(size = 53) {
+    this.keyMap = Array.from({ length: size }, () => []);
+  }
+
+  private hash(key: string) {
+    let total = 0;
+    let weirdPrime = 31;
+    for (let i = 0; i < Math.min(key.length, 100); i++) {
+      let char = key[i];
+      let value = char.charCodeAt(0) - 96;
+      total = (total * weirdPrime + value) % this.keyMap.length;
+    }
+    return total;
+  }
+
+  set(key: string, value: T) {
+    if (!this.keyMap[this.hash(key)].find((tuple) => tuple[0] === key)) {
+      this.keyMap[this.hash(key)].push([key, value]);
+    } else {
+      this.keyMap[this.hash(key)][
+        this.keyMap[this.hash(key)].findIndex((tuple) => tuple[0] === key)
+      ] = [key, value];
+    }
+  }
+
+  get(key: string) {
+    return this.keyMap[this.hash(key)].find((elem) => elem[0] === key)?.[1];
+  }
+
+  keys() {
+    return this.keyMap
+      .filter((arr) => arr.length > 0)
+      .flat()
+      .map((tuple) => tuple[0]);
+  }
+
+  values() {
+    return this.keyMap
+      .filter((arr) => arr.length > 0)
+      .flat()
+      .map((tuple) => tuple[1]);
+  }
+}
+```
+
+keys, values 메서드입니다. 여기서 문제는 key의 중복이 발생하는 경우입니다. 또 갱신이 발생하는 경우입니다. 이 2가지 모두 해결했습니다.
+
+```js
+  keys(){
+    let keysArr = [];
+    for(let i = 0; i < this.keyMap.length; i++){
+      if(this.keyMap[i]){
+        for(let j = 0; j < this.keyMap[i].length; j++){
+          if(!keysArr.includes(this.keyMap[i][j][0])){
+            keysArr.push(this.keyMap[i][j][0])
+          }
+        }
+      }
+    }
+    return keysArr;
+  }
+  values(){
+    let valuesArr = [];
+    for(let i = 0; i < this.keyMap.length; i++){
+      if(this.keyMap[i]){
+        for(let j = 0; j < this.keyMap[i].length; j++){
+          if(!valuesArr.includes(this.keyMap[i][j][1])){
+            valuesArr.push(this.keyMap[i][j][1])
+          }
+        }
+      }
+    }
+    return valuesArr;
+  }
+```
+
+강의는 이렇게 제공합니다.
+
+삽입, 삭제, 탐색시간은 최고와 보통의 경우 모두 상수시간복잡성을 갖습니다. 좋은 해쉬함수를 잘 작성해서 상수시간을 취할 수 있습니다. 하지만 암호학은 조금 다를 수 있습니다. 암호학적으로 안전하려면 선형시간복잡성을 갖게 될 것입니다. 하지만 지금처럼 자료구조로만 활용할 때는 적합합니다.
+
+최악의 경우는 빅오표기법상 선형시간복잡성을 갖습니다. 모든 해쉬가 하나의 배열로 만들어지면 결국 배열입니다.
+
+해쉬는 언어에서 지원하는 것을 활용하도록 권장합니다. 본인이 프로그래밍 언어를 만드는 사람이 아닌 이상 또 자바스크립트같은 하이레벨 언어는 그냥 언어에서 제공하는 해쉬맵을 활용합니다. 자바스크립트는 객체와 맵을 활용하고 삽입삭제가 많으면 맵을 적극적으로 활용하도록 합니다.
+
+여기서 배우는 해쉬테이블은 교육목적입니다. 실무에서는 그냥 객체 혹은 맵을 사용합시다.
+
+# 그래프
+
+새로운 자료구조입니다. 그래프는 오늘날 상당히 유용합니다. 사용자, 추천엔진이 주로 유용합니다. 그래프 도표랑 다릅니다.
+
+- 그래프를 설명합니다.
+- 그래프와 트리의 차이를 알아봅니다. 그리고 세상에서 어떻게 활용하는지 알아봅니다.
+- 그래프 자료구조를 구현합니다.
+- 순회하는 방법도 배웁니다.
+
+- 그래프는 노드와 연결관계에 불과합니다. 더 좋은 용어로 그래프는 버텍스와 엣지의 합에 불과합니다.
+- 그래프는 다양한 연결관계를 갖습니다. 링크드 리스트, 트리도 그래프에 해당합니다.
+
+- 그래프의 이용입니다. 소셜 네트워크, 지도, 네트워크 라우팅, 시각적 위계 등 다양하게 사용합니다.
+- 소셜 네트워크는 가족, 친구 등 다양한 관계 정보를 보관합니다.
+- 지도가 경로를 탐색할 때 다양하게 접근할 수 있는 연결관계가 있습니다. 지도앱이 최단경로를 계산해줍니다. 단순히 길이문제만 있는 것이 아닙니다. 최고 속도, 교통 상황같은 정보를 같이 활용할 수 있습니다.
+- 추천도 그래프를 많이 활용합니다. 하나의 상품을 구매하면 다른 상품을 구매한 사람들의 자료를 보고 가중치를 정할 수 있습니다.
