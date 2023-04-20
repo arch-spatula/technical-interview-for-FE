@@ -4,11 +4,12 @@ const filePath =
 const [input] = fs.readFileSync(filePath).toString().split("\n");
 
 /**
- * @param {string} s
- * @returns {number}
+ * @param {string} input
+ * @param {[number, string][]} r
+ * @returns {string[]}
  */
-function solution(s) {
-  return s.length;
+function solution(input) {
+  return input.split(" ").filter((str) => str !== "").length;
 }
 
 console.log(solution(input));
