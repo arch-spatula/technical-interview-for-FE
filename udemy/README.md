@@ -6410,3 +6410,96 @@ V는 버텍스이고 E는 엣지입니다.
 인접배열은 공간이 덜 필요합니다. 인접행렬은 공간이 더 필요합니다. 인접배열은 엣지를 순회하기 쉽습니다. 하지만 검색시간은 인접행렬이 더 좋습니다. 인접배열은 검색시간이 버텍스와 엣지를 합한 선형시간복잡성을 갖습니다.
 
 인접배열이 순회더 쉽고 구현도 더 쉽습니다. 공간복잡성과 현실의 대부분의 데이터 모델링은 많은 관계가 있는 것은 아닙니다.
+
+인접 리스트를 앞으로 구현할 것입니다.
+
+방향을 갖게 만드는 것은 상당히 쉽습니다. 하지만 일단은 없을 것입니다.
+
+```js
+class Graph {
+  constructor() {
+    this.adjacencyList = {};
+  }
+}
+```
+
+addVertex는 쉽습니다. 키는 대입하는 대입한 인자이고 값은 빈 비열을 반환하게 만들면 됩니다. 상당히 단순한 메서드입니다.
+
+- Write a method called addVertex, which accepts a name of a vertex
+- It should add a key to the adjacency list with the name of the vertex and set its value to be an empty array
+
+```ts
+export class Graph {
+  private adjacencyList: { [key: string | number]: (string | number)[] };
+  constructor() {
+    this.adjacencyList = {};
+  }
+
+  get getList() {
+    return this.adjacencyList;
+  }
+
+  addVertex(key: string | number) {
+    if (this.adjacencyList[key]) return null;
+    this.adjacencyList[key] = [];
+  }
+}
+```
+
+간단하게 구현했습니다. 예외처리도 추가했습니다.
+
+```js
+class Graph {
+  constructor() {
+    this.adjacencyList = {};
+  }
+  addVertex(vertex) {
+    if (!this.adjacencyList[vertex]) this.adjacencyList[vertex] = [];
+  }
+}
+```
+
+조금 더 단순합니다.
+
+이번에는 관계를 만들 것입니다. 엣지를 추가합니다.
+
+2개 버텍스를 대입합니다. 각각 버텍스의 배열을 접근하고 키를 추가합니다. 존재하지 않거나 덮어쓰기 문제는 나중에 생각해도 괜찮습니다.
+
+- This function should accept two vertices, we can call them vertex1 and vertex2
+- The function should find in the adjacency list the key of vertex1 and push vertex2 to the array
+- The function should find in the adjacency list the key of vertex2 and push vertex1 to the array
+- Don't worry about handling errors/invalid vertices
+
+```ts
+  addEdge(vertex1: string | number, vertex2: string | number) {
+    if (!this.adjacencyList[vertex1] || !this.adjacencyList[vertex2])
+      return null;
+
+    this.adjacencyList[vertex1].push(vertex2);
+    this.adjacencyList[vertex2].push(vertex1);
+  }
+```
+
+예외처리를 포함하고 이렇게 구현했습니다. 아마 방향은 메서드를 대입하는 순서로 제어할 수 있었을 것입니다.
+
+```js
+class Graph {
+  constructor() {
+    this.adjacencyList = {};
+  }
+  addVertex(vertex) {
+    if (!this.adjacencyList[vertex]) this.adjacencyList[vertex] = [];
+  }
+  addEdge(v1, v2) {
+    this.adjacencyList[v1].push(v2);
+    this.adjacencyList[v2].push(v1);
+  }
+}
+
+let g = new Graph();
+g.addVertex("Dallas");
+g.addVertex("Tokyo");
+g.addVertex("Aspen");
+```
+
+구현이 동일합니다.
