@@ -1,18 +1,26 @@
 const fs = require("fs");
 const filePath =
   process.platform === "linux" ? "/dev/stdin" : __dirname + "/input.txt";
-const [input] = fs.readFileSync(filePath).toString().split("\n");
+const [num] = fs
+  .readFileSync(filePath)
+  .toString()
+  .split("\n")
+  .map((str) => parseInt(str));
 
 /**
- * @param {string} input
- * @param {[number, string][]} r
- * @returns {string[]}
+ * @param {number} num
+ * @returns {string}
  */
-function solution(input) {
-  return input.split(" ").filter((str) => str !== "").length;
+function solution(num) {
+  return Array.from({ length: 2 * num - 1 }, (_, idx) =>
+    Math.abs(num - idx - 1)
+  )
+    .map((elem) => num - elem)
+    .map((elem) => " ".repeat(num - elem) + "*".repeat(2 * elem - 1))
+    .join("\n");
 }
 
-console.log(solution(input));
+console.log(solution(num));
 
 module.exports = {
   solution,
