@@ -6503,3 +6503,74 @@ g.addVertex("Aspen");
 ```
 
 구현이 동일합니다.
+
+이번에는 엣지를 삭제해봅니다. 2개의 데이터를 제거해야 합니다. 2개의 버텍스를 받아 제거해야 합니다.
+
+- This function should accept two vertices, we'll call them vertex1 and vertex2
+- The function should reassign the key of vertex1 to be an array that does not contain vertex2
+- The function should reassign the key of vertex2 to be an array that does not contain vertex1
+- Don't worry about handling errors/invalid vertices
+
+```ts
+  removeEdge(vertex1: string | number, vertex2: string | number) {
+    // 존재하지 않는 버텍스에 기능 정지
+    if (!this.adjacencyList[vertex1] || !this.adjacencyList[vertex2])
+      return null;
+    // 이미 엣지가 없으면 기능 정지
+    const vertex1Idx = this.adjacencyList[vertex1].findIndex(
+      (elem) => elem === vertex2
+    );
+    const vertex2Idx = this.adjacencyList[vertex2].findIndex(
+      (elem) => elem === vertex1
+    );
+    if (vertex1Idx === -1 || vertex2Idx === -1) return null;
+    // 엣지 삭제
+    this.adjacencyList[vertex1].splice(vertex2Idx, 1);
+    this.adjacencyList[vertex2].splice(vertex1Idx, 1);
+```
+
+저는 splice를 사용하고 예외처리를 추가했습니다.
+
+```js
+    removeEdge(vertex1,vertex2){
+        this.adjacencyList[vertex1] = this.adjacencyList[vertex1].filter(
+            v => v !== vertex2
+        );
+        this.adjacencyList[vertex2] = this.adjacencyList[vertex2].filter(
+            v => v !== vertex1
+        );
+    }
+```
+
+마지막은 버텍스를 삭제합니다. 버텍스를 삭제할 때는 엣지들도 같이 삭제해야 합니다.
+
+- The function should accept a vertex to remove
+- The function should loop as long as there are any other vertices in the adjacency list for that vertex
+- Inside of the loop, call our removeEdge function with the vertex we are removing and any values in the adjacency list for that vertex
+- delete the key in the adjacency list for that vertex
+
+```ts
+  removeVertex(vertex: string | number) {
+    if (!this.adjacencyList[vertex]) return null;
+
+    delete this.adjacencyList[vertex];
+
+    for (const key in this.adjacencyList) {
+      this.adjacencyList[key] = this.adjacencyList[key].filter(
+        (elem) => elem !== vertex
+      );
+    }
+  }
+```
+
+```js
+    removeVertex(vertex){
+        while(this.adjacencyList[vertex].length){
+            const adjacentVertex = this.adjacencyList[vertex].pop();
+            this.removeEdge(vertex, adjacentVertex);
+        }
+        delete this.adjacencyList[vertex]
+    }
+```
+
+강의에서 제공하는 코드가 더 직관적입니다.
