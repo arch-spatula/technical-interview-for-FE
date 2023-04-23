@@ -1,42 +1,20 @@
-import { isGroupWord, solution } from "./playground";
+import { solution } from "./playground";
 import { test, expect, describe } from "vitest";
 
-describe("단어 N개를 입력으로 받아 그룹 단어의 개수를 출력하는 프로그램", () => {
-  test('"happy", "new", "year"', () => {
-    expect(solution(3, ["happy", "new", "year"])).toBe(3);
-  });
-
-  test('"aba", "abab", "abcabc", "a"', () => {
-    expect(solution(4, ["aba", "abab", "abcabc", "a"])).toBe(1);
-  });
-
-  test('"ab", "aa", "aca", "ba", "bb"', () => {
-    expect(solution(5, ["ab", "aa", "aca", "ba", "bb"])).toBe(4);
-  });
-
-  test('"yzyzy", "zyzyz"', () => {
-    expect(solution(2, ["yzyzy", "zyzyz"])).toBe(0);
-  });
-
-  test('"z"', () => {
-    expect(solution(1, ["z"])).toBe(1);
-  });
-
-  test('"a", "aba"', () => {
-    expect(solution(2, ["a", "aba"])).toBe(1);
-  });
-});
-
-describe("isGroupWord", () => {
-  test("true - a", () => {
-    expect(isGroupWord("a")).toBe(true);
-  });
-
-  test("false - aba", () => {
-    expect(isGroupWord("aba")).toBe(false);
-  });
-
-  test("true - aab", () => {
-    expect(isGroupWord("aab")).toBe(true);
+describe("전공평점을 계산해주는 프로그램", () => {
+  test("치훈이의 실제 전공과목 성적", () => {
+    expect(
+      solution([
+        [3, 23, 85, 34, 17, 74, 25, 52, 65],
+        [1, 0, 7, 39, 42, 88, 52, 14, 72, 63],
+        [87, 42, 18, 78, 53, 45, 18, 84, 53],
+        [34, 28, 64, 85, 12, 16, 75, 36, 55],
+        [21, 77, 45, 35, 28, 75, 90, 76, 1],
+        [25, 87, 65, 15, 28, 11, 37, 28, 74],
+        [65, 27, 75, 41, 7, 89, 78, 64, 39],
+        [47, 47, 70, 45, 23, 65, 3, 41, 44],
+        [87, 13, 82, 38, 31, 12, 29, 29, 80],
+      ])
+    ).toEqual([90, [5, 7]]);
   });
 });

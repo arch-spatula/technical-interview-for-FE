@@ -1,48 +1,40 @@
 const fs = require("fs");
 const filePath =
   process.platform === "linux" ? "/dev/stdin" : __dirname + "/input.txt";
-const input = fs.readFileSync(filePath).toString().split("\n");
-const n = parseInt(input[0]);
-const str = input.slice(1, n + 1);
+const input = fs
+  .readFileSync(filePath)
+  .toString()
+  .split("\n")
+  .map((elem) => elem.split(" ").map((str) => parseInt(str)));
 
 /**
- * @param {string} str
- * @returns {boolean}
+ *
+ * @param {number[][]} input
+ * @returns
  */
-function isGroupWord(str) {
-  const memo = {};
-  let check = true;
-  str.split("").forEach((elem, idx, arr) => {
-    // 존재하고 직전과 다르면
-    if (memo[elem] && arr[idx - 1] !== elem) {
-      check = false;
-    }
-    // 존재하지 않으면 기록
-    if (!memo[elem]) {
-      memo[elem] = 1;
-    }
+function solution(input) {
+  let maxNum = -1;
+  let maxNumRow = -1;
+  let maxNumCol = -1;
+  input.forEach((row, rowIdx) => {
+    row.forEach((num, colIdx) => {
+      if (num > maxNum) {
+        maxNum = num;
+        maxNumRow = rowIdx + 1;
+        maxNumCol = colIdx + 1;
+      }
+    });
   });
-  return check;
+  return [maxNum, [maxNumRow, maxNumCol]];
 }
 
-/**
- * @param {string} n
- * @param {string[]} str
- * @returns {number}
- */
-function solution(n, str) {
-  const arr = str.slice(0, n).filter((elem) => {
-    // 이미 등장했던 글자가 다시 등장하면 false
-    return isGroupWord(elem);
-  });
-  return arr.length;
-}
-
-console.log(solution(n, str));
+solution(input).forEach((elem) => {
+  if (typeof elem === "number") console.log(elem);
+  if (typeof elem === "object") console.log(elem.join(" "));
+});
 
 module.exports = {
   solution,
-  isGroupWord,
 };
 
 // --------------------------------------------------------------------------
