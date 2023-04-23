@@ -57,3 +57,58 @@ describe("Graph", () => {
     expect(graph.getList).toEqual({});
   });
 });
+
+describe("DFS & BFS", () => {
+  test("setup", () => {
+    const graph = new Graph();
+    graph.addVertex("A");
+    graph.addVertex("B");
+    graph.addVertex("C");
+    graph.addVertex("D");
+    graph.addVertex("E");
+    graph.addVertex("F");
+
+    graph.addEdge("A", "B");
+    graph.addEdge("A", "C");
+    graph.addEdge("B", "D");
+    graph.addEdge("C", "E");
+    graph.addEdge("D", "E");
+    graph.addEdge("D", "F");
+    graph.addEdge("E", "F");
+    expect(graph.getList).toEqual({
+      A: ["B", "C"],
+      B: ["A", "D"],
+      C: ["A", "E"],
+      D: ["B", "E", "F"],
+      E: ["C", "D", "F"],
+      F: ["D", "E"],
+    });
+  });
+
+  test("DFS Recursive", () => {
+    const graph = new Graph();
+    graph.addVertex("A");
+    graph.addVertex("B");
+    graph.addVertex("C");
+    graph.addVertex("D");
+    graph.addVertex("E");
+    graph.addVertex("F");
+
+    graph.addEdge("A", "B");
+    graph.addEdge("A", "C");
+    graph.addEdge("B", "D");
+    graph.addEdge("C", "E");
+    graph.addEdge("D", "E");
+    graph.addEdge("D", "F");
+    graph.addEdge("E", "F");
+
+    expect(graph.searchByDepthFirstRecursive("A")).toEqual([
+      "A",
+      "B",
+      "D",
+      "E",
+      "C",
+      "F",
+    ]);
+  });
+});

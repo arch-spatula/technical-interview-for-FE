@@ -44,4 +44,27 @@ export class Graph {
     }
     delete this.adjacencyList[vertex];
   }
+
+  searchByDepthFirstRecursive(start: string | number) {
+    // 예외처리
+    if (Object.keys(this.adjacencyList).length === 0) return null;
+
+    // 탐색 기록
+    const visitedVertex = {};
+    const result: (string | number)[] = [];
+    const adjacencyList = this.adjacencyList; // 접근할 수 있게 식별자를 선언
+
+    // 탐색 처리
+    (function DFS(vertex) {
+      if (!vertex) return null; // vertex는 start를 매개변수로 받을 수 있습니다. vertex는 존재하지 않는 경우도 있습니다.
+      visitedVertex[vertex] = true;
+      result.push(vertex);
+      // 여기서 this가 사라지는 이유는 메서드로서 호출이 아닌 함수로 호출하기 때문입니다.
+      adjacencyList[vertex].forEach((adjacentVertex) => {
+        if (!visitedVertex[adjacentVertex]) DFS(adjacentVertex);
+      });
+    })(start);
+
+    return result;
+  }
 }

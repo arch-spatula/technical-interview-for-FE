@@ -6324,7 +6324,7 @@ keys, values 메서드입니다. 여기서 문제는 key의 중복이 발생하�
 
 여기서 배우는 해쉬테이블은 교육목적입니다. 실무에서는 그냥 객체 혹은 맵을 사용합시다.
 
-# 그래프
+## 그래프
 
 새로운 자료구조입니다. 그래프는 오늘날 상당히 유용합니다. 사용자, 추천엔진이 주로 유용합니다. 그래프 도표랑 다릅니다.
 
@@ -6574,3 +6574,121 @@ g.addVertex("Aspen");
 ```
 
 강의에서 제공하는 코드가 더 직관적입니다.
+
+## 그래프 순회
+
+방문, 갱신, 탐색 등 그래프의 버텍스를 처리하는데 활용합니다.
+
+대부분의 고급알고리즘은 이 순회로부터 시작합니다. 그래프의 모든 버텍스를 방문하는 것으로 시작합니다.
+
+순회는 이전 트리에서 배우기도 했습니다. 그래프 순회는 트리랑 조금 다릅니다. 루트가 없어서 어디서 시작할지 정할 수 없습니다. 트리랑 다르게 어디서 시작하는지 직접 정해야 합니다. 그래프의 노드에서 하나만의 경로만 있는 것은 아닙니다. 가끔은 백트레킹을 하거나 재방문을 자주 하는 경우가 많습니다. 코드에 자각을 많이 필요합니다.
+
+웹 크롤러는 트리가 아니라 그래프 구조를 갖습니다.
+
+가장 연견된 검색도 해당합니다.
+
+응용가능성이 상당히 많은 자료구조의 연산입니다.
+
+GPS도 상당히 유용하게 활용할 수 있습니다.
+
+### DFS
+
+pre, in, post도 중요하지만 DFS와 BSF사이 차이에 집중합니다. 트리가 아닌 그래프는 DFS, BFS 구분이 모호한 점이 어려울 수 있습니다. 하나의 인접 버텍스에서 다음 버텍스를 우선으로 탐색합니다. BFS는 인접 버텍스부터 탐색합니다.
+
+DFS는 재귀와 반복 2가지 방법이 있습니다.
+
+아래는 재귀함수로 만드는 방법입니다.
+
+- The function should accept a starting node
+- Create a list to store the end result, to be returned at the very end
+- Create an object to store visited vertices
+- Create a helper function which accepts a vertex
+  - The helper function should return early if the vertex is empty
+  - The helper function should place the vertex it accepts into the visited object and push that vertex into the result array.
+  - Loop over all of the values in the adjacencyList for that vertex
+  - If any of those values have not been visited, recursively invoke the helper function with that vertex
+- Invoke the helper function with the starting vertex
+- Return the result array
+
+```ts
+DFSRecursive(vertex: string | number) {
+    if (Object.keys(this.adjacencyList).length === 0) return null;
+
+    const visitedVertex = {};
+    const result: (string | number)[] = [];
+    const DFSRecursiveHelper = (vertex: string | number) => {
+      if (
+        Object.keys(this.adjacencyList).length ===
+        Object.keys(visitedVertex).length
+      )
+        return null;
+
+      result.push(vertex);
+      visitedVertex[vertex] = true;
+      // 방문 중인 버텍스
+      const now = this.adjacencyList[vertex];
+
+      // - The helper function should place the vertex
+      // vertex accepts into the visited object and push that vertex into the result array.
+      // DFSRecursiveHelper(this.adjacencyList)
+      return 1;
+
+      // - Loop over all of the values in the adjacencyList for that vertex
+      // - If any of those values have not been visited, recursively invoke the helper function with that vertex
+    };
+    DFSRecursiveHelper(vertex);
+    return result;
+  }
+```
+
+부족한 것이 창의력이라는 생각을 했지만 자기합리화와 방어기제에 불과합니다. 그냥 실력이 없는 것입니다.
+
+```js
+    depthFirstRecursive(start){
+        const result = [];
+        const visited = {};
+        const adjacencyList = this.adjacencyList;
+
+        (function dfs(vertex){
+            if(!vertex) return null;
+            visited[vertex] = true;
+            result.push(vertex);
+            adjacencyList[vertex].forEach(neighbor => {
+                if(!visited[neighbor]){
+                    return dfs(neighbor)
+                }
+            });
+        })(start);
+
+        return result;
+    }
+```
+
+생각한 것보다 짧습니다. 그리고 즉시 실행함수를 여기서 사용할 거라는 생각은 못했습니다.
+
+```ts
+  searchByDepthFirstRecursive(start: string | number) {
+    // 예외처리
+    if (Object.keys(this.adjacencyList).length === 0) return null;
+
+    // 탐색 기록
+    const visitedVertex = {};
+    const result: (string | number)[] = [];
+    const adjacencyList = this.adjacencyList; // 접근할 수 있게 식별자를 선언
+
+    // 탐색 처리
+    (function DFS(vertex) {
+      if (!vertex) return null; // vertex는 start를 매개변수로 받을 수 있습니다.
+      visitedVertex[vertex] = true;
+      result.push(vertex);
+      // 여기서 this가 사라지는 이유는 메서드로서 호출이 아닌 함수로 호출하기 때문입니다.
+      adjacencyList[vertex].forEach((adjacentVertex) => {
+        if (!visitedVertex[adjacentVertex]) DFS(adjacentVertex);
+      });
+    })(start);
+
+    return result;
+  }
+```
+
+강의에서 알려준 예제를 활용해서 다시 주석을 추가했습니다.
