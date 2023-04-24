@@ -111,4 +111,66 @@ describe("DFS & BFS", () => {
       "F",
     ]);
   });
+
+  test("DFS Iterative", () => {
+    const graph = new Graph();
+    graph.addVertex("A");
+    graph.addVertex("B");
+    graph.addVertex("C");
+    graph.addVertex("D");
+    graph.addVertex("E");
+    graph.addVertex("F");
+
+    graph.addEdge("A", "B");
+    graph.addEdge("A", "C");
+    graph.addEdge("B", "D");
+    graph.addEdge("C", "E");
+    graph.addEdge("D", "E");
+    graph.addEdge("D", "F");
+    graph.addEdge("E", "F");
+
+    expect(graph.searchByDepthFirstIterative("A")).toEqual([
+      "A",
+      "C",
+      "E",
+      "F",
+      "D",
+      "B",
+    ]);
+  });
+
+  test("BFS Iterative", () => {
+    const graph = new Graph();
+    graph.addVertex("A");
+    graph.addVertex("B");
+    graph.addVertex("C");
+    graph.addVertex("D");
+    graph.addVertex("E");
+    graph.addVertex("F");
+
+    graph.addEdge("A", "B");
+    graph.addEdge("A", "C");
+    graph.addEdge("B", "D");
+    graph.addEdge("C", "E");
+    graph.addEdge("D", "E");
+    graph.addEdge("D", "F");
+    graph.addEdge("E", "F");
+
+    //          A
+    //        /   \
+    //       B     C
+    //       |     |
+    //       D --- E
+    //        \   /
+    //          F
+
+    expect(graph.searchByBreadthFirst("A")).toEqual([
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+    ]);
+  });
 });

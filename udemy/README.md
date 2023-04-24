@@ -6610,6 +6610,17 @@ DFS는 재귀와 반복 2가지 방법이 있습니다.
 - Invoke the helper function with the starting vertex
 - Return the result array
 
+```
+DFS(vertex):
+  if vertex is empty
+      return (this is base case)
+  add vertex to results list
+  mark vertex as visited
+  for each neighbor in vertex's neighbors:
+      if neighbor is not visited:
+        recursively call DFS on neighbor
+```
+
 ```ts
 DFSRecursive(vertex: string | number) {
     if (Object.keys(this.adjacencyList).length === 0) return null;
@@ -6692,3 +6703,188 @@ DFSRecursive(vertex: string | number) {
 ```
 
 강의에서 알려준 예제를 활용해서 다시 주석을 추가했습니다.
+
+이번에는 DFS 반복문을 활용합니다. 2가지를 모두 학습하는 것이 좋습니다. 재귀와 반복문의 연관성을 파악할 수 있습니다.
+
+배열을 stack으로 활용해서 처리하는 것도 가능합니다.
+
+재귀함수와 순서가 다르게 될 것입니다.
+
+- The function should accept a starting node
+- Create a stack to help use keep track of vertices (use a list/array)
+- Create a list to store the end result, to be returned at the very end
+- Create an object to store visited vertices
+- Add the starting vertex to the stack, and mark it visited
+- While the stack has something in it:
+  - Pop the next vertex from the stack
+  - If that vertex hasn't been visited yet:
+    - ​Mark it as visited
+    - Add it to the result list
+    - Push all of its neighbors into the stack
+- Return the result array
+
+```
+DFS-iterative(start):
+    let S be a stack
+    S.push(start)
+    while S is not empty
+        vertex = S.pop()
+        if vertex is not labeled as discovered:
+            visit vertex (add to result list)
+            label vertex as discovered
+            for each of vertex's neighbors, N do
+                S.push(N)
+```
+
+```ts
+  searchByDepthFirstIterative(start: string | number) {
+    // 예외처리
+    if (Object.keys(this.adjacencyList).length === 0) return null;
+
+    const stack: (string | number)[] = [];
+    const result: (string | number)[] = [];
+    const visitedVertex = {};
+
+    stack.push(start);
+    // visitedVertex[start] = true;
+
+    while (stack.length > 0) {
+      const vertex = stack.pop()!;
+      if (!visitedVertex[vertex]) {
+        result.push(vertex);
+        visitedVertex[vertex] = true;
+        stack.push(...this.adjacencyList[vertex]);
+      }
+      console.log(vertex);
+    }
+    // {A} {AC} {ACE} {ACEF}  {ACEFD}         {ACEFDB}
+    // A -> C -> E -> F -> E -> D -> F -> E -> B -> D -> A -> D -> C -> A -> B
+    return result;
+```
+
+문제는 풀이가 되었지만 비효율적입니다. stack에 push를 더 효율적으로 하는 방법이 있는지 궁금해졌습니다. 방문을 안해도 되는 노드를 push하고 있습니다.
+
+```ts
+searchByDepthFirstIterative(start: string | number) {
+    // 예외처리
+    if (Object.keys(this.adjacencyList).length === 0) return null;
+
+    const stack: (string | number)[] = [];
+    const result: (string | number)[] = [];
+    const visitedVertex = {};
+
+    stack.push(start);
+    // visitedVertex[start] = true;
+
+    while (stack.length > 0) {
+      const vertex = stack.pop()!;
+      if (!visitedVertex[vertex]) {
+        result.push(vertex);
+        visitedVertex[vertex] = true;
+        // 방문을 안 한 노드만 추가?
+        this.adjacencyList[vertex].forEach((vertexItem) => {
+          if (!visitedVertex[vertexItem]) stack.push(vertexItem);
+        });
+      }
+    }
+    // {A} {AC} {ACE} {ACEF}  {ACEFD}         {ACEFDB}
+    // A -> C -> E -> F -> E -> D -> F -> E -> B -> D -> A -> D -> C -> A -> B
+    // A -> C -> E -> F -> D -> B -> D -> B
+    return result;
+  }
+```
+
+무분별한 stack 추가가 아닌 선형 탐색 후 stack을 추가했습니다. console만 덜 찍힐 뿐 시간복잡성의 감축은 없습니다.
+
+```js
+    depthFirstIterative(start){
+        const stack = [start];
+        const result = [];
+        const visited = {};
+        let currentVertex;
+
+        visited[start] = true;
+        while(stack.length){
+            currentVertex = stack.pop();
+            result.push(currentVertex);
+
+            this.adjacencyList[currentVertex].forEach(neighbor => {
+               if(!visited[neighbor]){
+                   visited[neighbor] = true;
+                   stack.push(neighbor)
+               }
+            });
+        }
+        return result;
+    }
+```
+
+이해가 더 직관적이기는 합니다. 하지만 더 고전적인 방식은 재귀함수입니다. 또 교육용으로 더 중요하기는 합니다.
+
+순회하는 순서가 반대가 된 이유는 push pop이 뒤에서 시작하기 때문입니다. 버텍스를 접근하면 엣지를 pop하는 순서로 접근하기 때문에 순서가 반대입니다.
+
+BFS는 먼저 인접 버텍스부터 접근하는 방식으로 동작합니다. BFS는 계층이라는 개념이 있습니다. 시작하는 버텍스에서 다음 버텍스로 접근하기 위한 경로가 들어가는 수입니다. 접근하는 버텍스의 순서는 중요하지 않습니다.
+
+DFS와 의사코드랑 비슷합니다. 하지만 Queue를 활용합니다. 배열의 push, shift로 기능 구현은 가능합니다.
+
+- This function should accept a starting vertex
+- Create a queue (you can use an array) and place the starting vertex in it
+- Create an array to store the nodes visited
+- Create an object to store nodes visited
+- Mark the starting vertex as visited
+- Loop as long as there is anything in the queue
+- Remove the first vertex from the queue and push it into the array that stores nodes visited
+- Loop over each vertex in the adjacency list for the vertex you are visiting.
+- If it is not inside the object that stores nodes visited, mark it as visited and enqueue that vertex
+- Once you have finished looping, return the array of visited nodes
+
+```ts
+  searchByBreadthFirst(start: string | number) {
+    // 예외처리
+    if (Object.keys(this.adjacencyList).length === 0) return null;
+
+    const queue = [start];
+    const result: (string | number)[] = [];
+    const visitedVertex = {};
+    visitedVertex[start] = true;
+    while (queue.length > 0) {
+      const vertex = queue.shift()!;
+      result.push(vertex);
+      this.adjacencyList[vertex].forEach((vertexItem) => {
+        if (!visitedVertex[vertexItem]) {
+          visitedVertex[vertexItem] = true;
+          queue.push(vertexItem);
+        }
+      });
+    }
+    return result;
+```
+
+이렇게 구현했습니다. stack을 queue로만 바꿨습니다.
+
+```js
+    breadthFirst(start){
+        const queue = [start];
+        const result = [];
+        const visited = {};
+        let currentVertex;
+        visited[start] = true;
+
+        while(queue.length){
+            currentVertex = queue.shift();
+            result.push(currentVertex);
+
+            this.adjacencyList[currentVertex].forEach(neighbor => {
+                if(!visited[neighbor]){
+                    visited[neighbor] = true;
+                    queue.push(neighbor);
+                }
+            });
+        }
+        return result;
+    }
+```
+
+queue는 배열의 시작하는 부분을 접근하기 때문에 stack과 순서가 달라집니다.
+
+그래프를 가장 흔히 사용하는 용도는 최단 경로 찾기입니다. 바로 다익스트라 알고리즘입니다.
