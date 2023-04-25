@@ -6888,3 +6888,858 @@ DFS와 의사코드랑 비슷합니다. 하지만 Queue를 활용합니다. 배�
 queue는 배열의 시작하는 부분을 접근하기 때문에 stack과 순서가 달라집니다.
 
 그래프를 가장 흔히 사용하는 용도는 최단 경로 찾기입니다. 바로 다익스트라 알고리즘입니다.
+
+## 다익스트라 알고리즘
+
+다익스트라라고 말하면 대부분 무슨 의미를 하는지 알고 있습니다.
+
+최댄 경로 알고리즘입니다. 그래프 자료구조를 이해해야 합니다. 우선순위 큐를 활용해야 합니다. 이진힙으로 우선순위 큐를 만들었던 것을 활용하면 됩니다.
+
+- 다익스트라의 의의를 배웁니다.
+- 가중치 그래프를 만들어봅니다.
+- 다익스트라 예시를 봅니다.
+- 나이브 우선순위 큐와 전형적인 우선순위 큐를 배웁니다.
+
+다익스트라 알고리즘은 가장 유명하고 가장 전형적으로 활용합니다. CS 지식의 일반적이고 코테 단골문제입니다. 많은 기술 기업들이 이 알고리즘 기반으로 활용합니다. 주로 하는 작업은 두 버텍스 사이 최단 경로를 찾습니다.
+
+에드거 다익스트라는 네덜란드 프로그래머입니다. 컴퓨터과학 분야를 발전 시켰습니다. 오늘도 인용되는 논문을 저술했습니다. 컴퓨터과학 분야를 확장시키기도 했습니다.
+
+인간이 하기 어려운 것을 컴퓨터가 쉽게할 수 있는 예시를 보여주기 위해 다익스트라 최단 경로 알고리즘을 만들게 배경이었습니다.
+
+왜 아직도 유용한가?
+
+- GPS
+- 네트워크 라우팅
+- 생물학(전염 추정)
+- 항공 티켓
+
+최단 경로를 보여주기 위해서는 경로 즉 엣지 정보를 저장하는 법을 구현해야 합니다. 방향은 없지만 거리정보를 즉 무게 정보를 담아야 합니다.
+
+무게 정보를 담는 것은 생각보다 어려운 것은 아닙니다.
+
+```ts
+type Vertex = string | number;
+type Edge = { vertex: Vertex; weight: number };
+
+export class WeightedGraph {
+  private adjacencyList: { [key: Vertex]: Edge[] };
+
+  constructor() {
+    this.adjacencyList = {};
+  }
+
+  get getList() {
+    return this.adjacencyList;
+  }
+
+  addVertex(key: Vertex) {
+    if (this.adjacencyList[key]) return null;
+    this.adjacencyList[key] = [];
+  }
+
+  addEdge(vertex1: Vertex, vertex2: Vertex, weight) {
+    if (!this.adjacencyList[vertex1] || !this.adjacencyList[vertex2])
+      return null;
+
+    this.adjacencyList[vertex1].push({ vertex: vertex2, weight });
+    this.adjacencyList[vertex2].push({ vertex: vertex1, weight });
+  }
+
+  removeEdge(vertex1: Vertex, vertex2: Vertex) {
+    // 존재하지 않는 버텍스에 기능 정지
+    if (!this.adjacencyList[vertex1] || !this.adjacencyList[vertex2])
+      return null;
+    // 이미 엣지가 없으면 기능 정지
+    this.adjacencyList[vertex1] = this.adjacencyList[vertex1].filter(
+      (v) => v.vertex !== vertex2
+    );
+    this.adjacencyList[vertex2] = this.adjacencyList[vertex2].filter(
+      (v) => v.vertex !== vertex1
+    );
+  }
+
+  removeVertex(vertex: Vertex) {
+    if (!this.adjacencyList[vertex]) return null;
+
+    while (this.adjacencyList[vertex].length) {
+      const adjacentVertex = this.adjacencyList[vertex].pop()!;
+      this.removeEdge(vertex, adjacentVertex.vertex);
+    }
+    delete this.adjacencyList[vertex];
+  }
+
+  searchByDepthFirstRecursive(start: Vertex) {
+    // 예외처리
+    if (Object.keys(this.adjacencyList).length === 0) return null;
+
+    // 탐색 기록
+    const visitedVertex = {};
+    const result: Vertex[] = [];
+    const adjacencyList = this.adjacencyList; // 접근할 수 있게 식별자를 선언
+
+    // 탐색 처리
+    (function DFS(vertex) {
+      if (!vertex) return null; // vertex는 start를 매개변수로 받을 수 있습니다. vertex는 존재하지 않는 경우도 있습니다.
+      visitedVertex[vertex] = true;
+      result.push(vertex);
+      // 여기서 this가 사라지는 이유는 메서드로서 호출이 아닌 함수로 호출하기 때문입니다.
+      adjacencyList[vertex].forEach((adjacentVertex) => {
+        if (!visitedVertex[adjacentVertex.vertex]) DFS(adjacentVertex.vertex);
+      });
+    })(start);
+
+    return result;
+  }
+
+  searchByDepthFirstIterative(start: Vertex) {
+    // 예외처리
+    if (Object.keys(this.adjacencyList).length === 0) return null;
+
+    const stack = [start];
+    const result: Vertex[] = [];
+    const visitedVertex = {};
+
+    visitedVertex[start] = true;
+    while (stack.length > 0) {
+      const vertex = stack.pop()!;
+      result.push(vertex);
+      // 방문을 안 한 노드만 추가?
+      this.adjacencyList[vertex].forEach((vertexItem) => {
+        if (!visitedVertex[vertexItem.vertex]) {
+          visitedVertex[vertexItem.vertex] = true;
+          stack.push(vertexItem.vertex);
+        }
+      });
+    }
+    return result;
+  }
+
+  searchByBreadthFirst(start: Vertex) {
+    // 예외처리
+    if (Object.keys(this.adjacencyList).length === 0) return null;
+
+    const queue = [start];
+    const result: Vertex[] = [];
+    const visitedVertex = {};
+    visitedVertex[start] = true;
+    while (queue.length > 0) {
+      const vertex = queue.shift()!;
+      result.push(vertex);
+      this.adjacencyList[vertex].forEach((vertexItem) => {
+        if (!visitedVertex[vertexItem.vertex]) {
+          visitedVertex[vertexItem.vertex] = true;
+          queue.push(vertexItem.vertex);
+        }
+      });
+    }
+    return result;
+  }
+}
+```
+
+지난 강의의 코드를 객체로 리팩토링해서 구현할 수 있었습니다.
+
+```js
+class WeightedGraph {
+  constructor() {
+    this.adjacencyList = {};
+  }
+  addVertex(vertex) {
+    if (!this.adjacencyList[vertex]) this.adjacencyList[vertex] = [];
+  }
+  addEdge(vertex1, vertex2, weight) {
+    this.adjacencyList[vertex1].push({ node: vertex2, weight });
+    this.adjacencyList[vertex2].push({ node: vertex1, weight });
+  }
+}
+```
+
+강의에서 구현한 가중 그래프입니다.
+
+그래프는 가중치 그래프입니다.
+
+```js
+const graph = new WeightedGraph();
+graph.addVertex("A");
+graph.addVertex("B");
+graph.addVertex("C");
+graph.addVertex("D");
+graph.addVertex("E");
+graph.addVertex("F");
+
+graph.addEdge("A", "B", 4);
+graph.addEdge("A", "C", 2);
+graph.addEdge("B", "E", 3);
+graph.addEdge("C", "D", 2);
+graph.addEdge("C", "F", 4);
+graph.addEdge("D", "E", 3);
+graph.addEdge("D", "F", 1);
+graph.addEdge("E", "F", 1);
+```
+
+이런 그래프로 시작하겠습니다. 이것은 아주 작은 그래프입니다. A에서 E로 도달하려는 것이 목표입니다. 이것이 우리의 목표입니다.
+
+- Every time we look to visit a new node, we pick the node with the smallest known distance to visit first.
+  - 새로운 노드를 방문할 때마다 가장 거리가 가까운 노드를 고릅니다.
+- Once we’ve moved to the node we’re going to visit, we look at each of its neighbors
+  - 접근하려는 노드로 이동하면 그 인접 노드를 확인합니다.
+- For each neighboring node, we calculate the distance by summing the total edges that lead to the node we’re checking from the starting node.
+  - 모든 이웃하는 노드에서 시각하는 노드 각각의 경로를 총합을 구합니다. (지나간 길의 합을 구합니다).
+- If the new total distance to a node is less than the previous total, we store the new shorter distance for that node.
+  - 총합을 구한 길이가 이전보다 총합보다 작으면 새 경로를 저장합니다.
+
+방문과 이전을 기록합니다. 그리고 방문을 하지 않으면 무한대로 가정합니다. 그리고 시작은 본인 버텍스로 시작합니다.
+
+특정 노드를 방문했던 경로를 기록해야 합니다.
+
+```js
+const distance = {
+  A: 0,
+  B: infinity,
+  C: infinity,
+  D: infinity,
+  E: infinity,
+  F: infinity,
+};
+
+const visited = [];
+const previous = {
+  A: null,
+  B: null,
+  C: null,
+  D: null,
+  E: null,
+  F: null,
+};
+```
+
+이렇게 초기화합니다. 가장 짧은 거리로 갱신될 수 있도록 본인 이외에는 모두 무한대로 둡니다. 값을 확인과 동시에 갱신되도록 합니다.
+
+```js
+const distance = {
+  A: 0,
+  B: infinity,
+  C: infinity,
+  D: infinity,
+  E: infinity,
+  F: infinity,
+};
+
+const visited = [A];
+const previous = {
+  A: null,
+  B: null,
+  C: null,
+  D: null,
+  E: null,
+  F: null,
+};
+```
+
+시작하면서 본인을 방문했기 때문에 갱신하지 않습니다.
+
+```js
+const distance = {
+  A: 0,
+  B: 4,
+  C: 2,
+  D: infinity,
+  E: infinity,
+  F: infinity,
+};
+
+const visited = [A, C];
+const previous = {
+  A: null,
+  B: A,
+  C: A,
+  D: null,
+  E: null,
+  F: null,
+};
+```
+
+B와 C는 모두 A에서 접근하기 때문에 previous를 갱신합니다. 그리고 더 짧은 경로를 기록합니다.
+
+```js
+const distance = {
+  A: 0,
+  B: 4,
+  C: 2,
+  D: 4,
+  E: infinity,
+  F: infinity,
+};
+
+const visited = [A, C, D];
+const previous = {
+  A: null,
+  B: A,
+  C: A,
+  D: C,
+  E: null,
+  F: null,
+};
+```
+
+D는 A에서 C로 이동해서 D로 접근할 수 있습니다.
+
+```js
+const distance = {
+  A: 0,
+  B: 4,
+  C: 2,
+  D: 4,
+  E: infinity,
+  F: 5,
+};
+
+const visited = [A, C, D, F];
+const previous = {
+  A: null,
+  B: A,
+  C: A,
+  D: C,
+  E: null,
+  F: D,
+};
+```
+
+F로 접근할 때 C로 접근하거나 D로 접근할 수 있습니다. 하지만 D에서 접근해야 더 가깝습니다. 더 가까운 D로 갱신합니다.
+
+```js
+const distance = {
+  A: 0,
+  B: 4,
+  C: 2,
+  D: 4,
+  E: 6,
+  F: 5,
+};
+
+const visited = [A, C, B, D, F];
+const previous = {
+  A: null,
+  B: A,
+  C: A,
+  D: C,
+  E: F,
+  F: D,
+};
+```
+
+접근하는 순서 중에서 가장 가까운 값으로 갱신하고 이전에 계산에 활용했던 값을 활용합니다.
+
+가장 작은 값을 고르는 것은 방문했던 경로를 봐야 합니다. 여러개의 노드를 보면 시간이 꽤 걸릴 수 있습니다.
+
+나이브 우선순위 큐입니다.
+
+```js
+class PriorityQueue {
+  constructor() {
+    this.values = [];
+  }
+  enqueue(val, priority) {
+    this.values.push({ val, priority });
+    this.sort();
+  }
+  dequeue() {
+    return this.values.shift();
+  }
+  sort() {
+    this.values.sort((a, b) => a.priority - b.priority);
+  }
+}
+```
+
+사입할 때마다 정렬합니다.
+
+우선순위큐는 이진힙으로 빠르게 만들 수 있지만 이 우선순위 큐는 입출력이 간단해서 활용할 것입니다.
+
+목표는 가장 작은 값을 찾는 것입니다.
+
+우선순위 큐와 동작원리입니다.
+
+- This function should accept a starting and ending vertex
+- Create an object (we'll call it distances) and set each key to be every vertex in the adjacency list with a value of infinity, except for the starting vertex which should have a value of 0.
+- After setting a value in the distances object, add each vertex with a priority of Infinity to the priority queue, except the starting vertex, which should have a priority of 0 because that's where we begin.
+- Create another object called previous and set each key to be every vertex in the adjacency list with a value of null
+- Start looping as long as there is anything in the priority queue
+  - dequeue a vertex from the priority queue
+  - If that vertex is the same as the ending vertex - we are done!
+  - Otherwise loop through each value in the adjacency list at that vertex
+    - Calculate the distance to that vertex from the starting vertex
+    - if the distance is less than what is currently stored in our distances object
+      - update the distances object with new lower distance
+      - update the previous object to contain that vertex
+      - enqueue the vertex with the total distance from the start node
+
+최단 경로 알고즘으로 경로를 반환하도록 합니다.
+
+```ts
+findShortest(start: Vertex, end: Vertex) {
+    const distances: { [keys: Vertex]: number } = Object.keys(
+      this.adjacencyList
+    ).reduce(
+      (acc, curr) => ((acc[curr] = curr === start ? 0 : Infinity), acc),
+      {}
+    );
+
+    const vertex = new PriorityQueue();
+
+    Object.entries(distances).forEach((elem) => {
+      vertex.enqueue(elem[0], elem[1]);
+    });
+
+    const previous = Object.keys(this.adjacencyList).reduce(
+      (acc, curr) => ((acc[curr] = null), acc),
+      {}
+    );
+
+    while (vertex.getValues.length > 0) {
+      const foo = vertex.dequeue()?.val;
+      if (foo === end) break;
+      if (foo) {
+        this.adjacencyList[foo].forEach((vertex) => {
+          //
+          vertex.weight;
+        });
+      }
+    }
+
+    return vertex.getValues;
+```
+
+일단은 이렇게 작성을 시작했습니다.
+
+```ts
+type Vertex = string | number;
+type Edge = { vertex: Vertex; weight: number };
+type PriorityElement = { val: Vertex; priority: number };
+
+class PriorityQueue {
+  private values: PriorityElement[];
+  constructor() {
+    this.values = [];
+  }
+  enqueue(val: Vertex, priority: number) {
+    this.values.push({ val, priority });
+    this.sort();
+  }
+  dequeue() {
+    return this.values.shift();
+  }
+  sort() {
+    this.values.sort((a, b) => a.priority - b.priority);
+  }
+
+  get getValues() {
+    return this.values;
+  }
+}
+
+export class WeightedGraph {
+  private adjacencyList: { [key: Vertex]: Edge[] };
+
+  constructor() {
+    this.adjacencyList = {};
+  }
+
+  get getList() {
+    return this.adjacencyList;
+  }
+
+  addVertex(key: Vertex) {
+    if (this.adjacencyList[key]) return null;
+    this.adjacencyList[key] = [];
+  }
+
+  addEdge(vertex1: Vertex, vertex2: Vertex, weight) {
+    if (!this.adjacencyList[vertex1] || !this.adjacencyList[vertex2])
+      return null;
+
+    this.adjacencyList[vertex1].push({ vertex: vertex2, weight });
+    this.adjacencyList[vertex2].push({ vertex: vertex1, weight });
+  }
+
+  removeEdge(vertex1: Vertex, vertex2: Vertex) {
+    // 존재하지 않는 버텍스에 기능 정지
+    if (!this.adjacencyList[vertex1] || !this.adjacencyList[vertex2])
+      return null;
+    // 이미 엣지가 없으면 기능 정지
+    this.adjacencyList[vertex1] = this.adjacencyList[vertex1].filter(
+      (v) => v.vertex !== vertex2
+    );
+    this.adjacencyList[vertex2] = this.adjacencyList[vertex2].filter(
+      (v) => v.vertex !== vertex1
+    );
+  }
+
+  removeVertex(vertex: Vertex) {
+    if (!this.adjacencyList[vertex]) return null;
+
+    while (this.adjacencyList[vertex].length) {
+      const adjacentVertex = this.adjacencyList[vertex].pop()!;
+      this.removeEdge(vertex, adjacentVertex.vertex);
+    }
+    delete this.adjacencyList[vertex];
+  }
+
+  searchByDepthFirstRecursive(start: Vertex) {
+    // 예외처리
+    if (Object.keys(this.adjacencyList).length === 0) return null;
+
+    // 탐색 기록
+    const visitedVertex = {};
+    const result: Vertex[] = [];
+    const adjacencyList = this.adjacencyList; // 접근할 수 있게 식별자를 선언
+
+    // 탐색 처리
+    (function DFS(vertex) {
+      if (!vertex) return null; // vertex는 start를 매개변수로 받을 수 있습니다. vertex는 존재하지 않는 경우도 있습니다.
+      visitedVertex[vertex] = true;
+      result.push(vertex);
+      // 여기서 this가 사라지는 이유는 메서드로서 호출이 아닌 함수로 호출하기 때문입니다.
+      adjacencyList[vertex].forEach((adjacentVertex) => {
+        if (!visitedVertex[adjacentVertex.vertex]) DFS(adjacentVertex.vertex);
+      });
+    })(start);
+
+    return result;
+  }
+
+  searchByDepthFirstIterative(start: Vertex) {
+    // 예외처리
+    if (Object.keys(this.adjacencyList).length === 0) return null;
+
+    const stack = [start];
+    const result: Vertex[] = [];
+    const visitedVertex = {};
+
+    visitedVertex[start] = true;
+    while (stack.length > 0) {
+      const vertex = stack.pop()!;
+      result.push(vertex);
+      // 방문을 안 한 노드만 추가?
+      this.adjacencyList[vertex].forEach((vertexItem) => {
+        if (!visitedVertex[vertexItem.vertex]) {
+          visitedVertex[vertexItem.vertex] = true;
+          stack.push(vertexItem.vertex);
+        }
+      });
+    }
+    return result;
+  }
+
+  searchByBreadthFirst(start: Vertex) {
+    // 예외처리
+    if (Object.keys(this.adjacencyList).length === 0) return null;
+
+    const queue = [start];
+    const result: Vertex[] = [];
+    const visitedVertex = {};
+    visitedVertex[start] = true;
+    while (queue.length > 0) {
+      const vertex = queue.shift()!;
+      result.push(vertex);
+      this.adjacencyList[vertex].forEach((vertexItem) => {
+        if (!visitedVertex[vertexItem.vertex]) {
+          visitedVertex[vertexItem.vertex] = true;
+          queue.push(vertexItem.vertex);
+        }
+      });
+    }
+    return result;
+  }
+
+  findShortest(start: Vertex, end: Vertex) {
+    const distances: { [keys: Vertex]: number } = {};
+    const nodes = new PriorityQueue();
+    const previous = {};
+    let smallest;
+    const path: Vertex[] = [];
+
+    for (const vertex in this.adjacencyList) {
+      if (vertex === start) {
+        distances[vertex] = 0;
+        nodes.enqueue(vertex, 0);
+      } else {
+        distances[vertex] = Infinity;
+        nodes.enqueue(vertex, Infinity);
+      }
+      previous[vertex] = null;
+    }
+
+    while (nodes.getValues.length > 0) {
+      smallest = nodes.dequeue()?.val;
+      if (smallest === end) {
+        while (previous[smallest]) {
+          path.push(smallest);
+          smallest = previous[smallest];
+        }
+        break;
+      }
+      if (smallest || distances[smallest] !== Infinity) {
+        //
+        for (let neighbor in this.adjacencyList[smallest]) {
+          let nextNode = this.adjacencyList[smallest][neighbor];
+          let candidate = distances[smallest] + nextNode.weight;
+          let nextNeighbor = nextNode.vertex;
+          if (candidate < distances[nextNeighbor]) {
+            distances[nextNeighbor] = candidate;
+            previous[nextNeighbor] = smallest;
+            nodes.enqueue(nextNeighbor, candidate);
+          }
+        }
+      }
+    }
+
+    return path.concat(smallest).reverse();
+  }
+}
+```
+
+최적화 없이 이렇게 구현할 수 있습니다.
+
+```ts
+type Vertex = string | number;
+type Edge = { vertex: Vertex; weight: number };
+
+class Node<T> {
+  public val: T;
+  public priority: number;
+  constructor(val: T, priority: number) {
+    this.val = val;
+    this.priority = priority;
+  }
+}
+
+class PriorityQueue<T> {
+  private values: Node<T>[];
+  constructor() {
+    this.values = [];
+  }
+  get getValues() {
+    return this.values;
+  }
+  enqueue(val, priority) {
+    let newNode = new Node(val, priority);
+    this.values.push(newNode);
+    this.bubbleUp();
+  }
+  bubbleUp() {
+    let idx = this.values.length - 1;
+    const element = this.values[idx];
+    while (idx > 0) {
+      let parentIdx = Math.floor((idx - 1) / 2);
+      let parent = this.values[parentIdx];
+      if (element?.priority >= parent?.priority) break;
+      this.values[parentIdx] = element;
+      this.values[idx] = parent;
+      idx = parentIdx;
+    }
+  }
+  dequeue() {
+    const min = this.values[0];
+    const end = this.values.pop();
+    if (this.values.length > 0) {
+      this.values[0] = end!;
+      this.sinkDown();
+    }
+    return min;
+  }
+  sinkDown() {
+    let idx = 0;
+    const length = this.values.length;
+    const element = this.values[0];
+    while (true) {
+      let leftChildIdx = 2 * idx + 1;
+      let rightChildIdx = 2 * idx + 2;
+      let leftChild, rightChild;
+      let swap: null | number = null;
+
+      if (leftChildIdx < length) {
+        leftChild = this.values[leftChildIdx];
+        if (leftChild.priority < element.priority) {
+          swap = leftChildIdx;
+        }
+      }
+      if (rightChildIdx < length) {
+        rightChild = this.values[rightChildIdx];
+        if (
+          (swap === null && rightChild.priority < element.priority) ||
+          (swap !== null && rightChild.priority < leftChild.priority)
+        ) {
+          swap = rightChildIdx;
+        }
+      }
+      if (swap === null) break;
+      this.values[idx] = this.values[swap];
+      this.values[swap] = element;
+      idx = swap;
+    }
+  }
+}
+
+export class WeightedGraph {
+  private adjacencyList: { [key: Vertex]: Edge[] };
+
+  constructor() {
+    this.adjacencyList = {};
+  }
+
+  get getList() {
+    return this.adjacencyList;
+  }
+
+  addVertex(key: Vertex) {
+    if (this.adjacencyList[key]) return null;
+    this.adjacencyList[key] = [];
+  }
+
+  addEdge(vertex1: Vertex, vertex2: Vertex, weight) {
+    if (!this.adjacencyList[vertex1] || !this.adjacencyList[vertex2])
+      return null;
+
+    this.adjacencyList[vertex1].push({ vertex: vertex2, weight });
+    this.adjacencyList[vertex2].push({ vertex: vertex1, weight });
+  }
+
+  removeEdge(vertex1: Vertex, vertex2: Vertex) {
+    // 존재하지 않는 버텍스에 기능 정지
+    if (!this.adjacencyList[vertex1] || !this.adjacencyList[vertex2])
+      return null;
+    // 이미 엣지가 없으면 기능 정지
+    this.adjacencyList[vertex1] = this.adjacencyList[vertex1].filter(
+      (v) => v.vertex !== vertex2
+    );
+    this.adjacencyList[vertex2] = this.adjacencyList[vertex2].filter(
+      (v) => v.vertex !== vertex1
+    );
+  }
+
+  removeVertex(vertex: Vertex) {
+    if (!this.adjacencyList[vertex]) return null;
+
+    while (this.adjacencyList[vertex].length) {
+      const adjacentVertex = this.adjacencyList[vertex].pop()!;
+      this.removeEdge(vertex, adjacentVertex.vertex);
+    }
+    delete this.adjacencyList[vertex];
+  }
+
+  searchByDepthFirstRecursive(start: Vertex) {
+    // 예외처리
+    if (Object.keys(this.adjacencyList).length === 0) return null;
+
+    // 탐색 기록
+    const visitedVertex = {};
+    const result: Vertex[] = [];
+    const adjacencyList = this.adjacencyList; // 접근할 수 있게 식별자를 선언
+
+    // 탐색 처리
+    (function DFS(vertex) {
+      if (!vertex) return null; // vertex는 start를 매개변수로 받을 수 있습니다. vertex는 존재하지 않는 경우도 있습니다.
+      visitedVertex[vertex] = true;
+      result.push(vertex);
+      // 여기서 this가 사라지는 이유는 메서드로서 호출이 아닌 함수로 호출하기 때문입니다.
+      adjacencyList[vertex].forEach((adjacentVertex) => {
+        if (!visitedVertex[adjacentVertex.vertex]) DFS(adjacentVertex.vertex);
+      });
+    })(start);
+
+    return result;
+  }
+
+  searchByDepthFirstIterative(start: Vertex) {
+    // 예외처리
+    if (Object.keys(this.adjacencyList).length === 0) return null;
+
+    const stack = [start];
+    const result: Vertex[] = [];
+    const visitedVertex = {};
+
+    visitedVertex[start] = true;
+    while (stack.length > 0) {
+      const vertex = stack.pop()!;
+      result.push(vertex);
+      // 방문을 안 한 노드만 추가?
+      this.adjacencyList[vertex].forEach((vertexItem) => {
+        if (!visitedVertex[vertexItem.vertex]) {
+          visitedVertex[vertexItem.vertex] = true;
+          stack.push(vertexItem.vertex);
+        }
+      });
+    }
+    return result;
+  }
+
+  searchByBreadthFirst(start: Vertex) {
+    // 예외처리
+    if (Object.keys(this.adjacencyList).length === 0) return null;
+
+    const queue = [start];
+    const result: Vertex[] = [];
+    const visitedVertex = {};
+    visitedVertex[start] = true;
+    while (queue.length > 0) {
+      const vertex = queue.shift()!;
+      result.push(vertex);
+      this.adjacencyList[vertex].forEach((vertexItem) => {
+        if (!visitedVertex[vertexItem.vertex]) {
+          visitedVertex[vertexItem.vertex] = true;
+          queue.push(vertexItem.vertex);
+        }
+      });
+    }
+    return result;
+  }
+
+  findShortest(start: Vertex, end: Vertex) {
+    const distances: { [keys: Vertex]: number } = {};
+    const nodes = new PriorityQueue<Vertex>();
+    const previous = {};
+    let smallest;
+    const path: Vertex[] = [];
+
+    for (const vertex in this.adjacencyList) {
+      if (vertex === start) {
+        distances[vertex] = 0;
+        nodes.enqueue(vertex, 0);
+      } else {
+        distances[vertex] = Infinity;
+        nodes.enqueue(vertex, Infinity);
+      }
+      previous[vertex] = null;
+    }
+
+    while (nodes.getValues.length > 0) {
+      smallest = nodes.dequeue()?.val;
+      if (smallest === end) {
+        while (previous[smallest]) {
+          path.push(smallest);
+          smallest = previous[smallest];
+        }
+        break;
+      }
+      if (smallest || distances[smallest] !== Infinity) {
+        //
+        for (let neighbor in this.adjacencyList[smallest]) {
+          let nextNode = this.adjacencyList[smallest][neighbor];
+          let candidate = distances[smallest] + nextNode.weight;
+          let nextNeighbor = nextNode.vertex;
+          if (candidate < distances[nextNeighbor]) {
+            distances[nextNeighbor] = candidate;
+            previous[nextNeighbor] = smallest;
+            nodes.enqueue(nextNeighbor, candidate);
+          }
+        }
+      }
+    }
+
+    return path.concat(smallest).reverse();
+  }
+}
+```
+
+강의 자료의 남은 부분을 모두 반영하면 사용할 수 있는 다익스트라 알고리즘을 만들 수 있습니다.
