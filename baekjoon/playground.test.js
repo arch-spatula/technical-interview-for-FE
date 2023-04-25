@@ -1,66 +1,15 @@
 import { solution } from "./playground";
 import { test, expect, describe } from "vitest";
 
-describe("영역의 넓이를 구하는 프로그램", () => {
-  test("2개 - 예제 1", () => {
-    expect(
-      solution(2, [
-        [5, 5],
-        [10, 10],
-      ])
-    ).toBe(175);
-  });
-
-  test("예제 1", () => {
-    expect(
-      solution(3, [
-        [3, 7],
-        [15, 7],
-        [5, 2],
-      ])
-    ).toBe(260);
-  });
-
-  test("2개 - 예제 2", () => {
-    expect(
-      solution(2, [
-        [
-          [3, 7],
-          [5, 2],
-        ],
-      ])
-    ).toBe(175);
-  });
-
-  test("모두 겹침", () => {
-    expect(
-      solution(3, [
-        [1, 1],
-        [1, 1],
-        [1, 1],
-      ])
-    ).toBe(100);
-  });
-
-  test("가로 겹침", () => {
-    expect(
-      solution(2, [
-        [5, 1],
-        [10, 1],
-      ])
-    ).toBe(100);
-  });
-
-  test("세로 겹침", () => {
-    expect(
-      solution(2, [
-        [1, 10],
-        [1, 5],
-      ])
-    ).toBe(100);
-  });
-
-  test("침범할 일이 없음", () => {
-    expect(solution(1, [[1, 1]])).toBe(100);
+describe("쿼터(Quarter, $0.25)의 개수, 다임(Dime, $0.10)의 개수, 니켈(Nickel, $0.05)의 개수, 페니(Penny, $0.01)의 개수를 구하는 프로그램", () => {
+  test("거스름돈", () => {
+    expect(solution([124, 25, 194])).toEqual([
+      [4, 2, 0, 4],
+      [1, 0, 0, 0],
+      [7, 1, 1, 4],
+    ]);
   });
 });
+// 4 2 0 3
+// 0 2 0 4
+// 7 1 1 3
