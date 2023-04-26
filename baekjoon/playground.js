@@ -1,46 +1,19 @@
 const fs = require("fs");
 const filePath =
   process.platform === "linux" ? "/dev/stdin" : __dirname + "/input.txt";
-const input = fs
-  .readFileSync(filePath)
-  .toString()
-  .split("\n")
-  .map((str) => parseInt(str));
-
-const t = input[0];
-const c = input.slice(1, t + 1);
+const input = fs.readFileSync(filePath).toString().split(" ").map(Number);
 
 /**
- * @param {number[]} c
- * @returns {[number, number, number, number][]}
+ * @param {number[]} args
+ * @returns {[number, number, number]}
  */
-function solution(c) {
-  // 거스름돈
-  const change = { q: 25, d: 10, n: 5, p: 1 };
-
-  return c.map((num) => {
-    let [q, d, n, p] = [0, 0, 0, 0];
-    while (num >= change["q"]) {
-      num -= change["q"];
-      q += 1;
-    }
-    while (num >= change["d"]) {
-      num -= change["d"];
-      d += 1;
-    }
-    while (num >= change["n"]) {
-      num -= change["n"];
-      n += 1;
-    }
-    while (num >= change["p"]) {
-      num -= change["p"];
-      p += 1;
-    }
-    return [q, d, n, p];
-  });
+function solution(...args) {
+  return (
+    args.map((num) => Math.pow(num, 2)).reduce((acc, curr) => acc + curr) % 10
+  );
 }
 
-solution(c).forEach((arr) => console.log(arr.join(" ")));
+console.log(solution(...input));
 
 module.exports = {
   solution,
