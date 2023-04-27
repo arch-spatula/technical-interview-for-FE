@@ -1,14 +1,14 @@
 /**
- * @param {number[]} numbers
- * @param {number} k
- * @returns {number}
+ * @param {number[]} arr
+ * @returns {number[]}
  */
-function solution(numbers, k) {
-  let answer = 0;
-  for (let i = 0; i / 2 < k; i += 2) {
-    answer = numbers[i % numbers.length];
-  }
-  return answer;
+function solution(arr) {
+  const queue = [];
+  arr.forEach((num, idx, arr) => {
+    const cache = arr[idx - 1];
+    if (num !== cache) queue.push(num);
+  });
+  return queue;
 }
 
 export default solution;
