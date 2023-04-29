@@ -1,53 +1,20 @@
 /**
- * @param {number[]} progresses
- * @param {number[]} speed
- * @returns {number[]}
+ * @param {string[]} participant
+ * @param {string[]} completion
+ * @returns {string}
  */
-function solution(progresses, speed) {
-  const queue = [];
-
-  /**
-   * @param {number} progresses
-   * @param {number} speed
-   * @returns {void}
-   */
-  const enqueue = (progresses, speed) => {
-    // 필요한 일 수
-    let days = 0;
-    while (progresses < 100) {
-      progresses += speed;
-      days += 1;
-    }
-    queue.push(days);
-  };
-
-  progresses.forEach((_, idx) => {
-    enqueue(progresses[idx], speed[idx]);
+function solution(participant, completion) {
+  const map = new Map();
+  participant.forEach((elem) => {
+    map.get(elem) ? map.set(elem, map.get(elem) + 1) : map.set(elem, 1);
   });
-
-  /**
-   * @param {number[]} queue
-   * @returns {number[]}
-   */
-  const dequeue = (queue) => {
-    const result = [];
-    let count = 0;
-    let day = queue[0];
-    for (let i = 0; i < queue.length; i++) {
-      // 까지
-      if (queue[i] > day) {
-        day = queue[i];
-        result.push(count);
-        count = 1;
-      } else {
-        count += 1;
-      }
-    }
-    result.push(count);
-    return result;
-  };
-
-  return dequeue(queue);
+  completion.forEach((elem) => {
+    map.set(elem, map.get(elem) - 1);
+  });
+  participant.forEach((elem) => {
+    map.get(elem) === 0 && map.delete(elem);
+  });
+  return map.keys().next().value;
 }
 
 export default solution;
