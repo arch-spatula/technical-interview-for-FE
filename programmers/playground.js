@@ -1,20 +1,28 @@
 /**
- * @param {string[]} participant
- * @param {string[]} completion
- * @returns {string}
+ * @param {[string, string][]} clothes
+ * @returns {number}
  */
-function solution(participant, completion) {
+function solution(clothes) {
   const map = new Map();
-  participant.forEach((elem) => {
-    map.get(elem) ? map.set(elem, map.get(elem) + 1) : map.set(elem, 1);
+
+  clothes.forEach((clothe) => {
+    const key = clothe[1];
+    const val = clothe[0];
+    map.get(key) ? map.set(key, [...map.get(key), val]) : map.set(key, [val]);
   });
-  completion.forEach((elem) => {
-    map.set(elem, map.get(elem) - 1);
-  });
-  participant.forEach((elem) => {
-    map.get(elem) === 0 && map.delete(elem);
-  });
-  return map.keys().next().value;
+
+  console.log(map.keys());
+  /**
+   * @param {Map} map
+   * @return {number}
+   */
+  const combination = (map) => {
+    map.keys();
+  };
+
+  // 조합
+  // 키의 개수로 조합
+  return map.size;
 }
 
 export default solution;
