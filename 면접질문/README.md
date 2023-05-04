@@ -12,3 +12,7 @@
 - 기술적이면서 검색, 독서, 질문으로 답을 얻을 수 없는 질문을 할 것이다.
 
 그냥 받는 느낌이지만 비전공자는 보통 이때 CS 지식이 많이 쌓입니다.
+
+# 활용 중인 질문지
+
+https://github.com/junh0328/prepare_frontend_interview
