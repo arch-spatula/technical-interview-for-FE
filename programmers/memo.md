@@ -1,3 +1,32 @@
+[약수의 개수와 덧셈](https://school.programmers.co.kr/learn/courses/30/lessons/77884/solution_groups?language=javascript)
+
+```js
+function solution(left, right) {
+  var answer = 0;
+  for (let i = left; i <= right; i++) {
+    if (Number.isInteger(Math.sqrt(i))) {
+      answer -= i;
+    } else {
+      answer += i;
+    }
+  }
+  return answer;
+}
+```
+
+다시 풀 필요는 없지만 제곱근이 정수면 약수는 홀수라는 점을 활용해서 풀이했습니다.
+
+[부족한 금액 계산하기](https://school.programmers.co.kr/learn/courses/30/lessons/82612/solution_groups?language=javascript)
+
+```js
+function solution(price, money, count) {
+  const tmp = (price * count * (count + 1)) / 2 - money;
+  return tmp > 0 ? tmp : 0;
+}
+```
+
+가우스 공식 활용하기
+
 # 앞으로 진도
 
 [피자 나눠 먹기 (2)](https://school.programmers.co.kr/learn/courses/30/lessons/120815)
