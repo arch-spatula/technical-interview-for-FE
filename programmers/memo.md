@@ -1,3 +1,39 @@
+임시저장
+
+```js
+import solution from "./playground";
+import { test, expect, describe } from "vitest";
+
+describe("배포마다 몇 개의 기능이 배포되는지를 return", () => {
+  test("예제 1", () => {
+    expect(solution("ihrhbakrfpndopljhygc", 4, 2)).toBe("happy");
+  });
+
+  test("예제 2", () => {
+    expect(solution("programmers", 1, 1)).toBe("programmers");
+  });
+});
+```
+
+```js
+/**
+ * @param {string} my_string
+ * @param {number} m
+ * @param {number} c
+ * @returns {string}
+ */
+function solution(my_string, m, c) {
+  return my_string
+    .split("")
+    .filter((_, idx) => idx % m === c - 1)
+    .join("");
+}
+
+export default solution;
+```
+
+---
+
 [약수의 개수와 덧셈](https://school.programmers.co.kr/learn/courses/30/lessons/77884/solution_groups?language=javascript)
 
 ```js
