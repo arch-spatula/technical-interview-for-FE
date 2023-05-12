@@ -1,34 +1,32 @@
 /**
- * @param {string} myString
- * @param {string} pat
- * @returns {boolean}
+ * @param {number[]} arr
+ * @returns {number}
  */
-function solution(myString, pat) {
-  // const result = myString.match(new RegExp(`${pat}`, "g"));
-  // two pointer
+function solution(arr) {
   let result = 0;
-  let i = 0;
-  let j = 0;
-  for (; i < myString.length; i++) {
-    // 발견
-    if (myString[i] === pat[j]) {
-      // 일치 순회
-      let check = true;
-      for (; j < pat.length; j++) {
-        if (myString[i + j] !== pat[j]) {
-          check = false;
-        }
-      }
-      j = 0;
-      if (check) {
-        result += 1;
-        console.log(myString[i]);
-      }
+  let latestArr = [];
+  let mappedArr = [...arr];
+  while (true) {
+    mappedArr = mappedArr.map(transform);
+    if (mappedArr.every((num, idx) => num === latestArr[idx])) {
+      break;
     } else {
-      j = 0;
+      latestArr = mappedArr;
     }
+    result += 1;
   }
   return result;
+
+  function transform(num) {
+    switch (true) {
+      case num >= 50 && num % 2 === 0:
+        return num / 2;
+      case num < 50 && num % 2 !== 0:
+        return num * 2 + 1;
+      default:
+        return num;
+    }
+  }
 }
 
 export default solution;

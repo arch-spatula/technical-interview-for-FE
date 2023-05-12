@@ -1,12 +1,8 @@
 import solution from "./playground";
 import { test, expect, describe } from "vitest";
 
-describe("정규 표현식 활용하기", () => {
+describe("조건에 맞게 수열 변환하기 2", () => {
   test("예제 1", () => {
-    expect(solution("banana", "ana")).toBe(2);
-  });
-
-  test("예제 2", () => {
-    expect(solution("aaaa", "aa")).toBe(3);
+    expect(solution([1, 2, 3, 100, 99, 98])).toBe(5);
   });
 });
