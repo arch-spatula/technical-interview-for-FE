@@ -1,35 +1,14 @@
 /**
- * @param {number[]} arr
- * @returns {number}
+ * @param {[number, number, number]} date1
+ * @param {[number, number, number]} date2
+ * @returns {0 | 1}
  */
-function solution(arr) {
-  let result = 0;
-  let latestArr = [];
-  let mappedArr = [...arr];
-  while (true) {
-    mappedArr = mappedArr.map(transform);
-    if (
-      mappedArr.every((num, idx) => num === latestArr[idx]) ||
-      mappedArr.every((num, idx) => num === arr[idx])
-    ) {
-      break;
-    } else {
-      latestArr = mappedArr;
-      result += 1;
-    }
+function solution(date1, date2) {
+  for (let i = 0; i < 3; i++) {
+    if (date1[i] < date2[i]) return 1;
+    else if (date1[i] > date2[i]) return 0;
   }
-  return result;
-
-  function transform(num) {
-    switch (true) {
-      case num >= 50 && num % 2 === 0:
-        return num / 2;
-      case num < 50 && num % 2 !== 0:
-        return num * 2 + 1;
-      default:
-        return num;
-    }
-  }
+  return 0;
 }
 
 export default solution;
