@@ -1,14 +1,18 @@
 /**
- * @param {[number, number, number]} date1
- * @param {[number, number, number]} date2
- * @returns {0 | 1}
+ * @param {string[]} strArr
+ * @returns {number}
  */
-function solution(date1, date2) {
-  for (let i = 0; i < 3; i++) {
-    if (date1[i] < date2[i]) return 1;
-    else if (date1[i] > date2[i]) return 0;
-  }
-  return 0;
+function solution(strArr) {
+  const map = new Map();
+  strArr.forEach((str) => {
+    if (!map.get(str.length)) map.set(str.length, [str]);
+    else map.set(str.length, [...map.get(str.length), str]);
+  });
+  let groupIdx = 0;
+  map.forEach((arr, key) => {
+    if (groupIdx < arr.length) groupIdx = arr.length;
+  });
+  return map.get(groupIdx).length;
 }
 
 export default solution;
