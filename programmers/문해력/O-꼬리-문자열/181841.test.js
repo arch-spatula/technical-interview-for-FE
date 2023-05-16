@@ -11,6 +11,14 @@ describe("배포마다 몇 개의 기능이 배포되는지를 return", () => {
   });
 
   test("꼬리가 더 길 경우", () => {
-    expect(solution(["c", "b", "a"], "abc")).toBe("cba");
+    expect(solution(["c", "c", "c"], "ccc")).toBe("ccc");
+  });
+
+  test("모두 일치", () => {
+    expect(solution(["c", "c", "c"], "c")).toBe("");
+  });
+
+  test("일치 없음", () => {
+    expect(solution(["a", "a", "a"], "c")).toBe("aaa");
   });
 });

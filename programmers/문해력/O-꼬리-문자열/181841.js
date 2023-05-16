@@ -4,7 +4,7 @@
  * @returns {string}
  */
 function solution(str_list, ex) {
-  return str_list.filter((str) => !str.endsWith(ex)).join("");
+  return str_list.filter((str) => !str.includes(ex)).join("");
 }
 
 export default solution;

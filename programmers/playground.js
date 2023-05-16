@@ -1,18 +1,16 @@
 /**
- * @param {string[]} strArr
- * @returns {number}
+ * @param {string} s
+ * @returns {string}
  */
-function solution(strArr) {
-  const map = new Map();
-  strArr.forEach((str) => {
-    if (!map.get(str.length)) map.set(str.length, [str]);
-    else map.set(str.length, [...map.get(str.length), str]);
+function solution(s) {
+  let result = "";
+  s.split("").forEach((char, idx) => {
+    if (idx === 0 || s[idx - 1] === " ") {
+      if (Number.isNaN(parseInt(char))) result += char.toUpperCase();
+      else result += char.toLowerCase();
+    } else result += char.toLowerCase();
   });
-  let groupIdx = 0;
-  map.forEach((arr, key) => {
-    if (groupIdx < arr.length) groupIdx = arr.length;
-  });
-  return map.get(groupIdx).length;
+  return result;
 }
 
 export default solution;
