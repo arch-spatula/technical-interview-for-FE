@@ -16,5 +16,3 @@ export function bubbleSort(arr: number[]) {
   }
   return arr;
 }
-
-bubbleSort([5, 3, 4, 1, 2]);
