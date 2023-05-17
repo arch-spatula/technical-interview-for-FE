@@ -1,14 +1,13 @@
 /**
- * @param {string} s
+ * @param {number} q
+ * @param {number} r
+ * @param {string} code
  * @returns {string}
  */
-function solution(s) {
+function solution(q, r, code) {
   let result = "";
-  s.split("").forEach((char, idx) => {
-    if (idx === 0 || s[idx - 1] === " ") {
-      if (Number.isNaN(parseInt(char))) result += char.toUpperCase();
-      else result += char.toLowerCase();
-    } else result += char.toLowerCase();
+  code.split("").forEach((char, idx) => {
+    if (idx % q === r) result += char;
   });
   return result;
 }

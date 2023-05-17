@@ -1,20 +1,16 @@
 import solution from "./playground";
 import { test, expect, describe } from "vitest";
 
-describe("JadenCase 문자열 만들기", () => {
+// q	r	code	result
+// 3	1	"qjnwezgrpirldywt"	"jerry"
+// 1	0	"programmers"	"programmers"
+
+describe("최솟값 만들기", () => {
   test("예제 1", () => {
-    expect(solution("3people unFollowed me")).toBe("3people Unfollowed Me");
+    expect(solution(3, 1, "qjnwezgrpirldywt")).toBe("jerry");
   });
 
   test("예제 2", () => {
-    expect(solution("for the last week")).toBe("For The Last Week");
-  });
-
-  test("공백 2칸", () => {
-    expect(solution("abc def")).toBe("Abc Def");
-  });
-
-  test("첫글자가 아니면 소문자", () => {
-    expect(solution("aBC")).toBe("Abc");
+    expect(solution(1, 0, "programmers")).toBe("programmers");
   });
 });
