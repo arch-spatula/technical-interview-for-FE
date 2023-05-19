@@ -4,8 +4,25 @@
 // - Repeat until the array is sorted.
 
 export function insertionSort(arr: number[]) {
-  return [1, 2, 3, 4, 5];
-}
+  let window = [arr[0]];
+  for (let i = 1; i < arr.length; i++) {
+    let pointer = arr[i];
+    window = insert(window, pointer);
+  }
+  return window;
 
-insertionSort([5, 3, 4, 1, 2]);
-insertionSort([2, 1, 9, 76, 4]);
+  function insert(arr: number[], num: number) {
+    arr.push(Infinity);
+    const result: number[] = [];
+    let compareFlag = true;
+    for (let i = 0; i < arr.length; i++) {
+      if (num < arr[i] && compareFlag) {
+        result.push(num);
+        compareFlag = false;
+      }
+      result.push(arr[i]);
+    }
+    result.pop();
+    return result;
+  }
+}
