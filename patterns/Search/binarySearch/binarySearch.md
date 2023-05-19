@@ -109,11 +109,11 @@ function binarySearch(arr, target) {
    * @returns {number}
    */
   function search(arr, target, start, end) {
-    if (start > end) return -1;
+    if (start === end) return -1;
     let median = Math.round((start + end) / 2);
     if (target === arr[median]) return median;
-    if (target < arr[median]) return search(arr, target, start, median - 1);
-    if (target > arr[median]) return search(arr, target, median + 1, end);
+    if (target < arr[median]) return search(arr, target, start, median);
+    if (target > arr[median]) return search(arr, target, median, end);
   }
 }
 ```
