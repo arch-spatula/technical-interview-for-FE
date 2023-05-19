@@ -1,13 +1,13 @@
-import { radixSort, getDitgit, digitCount } from "./radixSort";
+import { radixSort, getDigit, digitCount } from "./radixSort";
 import { test, expect, describe } from "vitest";
 
 describe("지수 정렬을 위한 헬퍼 함수들을 구현합니다.", () => {
   test("getDitgit으로 일의 자릿수의 값을 구합니다.", () => {
-    expect(getDitgit(12345, 0)).toBe(5);
+    expect(getDigit(12345, 0)).toBe(5);
   });
 
   test("getDitgit으로 존재하지 않는 백의 자릿수의 값을 구합니다.", () => {
-    expect(getDitgit(12, 3)).toBe(0);
+    expect(getDigit(12, 3)).toBe(0);
   });
 
   test("digitCount로 자릿수를 구합니다.", () => {

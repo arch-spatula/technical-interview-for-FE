@@ -1,4 +1,4 @@
-export function getDitgit(num: number, idx: number) {
+export function getDigit(num: number, idx: number) {
   return Math.floor(Math.abs(num) / Math.pow(10, idx)) % 10;
 }
 
@@ -21,7 +21,7 @@ export function radixSort(arr: number[]) {
     const digitBuckets = Array.from({ length: 10 }, () => []);
     for (let i = 0; i < arr.length; i++) {
       const elem = arr[i];
-      const digit = getDitgit(elem, k);
+      const digit = getDigit(elem, k);
       digitBuckets[digit].push(elem as never);
     }
     arr = [].concat(...digitBuckets);
