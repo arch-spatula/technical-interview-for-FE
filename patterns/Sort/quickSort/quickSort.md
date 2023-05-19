@@ -40,6 +40,34 @@ describe("퀵 정렬을 구현합니다.", () => {
  */
 function quickSort(arr) {
   if (arr.length <= 1) return arr;
+  const median = Math.round(arr.length / 2);
+  const pivotPoint = arr[median];
+
+  const left = [];
+  const right = [];
+  for (let i = 0; i < arr.length; i++) {
+    if (i === median) continue;
+    const loopPoint = arr[i];
+    if (loopPoint < pivotPoint) {
+      left.push(loopPoint);
+    } else {
+      right.push(loopPoint);
+    }
+  }
+  return [...quickSort(left), pivotPoint, ...quickSort(right)];
+}
+export default quickSort;
+```
+
+정답 중앙
+
+```js
+/**
+ * @param {number[]} arr
+ * @returns {number[]}
+ */
+function quickSort(arr) {
+  if (arr.length <= 1) return arr;
   const pivot = arr[arr.length - 1];
   const left = [];
   const right = [];
@@ -54,6 +82,32 @@ function quickSort(arr) {
 }
 ```
 
-정답코드
+정답코드(오른쪽)
+
+```js
+/**
+ * @param {number[]} arr
+ * @returns {number[]}
+ */
+function quickSort(arr) {
+  if (arr.length <= 1) return arr;
+  const pivotPoint = arr[0];
+  const left = [];
+  const right = [];
+  for (let i = 1; i < arr.length; i++) {
+    const loopPoint = arr[i];
+    if (loopPoint < pivotPoint) {
+      left.push(loopPoint);
+    } else {
+      right.push(loopPoint);
+    }
+  }
+  console.log(left, right);
+  return [...quickSort(left), pivotPoint, ...quickSort(right)];
+}
+export default quickSort;
+```
+
+정답왼쪽
 
 [참고](https://github.com/gopinav/JavaScript-Algorithms-Tutorial/blob/master/sorting/quick-sort.js)
