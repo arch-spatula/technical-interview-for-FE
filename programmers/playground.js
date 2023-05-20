@@ -1,29 +1,28 @@
 /**
- * @param {">" | "<"} ineq
- * @param {"!" | "="} eq
- * @param {number} n
- * @param {number} m
- * @returns {1 | 0}
+ * @param {number[]} arr
+ * @returns {number[]}
  */
-function solution(ineq, eq, n, m) {
-  let result = `${n}`;
-  switch (ineq) {
-    case "<":
-      result += "<";
-      break;
-    case ">":
-      result += ">";
-  }
-  switch (eq) {
-    case "!":
-      result += "";
-      break;
-    case "=":
-      result += "=";
-  }
-  result += `${m}`;
+function solution(arr) {
+  const result = [];
+  let twoFlag = false;
+  const twoStack = [];
 
-  return eval(result) ? 1 : 0;
+  let cacheTwo = [];
+  arr.forEach((num) => {
+    cacheTwo.push(num);
+    if (num === 2) {
+      twoStack.push(...cacheTwo);
+      cacheTwo = [];
+    }
+  });
+  twoStack.forEach((num) => {
+    if (num === 2) twoFlag = true;
+    if (twoFlag) result.push(num);
+  });
+
+  if (result.length === 0) result.push(-1);
+
+  return result;
 }
 
 export default solution;

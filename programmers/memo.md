@@ -1,3 +1,65 @@
+https://school.programmers.co.kr/learn/courses/30/lessons/181894
+
+2의 영역
+
+```js
+/**
+ * @param {number[]} arr
+ * @returns {number[]}
+ */
+function solution(arr) {
+  const result = [];
+  let twoFlag = false;
+  const twoStack = [];
+
+  let cacheTwo = [];
+  arr.forEach((num) => {
+    cacheTwo.push(num);
+    if (num === 2) {
+      twoStack.push(...cacheTwo);
+      cacheTwo = [];
+    }
+  });
+  twoStack.forEach((num) => {
+    if (num === 2) twoFlag = true;
+    if (twoFlag) result.push(num);
+  });
+
+  if (result.length === 0) result.push(-1);
+
+  return result;
+}
+```
+
+```js
+import solution from "./playground";
+import { test, expect, describe } from "vitest";
+
+describe("2의 영역", () => {
+  test("예제 1", () => {
+    expect(solution([1, 2, 1, 4, 5, 2, 9])).toEqual([2, 1, 4, 5, 2]);
+  });
+  test("예제 2", () => {
+    expect(solution([1, 2, 1])).toEqual([2]);
+  });
+  test("예제 3", () => {
+    expect(solution([1, 1, 1])).toEqual([-1]);
+  });
+  test("예제 4", () => {
+    expect(solution([1, 2, 1, 2, 1, 10, 2, 1])).toEqual([2, 1, 2, 1, 10, 2]);
+  });
+});
+```
+
+```js
+function solution(arr) {
+  const from = arr.indexOf(2);
+  const end = arr.lastIndexOf(2);
+
+  return from === -1 ? [-1] : arr.slice(from, end + 1);
+}
+```
+
 임시저장
 
 ```js
