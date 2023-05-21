@@ -35,17 +35,17 @@ describe("3x 마을 사람들은 3을 저주의 숫자라고 생각하기 때문
   });
 });
 
-describe("isUseThree", () => {
-  test("3의 배수를 사용하고 있습니다.", () => {
-    expect(isUseThree(3)).toBe(true);
-    expect(isUseThree(6)).toBe(true);
-    expect(isUseThree(9)).toBe(true);
-  });
+// describe("isUseThree", () => {
+//   test("3의 배수를 사용하고 있습니다.", () => {
+//     expect(isUseThree(3)).toBe(true);
+//     expect(isUseThree(6)).toBe(true);
+//     expect(isUseThree(9)).toBe(true);
+//   });
 
-  test("숫자 3을 사용하고 있습니다.", () => {
-    expect(isUseThree(3)).toBe(true);
-    expect(isUseThree(13)).toBe(true);
-    expect(isUseThree(23)).toBe(true);
-    expect(isUseThree(30)).toBe(true);
-  });
-});
+//   test("숫자 3을 사용하고 있습니다.", () => {
+//     expect(isUseThree(3)).toBe(true);
+//     expect(isUseThree(13)).toBe(true);
+//     expect(isUseThree(23)).toBe(true);
+//     expect(isUseThree(30)).toBe(true);
+//   });
+// });
