@@ -130,6 +130,22 @@ describe("Max Binary Heap - extractMax", () => {
 });
 ```
 
+## 힌트
+
+부모자식을 접근할 때 계산방법이 있습니다.
+
+<!-- TODO: latex로 부모자식 관계 대수적으로 표현하기 -->
+
+```js
+const parentIdx = Math.floor((childIdx - 1) / 2);
+```
+
+```js
+let parentIdx = 0;
+const getLeftChild = (idx) => 2 * idx + 1;
+const getRightChild = (idx) => 2 * idx + 2;
+```
+
 ## 정답코드
 
 ```js
