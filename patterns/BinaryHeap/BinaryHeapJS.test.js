@@ -1,5 +1,5 @@
 import MaxBinaryHeap from "./BinaryHeapJS";
-import { test, expect, describe } from "vitest";
+import { test, expect, describe, beforeEach } from "vitest";
 
 describe("Max Binary Heap - insert", () => {
   test("최초 생성하면 빈 배열", () => {
@@ -108,5 +108,50 @@ describe("Max Binary Heap - extractMax", () => {
     expect(maxBinaryHeap.heapValues).toEqual([63, 55, 33, 18, 41, 22, 13]);
     expect(maxBinaryHeap.extractMax()).toBe(63);
     expect(maxBinaryHeap.heapValues).toEqual([55, 41, 33, 18, 13, 22]);
+  });
+});
+
+describe("MaxBinaryHeap", () => {
+  let heap;
+
+  beforeEach(() => {
+    heap = new MaxBinaryHeap();
+  });
+
+  describe("insert", () => {
+    test("should insert elements into the heap in the correct order", () => {
+      heap.insert(10);
+      heap.insert(20);
+      heap.insert(5);
+      heap.insert(15);
+
+      expect(heap.heapValues).toEqual([20, 15, 5, 10]);
+    });
+
+    test("should return true after successfully inserting an element", () => {
+      const result = heap.insert(10);
+
+      expect(result).toBe(true);
+    });
+  });
+
+  describe("extractMax", () => {
+    test("should return null when the heap is empty", () => {
+      const result = heap.extractMax();
+
+      expect(result).toBeNull();
+    });
+
+    test("should extract the maximum element from the heap and maintain the heap property", () => {
+      heap.insert(10);
+      heap.insert(20);
+      heap.insert(5);
+      heap.insert(15);
+
+      const maxElement = heap.extractMax();
+
+      expect(maxElement).toBe(20);
+      expect(heap.heapValues).toEqual([15, 10, 5]);
+    });
   });
 });
