@@ -4,12 +4,15 @@
 
 ```js
 /**
- *
- * @returns
+ * @param {number} n
+ * @returns {number}
  */
-export function solution() {
-  return 0;
+function solution(n) {
+  let result = 0;
+  return result;
 }
+
+export default solution;
 ```
 
 이렇게 코드를 복사하기 바랍니다.
@@ -24,12 +27,6 @@ describe("테스트에 대한 묶음", () => {
   });
 });
 ```
-
-```sh
-yarn
-```
-
-명령 1번정도 부탁합니다.
 
 테스트는 문제를 이해하기 위해서 테스트 케이스를 작성하고 해결하는 방식으로 접하기 바랍니다.
 
@@ -52,10 +49,11 @@ describe("배열의 개수를 셉니다.", () => {
 이렇게 테스트케이스를 우선 작성해줍니다.
 
 ```js
+// playground.js
 /**
- * @param {Array} array
- * @param {Number} n
- * @returns {Number}
+ * @param {number[]} array
+ * @param {number[]} n
+ * @returns {number}
  */
 export function solution(array, n) {
   return array.filter((num) => num === n).length;
@@ -71,3 +69,11 @@ yarn test
 ```
 
 그리고 이렇게 테스트를 실행해주시기 바랍니다.
+
+## 참고
+
+```sh
+yarn
+```
+
+설치 잊지맙시다.
