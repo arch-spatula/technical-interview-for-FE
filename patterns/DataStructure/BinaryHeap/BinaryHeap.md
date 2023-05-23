@@ -188,33 +188,28 @@ class MaxBinaryHeap {
 
   #bubbleDown() {
     let parentIdx = 0;
-    const getLeftChild = (idx) => 2 * idx + 1;
-    const getRightChild = (idx) => 2 * idx + 2;
+    let leftChildIdx = 2 * parentIdx + 1;
+    let rightChildIdx = 2 * parentIdx + 2;
 
     while (
-      (this.#heapValues[parentIdx] <
-        this.#heapValues[getLeftChild(parentIdx)] ||
-        this.#heapValues[parentIdx] <
-          this.#heapValues[getRightChild(parentIdx)]) &&
-      parentIdx < this.#heapValues.length
+      (this.#heapValues[leftChildIdx] > this.#heapValues[parentIdx] ||
+        this.#heapValues[rightChildIdx] > this.#heapValues[parentIdx]) &&
+      this.#heapValues.length > parentIdx
     ) {
-      let leftChildIdx = getLeftChild(parentIdx),
-        rightChildIdx = getRightChild(parentIdx),
-        leftChildValue = this.#heapValues[leftChildIdx],
-        rightChildValue = this.#heapValues[rightChildIdx];
-
-      if (leftChildValue > rightChildValue) {
+      if (this.#heapValues[leftChildIdx] > this.#heapValues[rightChildIdx]) {
         this.#swap(parentIdx, leftChildIdx);
         parentIdx = leftChildIdx;
+        leftChildIdx = 2 * parentIdx + 1;
+        rightChildIdx = 2 * parentIdx + 2;
       }
 
-      if (leftChildValue < rightChildValue) {
+      if (this.#heapValues[rightChildIdx] > this.#heapValues[leftChildIdx]) {
         this.#swap(parentIdx, rightChildIdx);
         parentIdx = rightChildIdx;
+        leftChildIdx = 2 * parentIdx + 1;
+        rightChildIdx = 2 * parentIdx + 2;
       }
     }
-
-    return true;
   }
 
   #swap(idx1, idx2) {
