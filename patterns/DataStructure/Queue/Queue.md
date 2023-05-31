@@ -28,30 +28,30 @@ class Queue {
 ```
 
 ```js
-import { test, expect, describe } from "vitest";
-import Queue from "./QueueJS";
+import { test, expect, describe } from 'vitest';
+import Queue from './QueueJS';
 
-describe("Queue", () => {
-  test("Enqueue", () => {
+describe('Queue', () => {
+  test('Enqueue', () => {
     const queue = new Queue();
     expect(queue.enqueue(10)).toBe(1);
     expect(queue.enqueue(20)).toBe(2);
     expect(queue.enqueue(30)).toBe(3);
   });
 
-  test("Dequeue", () => {
+  test('Dequeue', () => {
     const queue = new Queue();
     expect(queue.dequeue()).toBe(null);
   });
 
-  test("Dequeue 1개", () => {
+  test('Dequeue 1개', () => {
     const queue = new Queue();
     queue.enqueue(10);
     expect(queue.dequeue()).toBe(10);
     expect(queue.dequeue()).toBe(null);
   });
 
-  test("Dequeue 3개", () => {
+  test('Dequeue 3개', () => {
     const queue = new Queue();
     queue.enqueue(10);
     queue.enqueue(20);
@@ -111,6 +111,50 @@ export default Queue;
 
 필이해볼 수 있는 정답입니다.
 
+## Queue Map
+
+해시맵을 활용해서 Queue를 구현할 수 있습니다. 한계는 정수를 저장할 수 있는 사이즈까지입니다.
+
+https://github.com/gopinav/JavaScript-Data-Structures-Tutorial/blob/master/queue-object.js
+
+```js
+class Queue {
+  #item;
+  #head;
+  #tail;
+  constructor() {
+    this.#item = new Map();
+    this.#head = 0;
+    this.#tail = 0;
+  }
+
+  enqueue(val) {
+    this.#item.set(this.#tail, val);
+    this.#tail += 1;
+    return this.length;
+  }
+
+  dequeue() {
+    if (this.length === 0) return null;
+
+    if (this.length > 0) {
+      const result = this.#item.get(this.#head);
+      this.#item.delete(this.#head);
+      this.#head += 1;
+      return result;
+    }
+
+    return result;
+  }
+
+  get length() {
+    return this.#tail - this.#head;
+  }
+}
+```
+
+Node에 의존하지 않고 링크드리스트처럼 만들 수 있습니다. 그리고 상수시간 복잡성을 유지할 수 있습니다. 투포인터 전략을 응용한 것이라고 볼 수 있습니다.
+
 ### 시간 복잡성 문제가 없을 때
 
 ```js
@@ -141,30 +185,30 @@ class Queue {
 ## 프로덕션
 
 ```ts
-import { test, expect, describe } from "vitest";
-import { Queue } from "./Queue";
+import { test, expect, describe } from 'vitest';
+import { Queue } from './Queue';
 
-describe("Queue", () => {
-  test("Enqueue", () => {
+describe('Queue', () => {
+  test('Enqueue', () => {
     const queue = new Queue<number>();
     expect(queue.enqueue(10)).toBe(1);
     expect(queue.enqueue(20)).toBe(2);
     expect(queue.enqueue(30)).toBe(3);
   });
 
-  test("Dequeue", () => {
+  test('Dequeue', () => {
     const queue = new Queue<number>();
     expect(queue.dequeue()).toBe(null);
   });
 
-  test("Dequeue 1개", () => {
+  test('Dequeue 1개', () => {
     const queue = new Queue<number>();
     queue.enqueue(10);
     expect(queue.dequeue()?.val).toBe(10);
     expect(queue.dequeue()).toBe(null);
   });
 
-  test("Dequeue 3개", () => {
+  test('Dequeue 3개', () => {
     const queue = new Queue<number>();
     queue.enqueue(10);
     queue.enqueue(20);

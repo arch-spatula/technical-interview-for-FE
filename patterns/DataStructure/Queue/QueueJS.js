@@ -1,39 +1,34 @@
-class Node {
-  constructor(val) {
-    this.val = val;
-    this.prev = null;
-  }
-}
-
 class Queue {
+  #item;
+  #head;
+  #tail;
   constructor() {
-    this.head = null;
-    this.tail = null;
-    this.length = 0;
+    this.#item = new Map();
+    this.#head = 0;
+    this.#tail = 0;
   }
+
   enqueue(val) {
-    if (this.length === 0) {
-      this.head = new Node(val);
-      this.tail = this.head;
-    }
-    if (this.length > 0) {
-      const newNode = new Node(val);
-      this.head.prev = newNode;
-      this.head = newNode;
-    }
-    this.length += 1;
+    this.#item.set(this.#tail, val);
+    this.#tail += 1;
     return this.length;
   }
+
   dequeue() {
     if (this.length === 0) return null;
+
     if (this.length > 0) {
+      const result = this.#item.get(this.#head);
+      this.#item.delete(this.#head);
+      this.#head += 1;
+      return result;
     }
-    const dequeueNode = this.tail;
-    this.tail = dequeueNode.prev;
-    const result = dequeueNode.val;
-    dequeueNode.prev = null;
-    this.length -= 1;
+
     return result;
+  }
+
+  get length() {
+    return this.#tail - this.#head;
   }
 }
 

@@ -1,17 +1,11 @@
-type Vertex = string | number;
-type Edge = { vertex: Vertex; weight: number };
-
-class Node<T> {
-  public val: T;
-  public priority: number;
-  constructor(val: T, priority: number) {
+class Node {
+  constructor(val, priority) {
     this.val = val;
     this.priority = priority;
   }
 }
 
-class PriorityQueue<T> {
-  private values: Node<T>[];
+class PriorityQueue {
   constructor() {
     this.values = [];
   }
@@ -39,7 +33,7 @@ class PriorityQueue<T> {
     const min = this.values[0];
     const end = this.values.pop();
     if (this.values.length > 0) {
-      this.values[0] = end!;
+      this.values[0] = end;
       this.sinkDown();
     }
     return min;
@@ -52,7 +46,7 @@ class PriorityQueue<T> {
       let leftChildIdx = 2 * idx + 1;
       let rightChildIdx = 2 * idx + 2;
       let leftChild, rightChild;
-      let swap: null | number = null;
+      let swap = null;
 
       if (leftChildIdx < length) {
         leftChild = this.values[leftChildIdx];
@@ -78,8 +72,6 @@ class PriorityQueue<T> {
 }
 
 export class WeightedGraph {
-  private adjacencyList: { [key: Vertex]: Edge[] };
-
   constructor() {
     this.adjacencyList = {};
   }
@@ -88,12 +80,12 @@ export class WeightedGraph {
     return this.adjacencyList;
   }
 
-  addVertex(key: Vertex) {
+  addVertex(key) {
     if (this.adjacencyList[key]) return null;
     this.adjacencyList[key] = [];
   }
 
-  addEdge(vertex1: Vertex, vertex2: Vertex, weight) {
+  addEdge(vertex1, vertex2, weight) {
     if (!this.adjacencyList[vertex1] || !this.adjacencyList[vertex2])
       return null;
 
@@ -101,7 +93,7 @@ export class WeightedGraph {
     this.adjacencyList[vertex2].push({ vertex: vertex1, weight });
   }
 
-  removeEdge(vertex1: Vertex, vertex2: Vertex) {
+  removeEdge(vertex1, vertex2) {
     // 존재하지 않는 버텍스에 기능 정지
     if (!this.adjacencyList[vertex1] || !this.adjacencyList[vertex2])
       return null;
@@ -114,23 +106,23 @@ export class WeightedGraph {
     );
   }
 
-  removeVertex(vertex: Vertex) {
+  removeVertex(vertex) {
     if (!this.adjacencyList[vertex]) return null;
 
     while (this.adjacencyList[vertex].length) {
-      const adjacentVertex = this.adjacencyList[vertex].pop()!;
+      const adjacentVertex = this.adjacencyList[vertex].pop();
       this.removeEdge(vertex, adjacentVertex.vertex);
     }
     delete this.adjacencyList[vertex];
   }
 
-  searchByDepthFirstRecursive(start: Vertex) {
+  searchByDepthFirstRecursive(start) {
     // 예외처리
     if (Object.keys(this.adjacencyList).length === 0) return null;
 
     // 탐색 기록
     const visitedVertex = {};
-    const result: Vertex[] = [];
+    const result = [];
     const adjacencyList = this.adjacencyList; // 접근할 수 있게 식별자를 선언
 
     // 탐색 처리
@@ -147,17 +139,17 @@ export class WeightedGraph {
     return result;
   }
 
-  searchByDepthFirstIterative(start: Vertex) {
+  searchByDepthFirstIterative(start) {
     // 예외처리
     if (Object.keys(this.adjacencyList).length === 0) return null;
 
     const stack = [start];
-    const result: Vertex[] = [];
+    const result = [];
     const visitedVertex = {};
 
     visitedVertex[start] = true;
     while (stack.length > 0) {
-      const vertex = stack.pop()!;
+      const vertex = stack.pop();
       result.push(vertex);
       // 방문을 안 한 노드만 추가?
       this.adjacencyList[vertex].forEach((vertexItem) => {
@@ -170,16 +162,16 @@ export class WeightedGraph {
     return result;
   }
 
-  searchByBreadthFirst(start: Vertex) {
+  searchByBreadthFirst(start) {
     // 예외처리
     if (Object.keys(this.adjacencyList).length === 0) return null;
 
     const queue = [start];
-    const result: Vertex[] = [];
+    const result = [];
     const visitedVertex = {};
     visitedVertex[start] = true;
     while (queue.length > 0) {
-      const vertex = queue.shift()!;
+      const vertex = queue.shift();
       result.push(vertex);
       this.adjacencyList[vertex].forEach((vertexItem) => {
         if (!visitedVertex[vertexItem.vertex]) {
@@ -191,12 +183,12 @@ export class WeightedGraph {
     return result;
   }
 
-  findShortest(start: Vertex, end: Vertex) {
-    const distances: { [keys: Vertex]: number } = {};
-    const nodes = new PriorityQueue<Vertex>();
+  findShortest(start, end) {
+    const distances = {};
+    const nodes = new PriorityQueue();
     const previous = {};
     let smallest;
-    const path: Vertex[] = [];
+    const path = [];
 
     for (const vertex in this.adjacencyList) {
       if (vertex === start) {
@@ -237,3 +229,5 @@ export class WeightedGraph {
     return path.concat(smallest).reverse();
   }
 }
+
+export default WeightedGraph;
