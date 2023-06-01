@@ -1,62 +1,15 @@
-import solution from "./playground";
-import { test, expect, describe } from "vitest";
+import solution from './playground';
+import { test, expect, describe } from 'vitest';
 
-describe("정사각형으로 만들기", () => {
-  test("예제 1", () => {
-    expect(
-      solution([
-        [572, 22, 37],
-        [287, 726, 384],
-        [85, 137, 292],
-        [487, 13, 876],
-      ])
-    ).toEqual([
-      [572, 22, 37, 0],
-      [287, 726, 384, 0],
-      [85, 137, 292, 0],
-      [487, 13, 876, 0],
-    ]);
+// arr	k	result
+// [0, 1, 1, 2, 2, 3]	3	[0, 1, 2]
+// [0, 1, 1, 1, 1]	4	[0, 1, -1, -1]
+
+describe('정사각형으로 만들기', () => {
+  test('예제 1', () => {
+    expect(solution([0, 1, 1, 2, 2, 3], 3)).toEqual([0, 1, 2]);
   });
-
-  test("예제 2", () => {
-    expect(
-      solution([
-        [57, 192, 534, 2],
-        [9, 345, 192, 999],
-      ])
-    ).toEqual([
-      [57, 192, 534, 2],
-      [9, 345, 192, 999],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-    ]);
-  });
-
-  test("예제 3", () => {
-    expect(
-      solution([
-        [1, 2],
-        [3, 4],
-      ])
-    ).toEqual([
-      [1, 2],
-      [3, 4],
-    ]);
-  });
-
-  test("예제 1", () => {
-    expect(
-      solution([
-        [572, 22],
-        [287, 726],
-        [85, 137],
-        [487, 13],
-      ])
-    ).toEqual([
-      [572, 22, 0, 0],
-      [287, 726, 0, 0],
-      [85, 137, 0, 0],
-      [487, 13, 0, 0],
-    ]);
+  test('예제 1', () => {
+    expect(solution([0, 1, 1, 1, 1], 4)).toEqual([0, 1, -1, -1]);
   });
 });

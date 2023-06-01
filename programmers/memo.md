@@ -1,3 +1,58 @@
+https://school.programmers.co.kr/learn/courses/30/lessons/181913
+
+```js
+import solution, { shuffle } from './playground';
+import { test, expect, describe } from 'vitest';
+
+describe('정사각형으로 만들기', () => {
+  test('예제 1', () => {
+    expect(
+      solution('rermgorpsam', [
+        [2, 3],
+        [0, 7],
+        [5, 9],
+        [6, 10],
+      ])
+    ).toEqual('programmers');
+  });
+});
+
+describe('shuffle', () => {
+  test('예제 1', () => {
+    expect(shuffle('rermgorpsam'.split(''), 2, 3)).toEqual(
+      'remrgorpsam'.split('')
+    );
+  });
+});
+```
+
+```js
+/**
+ *
+ * @param {string} my_string
+ * @param {[number, number][]} queries
+ * @returns
+ */
+function solution(my_string, queries) {
+  let result = my_string.split('');
+  queries.forEach(([s, e]) => {
+    result = shuffle(result, s, e);
+  });
+  return result.join('');
+}
+/**
+ * @param {string[]} arr
+ * @param {number} start
+ * @param {number} end
+ */
+export function shuffle(arr, start, end) {
+  arr.splice(start, end - start + 1, ...arr.slice(start, end + 1).reverse());
+  return arr;
+}
+
+export default solution;
+```
+
 https://school.programmers.co.kr/learn/courses/30/lessons/181894
 
 2의 영역
@@ -32,20 +87,20 @@ function solution(arr) {
 ```
 
 ```js
-import solution from "./playground";
-import { test, expect, describe } from "vitest";
+import solution from './playground';
+import { test, expect, describe } from 'vitest';
 
-describe("2의 영역", () => {
-  test("예제 1", () => {
+describe('2의 영역', () => {
+  test('예제 1', () => {
     expect(solution([1, 2, 1, 4, 5, 2, 9])).toEqual([2, 1, 4, 5, 2]);
   });
-  test("예제 2", () => {
+  test('예제 2', () => {
     expect(solution([1, 2, 1])).toEqual([2]);
   });
-  test("예제 3", () => {
+  test('예제 3', () => {
     expect(solution([1, 1, 1])).toEqual([-1]);
   });
-  test("예제 4", () => {
+  test('예제 4', () => {
     expect(solution([1, 2, 1, 2, 1, 10, 2, 1])).toEqual([2, 1, 2, 1, 10, 2]);
   });
 });
@@ -63,16 +118,16 @@ function solution(arr) {
 임시저장
 
 ```js
-import solution from "./playground";
-import { test, expect, describe } from "vitest";
+import solution from './playground';
+import { test, expect, describe } from 'vitest';
 
-describe("배포마다 몇 개의 기능이 배포되는지를 return", () => {
-  test("예제 1", () => {
-    expect(solution("ihrhbakrfpndopljhygc", 4, 2)).toBe("happy");
+describe('배포마다 몇 개의 기능이 배포되는지를 return', () => {
+  test('예제 1', () => {
+    expect(solution('ihrhbakrfpndopljhygc', 4, 2)).toBe('happy');
   });
 
-  test("예제 2", () => {
-    expect(solution("programmers", 1, 1)).toBe("programmers");
+  test('예제 2', () => {
+    expect(solution('programmers', 1, 1)).toBe('programmers');
   });
 });
 ```
@@ -86,9 +141,9 @@ describe("배포마다 몇 개의 기능이 배포되는지를 return", () => {
  */
 function solution(my_string, m, c) {
   return my_string
-    .split("")
+    .split('')
     .filter((_, idx) => idx % m === c - 1)
-    .join("");
+    .join('');
 }
 
 export default solution;
@@ -348,13 +403,13 @@ function solution(s) {
     if (obj[key] == 1) answer.push(key);
   }
 
-  return answer.sort().join("");
+  return answer.sort().join('');
 }
 
-console.log(solution("abcabcadc"), "d");
-console.log(solution("abdc"), "abcd");
-console.log(solution("hello"), "eho");
-console.log(solution("hheelloo"), "");
+console.log(solution('abcabcadc'), 'd');
+console.log(solution('abdc'), 'abcd');
+console.log(solution('hello'), 'eho');
+console.log(solution('hheelloo'), '');
 ```
 
 # 숨어있는 숫자의 덧셈 (1)
@@ -369,24 +424,24 @@ console.log(solution("hheelloo"), "");
  */
 export function solution(myString) {
   var regex = /[^0-9]/g;
-  var result = myString.replace(regex, "");
+  var result = myString.replace(regex, '');
   return result
-    .split("")
+    .split('')
     .map((str) => parseInt(str))
     .reduce((acc, curr) => acc + curr);
 }
 ```
 
 ```js
-import { solution } from "./playground";
-import { test, expect, describe } from "vitest";
+import { solution } from './playground';
+import { test, expect, describe } from 'vitest';
 
-describe("안의 모든 자연수들의 합을 return하도록 solution 함수를 구현합니다.", () => {
+describe('안의 모든 자연수들의 합을 return하도록 solution 함수를 구현합니다.', () => {
   test("'aAb1B2cC34oOp'안의 한자리 자연수는 1, 2, 3, 4 입니다. 따라서 1 + 2 + 3 + 4 = 10 을 return합니다.", () => {
-    expect(solution("aAb1B2cC34oOp")).toBe(10);
+    expect(solution('aAb1B2cC34oOp')).toBe(10);
   });
   test("'1a2b3c4d123Z'안의 한자리 자연수는 1, 2, 3, 4, 1, 2, 3 입니다. 따라서 1 + 2 + 3 + 4 + 1 + 2 + 3 = 16 을 return합니다.", () => {
-    expect(solution("1a2b3c4d123")).toBe(16);
+    expect(solution('1a2b3c4d123')).toBe(16);
   });
 });
 ```
@@ -401,7 +456,7 @@ describe("안의 모든 자연수들의 합을 return하도록 solution 함수�
 function solution(order) {
   return order
     .toString()
-    .split("")
+    .split('')
     .map((num) => Number(num))
     .filter((num) => num % 3 === 0 && num !== 0).length;
 }
@@ -503,16 +558,16 @@ function solution(keyinput, board) {
   let res = [0, 0];
   for (let p of keyinput) {
     switch (p) {
-      case "left":
+      case 'left':
         if (-res[0] < board[0] / 2 - 1) res[0]--;
         break;
-      case "right":
+      case 'right':
         if (res[0] < board[0] / 2 - 1) res[0]++;
         break;
-      case "up":
+      case 'up':
         if (res[1] < board[1] / 2 - 1) res[1]++;
         break;
-      case "down":
+      case 'down':
         if (-res[1] < board[1] / 2 - 1) res[1]--;
         break;
     }
@@ -562,7 +617,7 @@ function range(arr) {
 [[Javascript] 배열 중복 값 개수 구하기](https://hianna.tistory.com/459)
 
 ```js
-const arr = ["a", "b", "a", "b", "c"];
+const arr = ['a', 'b', 'a', 'b', 'c'];
 
 const result = {};
 arr.forEach((x) => {
@@ -586,7 +641,7 @@ console.log(filteredByValue); // {V: 5}
 
 ```js
 const obj = {
-  product: "book",
+  product: 'book',
   id: 123,
   page: 23,
 };
@@ -640,7 +695,7 @@ function solution(board) {
   // 좌표를 찾아냅니다.
   const mineLocation = Object.keys(
     Object.fromEntries(Object.entries(memo).filter(([key, value]) => value > 0))
-  ).map((loc) => loc.split(" ").map((loc) => Number(loc)));
+  ).map((loc) => loc.split(' ').map((loc) => Number(loc)));
   // 위험지대주변 1칸은 기록합니다.
   const dangerArea = [];
   mineLocation.forEach((xy) => {
@@ -768,15 +823,15 @@ function slope(dot1, dot2) {
  */
 function solution(n, arr1, arr2) {
   return [...Array(n)].map((_, idx) => {
-    const firstByte = convertToBinary(arr1, n)[idx].split("");
-    const secondByte = convertToBinary(arr2, n)[idx].split("");
+    const firstByte = convertToBinary(arr1, n)[idx].split('');
+    const secondByte = convertToBinary(arr2, n)[idx].split('');
     return [...Array(n)]
       .map((_, idx) => {
         return parseInt(firstByte[idx]) || parseInt(secondByte[idx])
-          ? "#"
-          : " ";
+          ? '#'
+          : ' ';
       })
-      .join("");
+      .join('');
   });
 }
 
@@ -787,11 +842,11 @@ function solution(n, arr1, arr2) {
  */
 function convertToBinary(arr, num) {
   return arr
-    .map((number) => number.toString(2).split(""))
+    .map((number) => number.toString(2).split(''))
     .map((binary) => {
       const missingZero = [...Array(num - binary.length)].fill(0);
       binary.unshift(...missingZero);
-      return binary.map((num) => num.toString()).join("");
+      return binary.map((num) => num.toString()).join('');
     });
 }
 ```
@@ -800,13 +855,13 @@ function convertToBinary(arr, num) {
 function solution(n, arr1, arr2) {
   return arr1.map((v, i) =>
     addZero(n, (v | arr2[i]).toString(2)).replace(/1|0/g, (a) =>
-      +a ? "#" : " "
+      +a ? '#' : ' '
     )
   );
 }
 
 const addZero = (n, s) => {
-  return "0".repeat(n - s.length) + s;
+  return '0'.repeat(n - s.length) + s;
 };
 ```
 

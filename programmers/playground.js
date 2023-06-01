@@ -1,24 +1,12 @@
 /**
- * @param {number[][]} arr
- * @returns {number[][]}
+ * @param {number[]} arr
+ * @param {number} k
+ * @returns
  */
-function solution(arr) {
-  let i = arr.length;
-  let j = arr[0].length;
-
-  if (i === j) return arr;
-  if (i > j) {
-    for (let idx = 0; idx < arr.length; idx++) {
-      arr[idx].push(...Array.from({ length: i - j }, () => 0));
-    }
-    return arr;
-  }
-  if (j > i) {
-    for (let idx = 0; idx < j - i; idx++) {
-      arr.push(Array.from({ length: j }, () => 0));
-    }
-    return arr;
-  }
+function solution(arr, k) {
+  const set = new Set(arr);
+  const result = Array.from({ length: k }, (_, idx) => [...set][idx] ?? -1);
+  return result;
 }
 
 export default solution;
