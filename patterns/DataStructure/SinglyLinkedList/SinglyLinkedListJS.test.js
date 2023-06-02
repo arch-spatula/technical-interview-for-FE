@@ -1,38 +1,4 @@
-# Singly Linked List
-
-단방향으로 Node를 연결합니다. 그래서 단방향으로 움직이기는 쉽지만 뒤로가기는 어렵습니다.
-
-```js
-export class SinglyLinkedList {
-  constructor() {
-    this.head;
-    this.tail;
-  }
-
-  push() {}
-
-  pop() {}
-
-  shift() {}
-
-  unshift() {}
-
-  get() {}
-
-  set() {}
-
-  insert() {}
-
-  remove() {}
-
-  reverse() {}
-}
-```
-
-시작코드
-
-```js
-import { SinglyLinkedList } from './SinglyLinkedList';
+import { SinglyLinkedList } from './SinglyLinkedListJS';
 import { test, expect, describe } from 'vitest';
 
 describe('단일 연결리스트의 push 메서드를 구현합니다.', () => {
@@ -43,12 +9,12 @@ describe('단일 연결리스트의 push 메서드를 구현합니다.', () => {
 
   test('아무 값도 추가하지 않은 링크리스트의 head의 값은 null입니다.', () => {
     const list = new SinglyLinkedList();
-    expect(list.head).toBe(null);
+    expect(list.head).toBeNull();
   });
 
   test('아무 값도 추가하지 않은 링크리스트의 tail의 값은 null입니다.', () => {
     const list = new SinglyLinkedList();
-    expect(list.tail).toBe(null);
+    expect(list.tail).toBeNull();
   });
 
   test('링크드 리스트에 노드 1개를 추가해서 길이가 1이 됩니다.', () => {
@@ -60,13 +26,13 @@ describe('단일 연결리스트의 push 메서드를 구현합니다.', () => {
   test('링크드 리스트에 노드 1개를 추가하고 그 값을 얻을 수 있습니다.', () => {
     const list = new SinglyLinkedList();
     list.push(80);
-    expect(list.head?.val).toBe(80);
+    expect(list.head).toBe(80);
   });
 
   test('링크드 리스트에 노드 1개를 추가하고 head와 tail이 동일합니다.', () => {
     const list = new SinglyLinkedList();
     list.push(80);
-    expect(list.head?.val === list.tail?.val).toBe(true);
+    expect(list.head === list.tail).toBe(true);
   });
 
   test('링크드 리스트에 노드 2개를 추가하면서 head와 tail이 달라집니다.', () => {
@@ -80,35 +46,14 @@ describe('단일 연결리스트의 push 메서드를 구현합니다.', () => {
     const list = new SinglyLinkedList();
     list.push(80);
     list.push(90);
-    expect(list.head?.val).toBe(80);
+    expect(list.head).toBe(80);
   });
 
   test('링크드 리스트에 노드 2개를 추가하면서 기존 노드는 tail이 됩니다.', () => {
     const list = new SinglyLinkedList();
     list.push(80);
     list.push(90);
-    expect(list.tail?.val).toBe(90);
-  });
-
-  test('링크드 리스트에 노드 2개를 추가하면서 head 다음에 next로 tail을 접근할 수 있습니다.', () => {
-    const list = new SinglyLinkedList();
-    list.push(80);
-    list.push(90);
-    expect(list.tail === list.head?.next).toBe(true);
-  });
-
-  test('링크드 리스트에 노드 4개를 추가하면 정상 동작합니다.', () => {
-    const list = new SinglyLinkedList();
-    list.push(80);
-    list.push(90);
-    list.push(70);
-    list.push(100);
-    expect(list.head?.val).toBe(80);
-    expect(list.head?.next?.val).toBe(90);
-    expect(list.head?.next?.next?.val).toBe(70);
-    expect(list.head?.next?.next?.next?.val).toBe(100);
-    expect(list.head?.next?.next?.next?.next).toBe(null);
-    expect(list.tail?.val).toBe(100);
+    expect(list.tail).toBe(90);
   });
 });
 
@@ -123,7 +68,7 @@ describe('pop 메서드를 구현합니다.', () => {
     // Loop through the list until you reach the tail
     const list = new SinglyLinkedList();
     list.push(100);
-    expect(list.pop()?.val).toBe(100);
+    expect(list.pop()).toBe(100);
     expect(list.pop()).toBe(null);
   });
 
@@ -134,15 +79,15 @@ describe('pop 메서드를 구현합니다.', () => {
     list.push(90);
     list.push(80);
     list.pop();
-    expect(list.tail?.val).toBe(90);
+    expect(list.tail).toBe(90);
   });
 
   test('노드가 2개일 때', () => {
     const list = new SinglyLinkedList();
     list.push(100);
     list.push(90);
-    expect(list.pop()?.val).toBe(90);
-    expect(list.pop()?.val).toBe(100);
+    expect(list.pop()).toBe(90);
+    expect(list.pop()).toBe(100);
     expect(list.head).toBe(null);
   });
 });
@@ -158,13 +103,13 @@ describe('shift', () => {
     list.push(90);
     list.push(80);
     list.push(70);
-    expect(list.shift()?.val).toBe(100);
+    expect(list.shift()).toBe(100);
     expect(list.length).toBe(3);
-    expect(list.shift()?.val).toBe(90);
+    expect(list.shift()).toBe(90);
     expect(list.length).toBe(2);
-    expect(list.shift()?.val).toBe(80);
+    expect(list.shift()).toBe(80);
     expect(list.length).toBe(1);
-    expect(list.shift()?.val).toBe(70);
+    expect(list.shift()).toBe(70);
     expect(list.length).toBe(0);
     expect(list.shift()).toBe(null);
     expect(list.length).toBe(0);
@@ -184,7 +129,7 @@ describe('unshift', () => {
     list.unshift(90);
     list.unshift(80);
     expect(list.head?.val).toBe(80);
-    expect(list.head?.next?.val).toBe(90);
+    expect(list.head?.prev?.val).toBe(90);
     expect(list.tail?.val).toBe(100);
   });
 });
@@ -360,6 +305,3 @@ describe('Reverse', () => {
     expect(list.tail?.val).toBe(100);
   });
 });
-```
-
-현재 테스트 코드도 리팩토링이 필요합니다. Node는 노출되면 곤란합니다. 모듈 내에서만 존재(contained)해야 합니다. 외부접근이 막혀야 합니다.

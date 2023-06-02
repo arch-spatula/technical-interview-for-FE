@@ -1,5 +1,9 @@
 # patterns에 대한 방향
 
+[trekhleb / javascript-algorithms ](https://github.com/trekhleb/javascript-algorithms)
+
+위 레포를 활용합니다.
+
 이런 저런 알고리즘 패턴을 작성할 것입니다.
 
 디자인 패턴을 추가합니다.
