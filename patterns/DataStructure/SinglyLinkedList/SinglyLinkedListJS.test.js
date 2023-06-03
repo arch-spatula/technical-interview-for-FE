@@ -120,17 +120,17 @@ describe('unshift', () => {
   test('1개 추가', () => {
     const list = new SinglyLinkedList();
     list.unshift(100);
-    expect(list.tail?.val).toBe(100);
+    expect(list.tail).toBe(100);
   });
 
   test('2개 추가', () => {
     const list = new SinglyLinkedList();
     list.unshift(100);
     list.unshift(90);
+    expect(list.head).toBe(90);
     list.unshift(80);
-    expect(list.head?.val).toBe(80);
-    expect(list.head?.prev?.val).toBe(90);
-    expect(list.tail?.val).toBe(100);
+    expect(list.head).toBe(80);
+    expect(list.tail).toBe(100);
   });
 });
 
@@ -146,11 +146,11 @@ describe('get', () => {
     list.push(90);
     list.push(80);
     expect(list.length).toBe(3);
-    expect(list.get(-1)).toBe(null);
-    expect(list.get(0)?.val).toBe(100);
-    expect(list.get(1)?.val).toBe(90);
-    expect(list.get(2)?.val).toBe(80);
-    expect(list.get(3)).toBe(null);
+    expect(list.get(-1)).toBeNull();
+    expect(list.get(0)).toBe(100);
+    expect(list.get(1)).toBe(90);
+    expect(list.get(2)).toBe(80);
+    expect(list.get(3)).toBeNull();
   });
 });
 
@@ -171,14 +171,14 @@ describe('set', () => {
     list.push(80);
     expect(list.length).toBe(3);
     expect(list.set(0, 25)).toBe(true);
-    expect(list.get(0)?.val).toBe(25);
+    expect(list.get(0)).toBe(25);
   });
 
   test('Node가 1개만 있어도 갱신할 수 있습니다.', () => {
     const list = new SinglyLinkedList();
     list.push(100);
     expect(list.set(0, 25)).toBe(true);
-    expect(list.get(0)?.val).toBe(25);
+    expect(list.get(0)).toBe(25);
   });
 });
 
@@ -200,7 +200,7 @@ describe('insert', () => {
     list.push(80);
     expect(list.length).toBe(3);
     expect(list.insert(3, 70)).toBe(true);
-    expect(list.tail?.val).toBe(70);
+    expect(list.tail).toBe(70);
     expect(list.tail === list.get(3)).toBe(true);
   });
 
@@ -217,9 +217,9 @@ describe('insert', () => {
     list.push(90);
     list.push(80);
     expect(list.insert(1, 70)).toBe(true);
-    expect(list.get(1)?.val).toBe(70);
+    expect(list.get(1)).toBe(70);
     expect(list.insert(2, 60)).toBe(true);
-    expect(list.get(2)?.val).toBe(60);
+    expect(list.get(2)).toBe(60);
   });
 
   test('Increment the length', () => {
@@ -248,7 +248,7 @@ describe('remove', () => {
     list.push(90);
     list.push(80);
     expect(list.length).toBe(3);
-    expect(list.remove(2)?.val).toBe(80);
+    expect(list.remove(2)).toBe(80);
   });
 
   test('If the index is 0, shift', () => {
@@ -257,7 +257,7 @@ describe('remove', () => {
     list.push(90);
     list.push(80);
     expect(list.length).toBe(3);
-    expect(list.remove(0)?.val).toBe(100);
+    expect(list.remove(0)).toBe(100);
   });
 
   test('Return the value of the node removed', () => {
@@ -266,9 +266,9 @@ describe('remove', () => {
     list.push(90);
     list.push(80);
     expect(list.length).toBe(3);
-    expect(list.remove(1)?.val).toBe(90);
-    expect(list.get(1)?.val).toBe(80);
-    expect(list.remove(1)?.val).toBe(80);
+    expect(list.remove(1)).toBe(90);
+    expect(list.get(1)).toBe(80);
+    expect(list.remove(1)).toBe(80);
     expect(list.get(1)).toBe(null);
   });
 
@@ -289,8 +289,8 @@ describe('Reverse', () => {
     list.push(100);
     list.push(90);
     list.reverse();
-    expect(list.head?.val).toBe(90);
-    expect(list.tail?.val).toBe(100);
+    expect(list.head).toBe(90);
+    expect(list.tail).toBe(100);
   });
 
   test('중간 노드의 순서가 바뀝니다.', () => {
@@ -300,8 +300,8 @@ describe('Reverse', () => {
     list.push(80);
     list.push(70);
     list.reverse();
-    expect(list.head?.val).toBe(70);
-    expect(list.get(1)?.val).toBe(80);
-    expect(list.tail?.val).toBe(100);
+    expect(list.head).toBe(70);
+    expect(list.get(1)).toBe(80);
+    expect(list.tail).toBe(100);
   });
 });
