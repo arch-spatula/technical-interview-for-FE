@@ -1,37 +1,19 @@
 /**
- * @param {string} s
  * @param {number} n
- * @returns {string}
+ * @returns {number}
  */
-function solution(s, n) {
-  // 스트림처리
-  const result = s
-    .split('')
-    .map((char) => {
-      if (char === ' ') return ' ';
-      // 대소문자 구분
-      if (char.toUpperCase() === char) {
-        // 아스키코드 인덱스 접근하기
-        // n만큼 이동하기
-        // 범위 확인
-        if (
-          char.charCodeAt() + n - 'A'.charCodeAt() >
-          'Z'.charCodeAt() - 'A'.charCodeAt()
-        )
-          return String.fromCharCode(char.charCodeAt() + n - 26);
-        else return String.fromCharCode(char.charCodeAt() + n);
-      } else {
-        // 아스키코드 인덱스 접근하기
-        if (
-          char.charCodeAt() + n - 'a'.charCodeAt() >
-          'z'.charCodeAt() - 'a'.charCodeAt()
-        )
-          return String.fromCharCode(char.charCodeAt() + n - 26);
-        else return String.fromCharCode(char.charCodeAt() + n);
-      }
-    })
-    .join('');
-  return result;
+function solution(n) {
+  // memo
+  const memo = [0, 1];
+  // 재귀함수
+  let idx = 0;
+  do {
+    const fib = memo[idx] + memo[idx + 1];
+    memo.push(fib % 1234567);
+    idx += 1;
+  } while (memo.length <= n);
+
+  return memo.at(-1);
 }
 
 export default solution;
