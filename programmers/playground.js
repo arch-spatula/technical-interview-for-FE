@@ -1,19 +1,21 @@
 /**
- * @param {number} n
+ * @param {number[]} rank
+ * @param {boolean[]} attendance
  * @returns {number}
  */
-function solution(n) {
-  // memo
-  const memo = [0, 1];
-  // 재귀함수
-  let idx = 0;
-  do {
-    const fib = memo[idx] + memo[idx + 1];
-    memo.push(fib % 1234567);
-    idx += 1;
-  } while (memo.length <= n);
-
-  return memo.at(-1);
+function solution(rank, attendance) {
+  const table = rank
+    .map((rank, idx) => ({
+      rank,
+      idx,
+      attendance: attendance[idx],
+    }))
+    .filter((elem) => elem.attendance)
+    .sort((a, b) => a.rank - b.rank)
+    .slice(0, 3)
+    .map((elem, idx) => elem.idx * Math.pow(10, 4 - idx * 2))
+    .reduce((acc, curr) => acc + curr);
+  return table;
 }
 
 export default solution;
