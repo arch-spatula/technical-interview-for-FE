@@ -1,19 +1,32 @@
 /**
- * @param {number} n
- * @returns {number}
+ * @param {string} s
+ * @returns {0 | 1}
  */
-function solution(n) {
-  // memo
-  const memo = [0, 1];
-  // 재귀함수
-  let idx = 0;
-  do {
-    const fib = memo[idx] + memo[idx + 1];
-    memo.push(fib % 1234567);
-    idx += 1;
-  } while (memo.length <= n);
-
-  return memo.at(-1);
+function solution(s) {
+  let sArr = s.split('');
+  let stack = [];
+  for (let i = sArr.length - 1; i >= 0; i--) {
+    if (stack.at(-1) === sArr[i]) stack.pop();
+    else stack.push(sArr[i]);
+  }
+  return stack.length === 0 ? 1 : 0;
 }
+
+// int solution(string s)
+// {
+//     stack<char> sStack;
+//     for(auto chr:s)
+//     {
+//         if(sStack.size()>0 && sStack.top() == chr)
+//         {
+//             sStack.pop();
+//         }
+//         else
+//         {
+//             sStack.push(chr);
+//         }
+//     }
+//     return answer;
+// }
 
 export default solution;
