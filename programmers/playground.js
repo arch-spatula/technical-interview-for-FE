@@ -1,32 +1,21 @@
 /**
- * @param {string} s
- * @returns {0 | 1}
+ * @param {number[]} rank
+ * @param {boolean[]} attendance
+ * @returns {number}
  */
-function solution(s) {
-  let sArr = s.split('');
-  let stack = [];
-  for (let i = sArr.length - 1; i >= 0; i--) {
-    if (stack.at(-1) === sArr[i]) stack.pop();
-    else stack.push(sArr[i]);
-  }
-  return stack.length === 0 ? 1 : 0;
+function solution(rank, attendance) {
+  const table = rank
+    .map((rank, idx) => ({
+      rank,
+      idx,
+      attendance: attendance[idx],
+    }))
+    .filter((elem) => elem.attendance)
+    .sort((a, b) => a.rank - b.rank)
+    .slice(0, 3)
+    .map((elem, idx) => elem.idx * Math.pow(10, 4 - idx * 2))
+    .reduce((acc, curr) => acc + curr);
+  return table;
 }
-
-// int solution(string s)
-// {
-//     stack<char> sStack;
-//     for(auto chr:s)
-//     {
-//         if(sStack.size()>0 && sStack.top() == chr)
-//         {
-//             sStack.pop();
-//         }
-//         else
-//         {
-//             sStack.push(chr);
-//         }
-//     }
-//     return answer;
-// }
 
 export default solution;
