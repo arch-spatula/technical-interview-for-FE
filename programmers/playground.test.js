@@ -1,31 +1,19 @@
 import solution from './playground';
 import { test, expect, describe } from 'vitest';
 
-// rank	                  attendance	                                  result
-// [3, 7, 2, 5, 4, 6, 1]	[false, true, true, true, true, false, false]	20403
-// [1, 2, 3]	            [true, true, true]	                          102
-// [6, 1, 5, 2, 3, 4]	    [true, false, true, false, false, true]	      50200
+// brown	yellow	return
+// 10	    2	      [4, 3]
+// 8	    1	      [3, 3]
+// 24	    24	    [8, 6]
 
-describe('시저 암호', () => {
+describe('카펫', () => {
   test('예제 1', () => {
-    expect(solution(2)).toBe(1);
+    expect(solution(10, 2)).toEqual([4, 3]);
   });
   test('예제 2', () => {
-    expect(solution(3)).toBe(2);
+    expect(solution(8, 1)).toEqual([3, 3]);
   });
   test('예제 3', () => {
-    expect(solution(4)).toBe(3);
-  });
-  test('예제 4', () => {
-    expect(solution(5)).toBe(5);
-  });
-  test('예제 5', () => {
-    expect(solution(1500)).toBe(1_058_440);
-  });
-  test('예제 6', () => {
-    expect(solution(6)).toBe(8);
-  });
-  test('예제 7', () => {
-    expect(solution(65)).toBe(117388);
+    expect(solution(24, 24)).toEqual([8, 6]);
   });
 });
