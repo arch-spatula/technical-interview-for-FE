@@ -1,20 +1,21 @@
 import solution from './playground';
 import { test, expect, describe } from 'vitest';
 
-// array	                commands	                        return
-// [1, 5, 2, 6, 3, 7, 4]	[[2, 5, 3], [4, 4, 1], [1, 7, 3]]	[5, 6, 3]
+// people	          limit	return
+// [70, 50, 80, 50]	100	  3
+// [70, 80, 50]	    100	  3
 
-describe('K번째수', () => {
+describe('구명보트', () => {
   test('예제 1', () => {
-    expect(
-      solution(
-        [1, 5, 2, 6, 3, 7, 4],
-        [
-          [2, 5, 3],
-          [4, 4, 1],
-          [1, 7, 3],
-        ]
-      )
-    ).toEqual([5, 6, 3]);
+    expect(solution([70, 50, 80, 50], 100)).toBe(3);
+  });
+  test('예제 2', () => {
+    expect(solution([70, 80, 50], 100)).toBe(3);
+  });
+  test('예제 3', () => {
+    expect(solution([60, 80, 40], 100)).toBe(2);
+  });
+  test('예제 4', () => {
+    expect(solution([45, 47, 49, 50, 80], 100)).toBe(3);
   });
 });
