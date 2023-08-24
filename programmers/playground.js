@@ -1,16 +1,15 @@
 /**
- * @param {number[]} people
- * @param {number} limit
- * @returns {number}
+ * @param {number[]} food
+ * @returns {string}
  */
-function solution(people, limit) {
-  let count = 0;
-  people.sort((a, b) => b - a);
-  while (0 < people.length) {
-    const first = people.pop();
-    if (people.at(-1) <= limit - first) people.pop();
-    count += 1;
-  }
-  return count;
+function solution(food) {
+  let result = '';
+  food.forEach((elem, idx) => {
+    if (idx !== 0) {
+      result += `${idx}`.repeat(Math.floor(elem / 2));
+    }
+  });
+  return result + '0' + result.split('').reverse().join('');
 }
+
 export default solution;
