@@ -24,3 +24,5 @@
 # 활용 중인 질문지
 
 https://github.com/junh0328/prepare_frontend_interview
+
+[인성 면접질문 활용](https://teamsparta.notion.site/50-4199e37f6e10400594ea836c69659666)

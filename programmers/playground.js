@@ -1,61 +1,18 @@
-// 최소공배수
-export function lcm(x, y) {
-  const result = [];
-  let dev = 2;
-  let n = x;
-  let m = y;
-  while (dev <= n && dev <= m) {
-    if (n % dev === 0 && m % dev === 0) {
-      n = parseInt(n / dev);
-      m = parseInt(m / dev);
-      result.push(dev);
-      dev = 2;
-    } else {
-      dev += 1;
-    }
-  }
-  result.push(n);
-  result.push(m);
-  return result.reduce((acc, curr) => acc * curr);
-}
-
 /**
- * @param {number[]} arr
+ * @param {number} n
  * @returns {number}
  */
-// function solution(arr) {
-//   const multiple = [];
-//   let copyArr = arr.slice();
-//   let div = 2;
+function solution(n) {
+  const MOD = 1234567;
+  const dp = new Array(n + 1).fill(0);
+  dp[1] = 1;
+  dp[2] = 2;
 
-//   while (div <= Math.max(...copyArr)) {
-//     if (copyArr.every((num) => num % div === 0)) {
-//       copyArr = copyArr.map((num) => parseInt(num / div));
-//       multiple.push(div);
-//       div = 2;
-//     } else {
-//       div += 1;
-//     }
-//   }
-
-//   return copyArr.concat(multiple).reduce((acc, curr) => acc * curr);
-// }
-
-function solution(arr) {
-  arr.sort((a, b) => b - a);
-  let result,
-    isDivide = false,
-    count = arr[0];
-
-  while (!isDivide) {
-    isDivide = arr.every((num) => count % num === 0);
-    if (isDivide) {
-      result = count;
-      break;
-    }
-    count += 1;
+  for (let i = 3; i <= n; i++) {
+    dp[i] = (dp[i - 1] + dp[i - 2]) % MOD;
   }
-  return result;
+
+  return dp[n];
 }
 
 export default solution;
