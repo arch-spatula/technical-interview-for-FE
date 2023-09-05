@@ -1,32 +1,38 @@
-import solution, { sumWindow } from './playground';
+import solution, { isCorrect, sumWindow } from './playground';
 import { test, expect, describe } from 'vitest';
+
+// s	      result
+// "[](){}"	3
+// "}]()[{"	2
+// "[)(]"	  0
+// "}}}"	  0
 
 describe('연속 부분 수열 합의 개수', () => {
   test('예제 1', () => {
-    expect(solution([7, 9, 1, 1, 4])).toBe(18);
+    expect(solution('[](){}')).toBe(3);
+  });
+  test('예제 2', () => {
+    expect(solution('}]()[{')).toBe(2);
+  });
+  test('예제 3', () => {
+    expect(solution('[)(]')).toBe(0);
+  });
+  test('예제 4', () => {
+    expect(solution('}}}')).toBe(0);
   });
 });
 
-describe('sumWindow', () => {
-  test('1개', () => {
-    expect(sumWindow(0, 1, [7, 9, 1, 1, 4])).toBe(7);
-    expect(sumWindow(1, 1, [7, 9, 1, 1, 4])).toBe(9);
-    expect(sumWindow(2, 1, [7, 9, 1, 1, 4])).toBe(1);
-    expect(sumWindow(3, 1, [7, 9, 1, 1, 4])).toBe(1);
-    expect(sumWindow(4, 1, [7, 9, 1, 1, 4])).toBe(4);
+describe('isCorrect', () => {
+  test('예제 1', () => {
+    expect(isCorrect('[](){}')).toBe(true);
   });
-  test('2개', () => {
-    expect(sumWindow(0, 2, [7, 9, 1, 1, 4])).toBe(16);
-    expect(sumWindow(1, 2, [7, 9, 1, 1, 4])).toBe(10);
-    expect(sumWindow(2, 2, [7, 9, 1, 1, 4])).toBe(2);
-    expect(sumWindow(3, 2, [7, 9, 1, 1, 4])).toBe(5);
-    expect(sumWindow(4, 2, [7, 9, 1, 1, 4])).toBe(11);
+  test('예제 2', () => {
+    expect(isCorrect('](){}[')).toBe(false);
   });
-  test('3개', () => {
-    expect(sumWindow(0, 3, [7, 9, 1, 1, 4])).toBe(17);
-    expect(sumWindow(1, 3, [7, 9, 1, 1, 4])).toBe(11);
-    expect(sumWindow(2, 3, [7, 9, 1, 1, 4])).toBe(6);
-    expect(sumWindow(3, 3, [7, 9, 1, 1, 4])).toBe(12);
-    expect(sumWindow(4, 3, [7, 9, 1, 1, 4])).toBe(20);
+  test('예제 3', () => {
+    expect(isCorrect('[{}]()')).toBe(true);
+  });
+  test('예제 4', () => {
+    expect(isCorrect('}')).toBe(false);
   });
 });
