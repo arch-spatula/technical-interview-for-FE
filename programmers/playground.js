@@ -1,46 +1,29 @@
 /**
- * @param {number} k
- * @param {number[]} score
+ * @param {number[]} elements
  * @returns {number}
  */
-function solution(k, score) {
-  let survivors = [];
-  const result = [];
-
-  for (let scoreIdx = 0; scoreIdx < score.length; scoreIdx++) {
-    survivors = cutOff(insert(score[scoreIdx], survivors), k);
-    result.push(survivors.at(-1));
-  }
-  return result;
-}
-
-/**
- * @param {number} num
- * @param {number[]} arr
- * @returns {number[]}
- */
-export function insert(num, arr) {
-  const result = arr.slice();
-  let insertFlag = false;
-  for (let i = 0; i < arr.length; i++) {
-    if (num >= arr[i]) {
-      result.splice(i, 0, num);
-      insertFlag = true;
-      break;
+function solution(elements) {
+  const result = new Set();
+  let windowSize = 1;
+  while (windowSize <= elements.length) {
+    for (let i = 0; i < elements.length; i++) {
+      result.add(sumWindow(i, windowSize, elements));
     }
+    windowSize += 1;
   }
-  if (!insertFlag) result.push(num);
 
-  return result;
+  return result.size;
 }
 
 /**
+ * @param {number} idx
+ * @param {number} size
  * @param {number[]} arr
- * @param {number} maxLength
- * @returns {number[]}
+ * @returns {number}
  */
-export function cutOff(arr, maxLength) {
-  return arr.slice(0, maxLength);
+export function sumWindow(idx, size, arr) {
+  const result = [...arr, ...arr];
+  return result.slice(idx, idx + size).reduce((acc, curr) => acc + curr);
 }
 
 export default solution;
