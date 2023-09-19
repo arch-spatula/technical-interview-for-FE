@@ -1,25 +1,37 @@
 /**
- * @param {[string, string][]} clothes
- * @returns {number}
+ * @param {string} s
+ * @returns {number[]}
  */
-function solution(clothes) {
-  let result = 1;
-  const memo = new Map();
-  clothes.forEach(([name, kind]) => {
-    if (!memo.get(kind)) memo.set(kind, [name]);
-    else memo.set(kind, [...memo.get(kind), name]);
-  });
-  // 아래가 어려웠습니다.
-  for (const item of memo.values()) {
-    result *= item.length + 1;
+function solution(s) {
+  /** @type {string[]} */
+  let parsedTuple = [];
+  let pushFlag = false;
+  for (let i = 0; i < s.slice(1, s.length - 1).length; i++) {
+    if (s[i] === '{') {
+      pushFlag = true;
+      parsedTuple.push('');
+      continue;
+    }
+    if (s[i] === '}') {
+      pushFlag = false;
+      continue;
+    }
+    if (pushFlag) parsedTuple[parsedTuple.length - 1] += s[i];
   }
-  // 1종류 1개
-  // nC1 + nC1 ...
-  // 2종류 1개
-  // nC1 * nC1 +
-  // 3종류 1개
-  // 4종류 1개 ...
-  return result - 1;
+
+  parsedTuple = parsedTuple
+    .map((char) => char.split(',').map((char) => parseInt(char)))
+    .slice(1)
+    .sort((a, b) => a.length - b.length);
+
+  let prev = [];
+  const result = Array.from({ length: parsedTuple.length }, (_, idx) => {
+    const foo = parsedTuple[idx].filter((elem) => !prev.includes(elem));
+    prev = parsedTuple[idx];
+    return foo[0];
+  });
+
+  return result;
 }
 
 export default solution;
