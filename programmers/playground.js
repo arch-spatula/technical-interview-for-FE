@@ -1,37 +1,47 @@
 /**
- * @param {string} s
- * @returns {number[]}
+ * @param {number[]} answers
+ * @returns {number}
  */
-function solution(s) {
-  /** @type {string[]} */
-  let parsedTuple = [];
-  let pushFlag = false;
-  for (let i = 0; i < s.slice(1, s.length - 1).length; i++) {
-    if (s[i] === '{') {
-      pushFlag = true;
-      parsedTuple.push('');
-      continue;
-    }
-    if (s[i] === '}') {
-      pushFlag = false;
-      continue;
-    }
-    if (pushFlag) parsedTuple[parsedTuple.length - 1] += s[i];
-  }
+function solution(answers) {
+  const result = [];
+  const students = [
+    {
+      size: countHit(answers, [1, 2, 3, 4, 5]),
+      idx: 1,
+    },
 
-  parsedTuple = parsedTuple
-    .map((char) => char.split(',').map((char) => parseInt(char)))
-    .slice(1)
-    .sort((a, b) => a.length - b.length);
+    {
+      size: countHit(answers, [2, 1, 2, 3, 2, 4, 2, 5]),
+      idx: 2,
+    },
+    {
+      size: countHit(answers, [3, 3, 1, 1, 2, 2, 4, 4, 5, 5]),
+      idx: 3,
+    },
+  ];
 
-  let prev = [];
-  const result = Array.from({ length: parsedTuple.length }, (_, idx) => {
-    const foo = parsedTuple[idx].filter((elem) => !prev.includes(elem));
-    prev = parsedTuple[idx];
-    return foo[0];
+  let maxCount = 0;
+  students.sort((a, b) => b.size - a.size);
+  students.forEach((student) => {
+    if (maxCount < student.size) maxCount = student.size;
+    if (maxCount === student.size) result.push(student.idx);
   });
 
   return result;
 }
 
+/**
+ * @param {number[]} answers
+ * @param {number[]} pattern
+ * @returns {number}
+ */
+function countHit(answers, pattern) {
+  let result = 0;
+  for (let i = 0; i < answers.length; i++)
+    if (pattern[i % pattern.length] === answers[i]) result += 1;
+  return result;
+}
+
 export default solution;
+
+export { countHit };
