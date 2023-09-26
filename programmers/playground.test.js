@@ -1,17 +1,17 @@
 import solution, { isPrime } from './playground';
 import { test, expect, describe } from 'vitest';
 
-// nums	        result
-// [1,2,3,4]	  1
-// [1,2,7,6,4]	4
+// n	result
+// 10	4
+// 5	3
 
 describe('소수 만들기', () => {
   test('예제 1', () => {
-    expect(solution([1, 2, 3, 4])).toBe(1);
+    expect(solution(10)).toBe(4);
   });
 
   test('예제 2', () => {
-    expect(solution([1, 2, 7, 6, 4])).toBe(4);
+    expect(solution(5)).toBe(3);
   });
 });
 
