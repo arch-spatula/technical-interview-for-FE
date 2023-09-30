@@ -1,25 +1,15 @@
-import solution, { isPrime } from './playground';
+import solution from './playground';
 import { test, expect, describe } from 'vitest';
 
-// n	result
-// 10	4
-// 5	3
+// priorities	        location	return
+// [2, 1, 3, 2]	      2	        1
+// [1, 1, 9, 1, 1, 1]	0	        5
 
-describe('소수 만들기', () => {
+describe('프로세스', () => {
   test('예제 1', () => {
-    expect(solution(10)).toBe(4);
+    expect(solution([2, 1, 3, 2], 2)).toBe(1);
   });
-
   test('예제 2', () => {
-    expect(solution(5)).toBe(3);
-  });
-});
-
-describe('helper', () => {
-  test('소수 맞음', () => {
-    expect(isPrime(7)).toBe(true);
-  });
-  test('소수 아님', () => {
-    expect(isPrime(6)).toBe(false);
+    expect(solution([1, 1, 9, 1, 1, 1], 0)).toBe(5);
   });
 });
