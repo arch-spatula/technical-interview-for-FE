@@ -1,15 +1,18 @@
 import solution from './playground';
 import { test, expect, describe } from 'vitest';
 
-// priorities	        location	return
-// [2, 1, 3, 2]	      2	        1
-// [1, 1, 9, 1, 1, 1]	0	        5
+// common	      result
+// [1, 2, 3, 4]	5
+// [2, 4, 8]	  16
 
-describe('프로세스', () => {
+describe('다음에 올 숫자', () => {
   test('예제 1', () => {
-    expect(solution([2, 1, 3, 2], 2)).toBe(1);
+    expect(solution([1, 2, 3, 4])).toBe(5);
   });
   test('예제 2', () => {
-    expect(solution([1, 1, 9, 1, 1, 1], 0)).toBe(5);
+    expect(solution([2, 4, 8])).toBe(16);
+  });
+  test('예제 2', () => {
+    expect(solution([2, -4, 8])).toBe(-16);
   });
 });

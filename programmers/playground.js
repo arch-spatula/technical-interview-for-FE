@@ -1,29 +1,21 @@
 /**
- * @param {number[]} priorities
- * @param {number} location
+ * @param {number[]} common
  * @returns {number}
  */
-function solution(priorities, location) {
-  const queue = [...priorities].map((num, idx) => ({ priority: num, idx }));
-  const orderedList = [];
+function solution(common) {
+  let result = null;
+  const [first, second, third] = common;
+  const firstDiff = second - first;
+  const secondDiff = third - second;
 
-  while (queue.length > 0) {
-    // dequeue
-    const dequeue = queue.shift();
-    const max = Math.max(...queue.map((elem) => elem.priority));
-    if (max > dequeue.priority) {
-      // 더 큰것이 있으면 enqueue
-      queue.push(dequeue);
-    } else {
-      // 더 큰것이 없으면 ordered에 추가하고 삭제
-      orderedList.push(dequeue);
-    }
-    // 없으면 while 중단
+  if (firstDiff === secondDiff) {
+    // 등차수열
+    result = first + firstDiff * common.length;
+  } else {
+    // 등비수열
+    result = first * Math.pow(second / first, common.length);
   }
 
-  // location 선형탐색
-  const result = orderedList.findIndex((elem) => elem.idx === location) + 1;
-  // 해당 인덱스 반환
   return result;
 }
 
