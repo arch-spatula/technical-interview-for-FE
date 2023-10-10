@@ -1,27 +1,32 @@
-const fs = require("fs");
+const fs = require('fs');
 const filePath =
-  process.platform === "linux" ? "/dev/stdin" : __dirname + "/input.txt";
-const input = fs.readFileSync(filePath).toString().split("\n").map(Number);
+  process.platform === 'linux' ? '/dev/stdin' : __dirname + '/input.txt';
+const [input] = fs.readFileSync(filePath).toString().split('\n').map(String);
 
+const grade = {
+  'A+': '4.3',
+  A0: '4.0',
+  'A-': '3.7',
+  'B+': '3.3',
+  B0: '3.0',
+  'B-': '2.7',
+  'C+': '2.3',
+  C0: '2.0',
+  'C-': '1.7',
+  'D+': '1.3',
+  D0: '1.0',
+  'D-': '0.7',
+  F: '0.0',
+};
 /**
- * @param {number[]} input
- * @returns {string}
+ * @param {keyof grade} input
+ * @returns {grade[keyof grade]}
  */
 function solution(input) {
-  // i, j 반복문
-  // n, m
-  // c, p 분모분자
-
-  // 배열을 만들고 인덱스를 읽는다.
-  // 9007199254740991
-  for (let i = 0; i < input; i++) {
-    console.log(`${i}/${input - i}`);
-  }
-  Array.from({ length: 10_000_000 });
-  return `${input}/${input}`;
+  return grade[input];
 }
 
-console.log(solution(input[0]));
+console.log(solution(input));
 
 module.exports = {
   solution,

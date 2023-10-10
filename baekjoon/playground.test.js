@@ -1,44 +1,8 @@
-import { solution } from "./playground";
-import { test, expect, describe } from "vitest";
+import { solution } from './playground';
+import { test, expect, describe } from 'vitest';
 
-describe("X가 주어졌을 때, X번째 분수를 구하는 프로그램", () => {
-  test("예제 1", () => {
-    expect(solution(1)).toBe("1/1");
-  });
-
-  test("예제 2", () => {
-    expect(solution(2)).toBe("1/2");
-  });
-
-  test("예제 3", () => {
-    expect(solution(3)).toBe("2/1");
-  });
-
-  test("예제 4", () => {
-    expect(solution(4)).toBe("3/1");
-  });
-
-  test("예제 5", () => {
-    expect(solution(5)).toBe("2/2");
-  });
-
-  test("예제 6", () => {
-    expect(solution(6)).toBe("1/3");
-  });
-
-  test("예제 7", () => {
-    expect(solution(7)).toBe("1/4");
-  });
-
-  test("예제 8", () => {
-    expect(solution(8)).toBe("2/3");
-  });
-
-  test("예제 9", () => {
-    expect(solution(9)).toBe("3/2");
-  });
-
-  test("예제 10", () => {
-    expect(solution(14)).toBe("2/4");
+describe('N 찍기', () => {
+  test('예제 1', () => {
+    expect(solution('A0')).toBe('4.0');
   });
 });
