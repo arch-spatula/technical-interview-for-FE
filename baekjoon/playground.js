@@ -1,32 +1,31 @@
 const fs = require('fs');
 const filePath =
   process.platform === 'linux' ? '/dev/stdin' : __dirname + '/input.txt';
-const [input] = fs.readFileSync(filePath).toString().split('\n').map(String);
+const input = fs
+  .readFileSync(filePath)
+  .toString()
+  .split('\n')
+  .map((str) => str.split(' ').map((elem) => parseInt(elem)));
 
-const grade = {
-  'A+': '4.3',
-  A0: '4.0',
-  'A-': '3.7',
-  'B+': '3.3',
-  B0: '3.0',
-  'B-': '2.7',
-  'C+': '2.3',
-  C0: '2.0',
-  'C-': '1.7',
-  'D+': '1.3',
-  D0: '1.0',
-  'D-': '0.7',
-  F: '0.0',
-};
 /**
- * @param {keyof grade} input
- * @returns {grade[keyof grade]}
+ * @param {number} n
+ * @param {number} s
+ * @returns {number}
  */
-function solution(input) {
-  return grade[input];
+function solution(n, s) {
+  // N명의 사람들과 ACM 수석심판
+  // S 만큼의 주식을 보유
+  // 이를 동등하게 나누어 갖기
+  // 단, 보유한 주식이 할당받는 인원 수로 나누어 떨어지지 않는 경우 나머지가 발생할 수 있다.
+  // X를 각 사람이 배분받는 몫
+  // X의 최대값을 계산
+  return parseInt(s / (n + 1));
 }
 
-console.log(solution(input));
+console.log(solution(input[0][0], input[0][1]));
+console.log(solution(input[1][0], input[1][1]));
+console.log(solution(input[2][0], input[2][1]));
+console.log(solution(input[3][0], input[3][1]));
 
 module.exports = {
   solution,
