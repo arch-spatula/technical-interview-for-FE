@@ -1,38 +1,22 @@
 const fs = require('fs');
 const filePath =
   process.platform === 'linux' ? '/dev/stdin' : __dirname + '/input.txt';
-const [me, doctor] = fs.readFileSync(filePath).toString().split('\n');
+const input = fs
+  .readFileSync(filePath)
+  .toString()
+  .split('\n')
+  .map(Number)
+  .slice(0, 3);
 
 /**
- * @param {string} me
- * @param {string} doctor
- * @returns {"go" | "no"}
+ * @param {number[]} nums
+ * @returns {number}
  */
-function solution(me, doctor) {
-  return null;
+function solution(nums) {
+  return nums.sort((a, b) => a - b)[1];
 }
 
-console.log('     /~\\');
-console.log('    ( oo|');
-console.log('    _\\=/_');
-console.log('   /  _  \\');
-console.log('  //|/.\\|\\\\');
-console.log(' ||  \\ /  ||');
-console.log('============');
-console.log('|          |');
-console.log('|          |');
-console.log('|          |');
-
-// /~\
-// ( oo|
-// _\=/_
-// /  _  \
-// //|/.\|\\
-// ||  \ /  ||
-// ============
-// |          |
-// |          |
-// |          |
+console.log(solution(input));
 
 module.exports = {
   solution,
