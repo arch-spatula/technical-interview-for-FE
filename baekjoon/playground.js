@@ -1,22 +1,22 @@
 const fs = require('fs');
 const filePath =
   process.platform === 'linux' ? '/dev/stdin' : __dirname + '/input.txt';
-const [input] = fs.readFileSync(filePath).toString().split('\n').map(Number);
+const [input] = fs.readFileSync(filePath).toString().split(' ').map(Number);
 
 /**
  * @param {number} num
- * @returns {string}
+ * @returns {number}
  */
 function solution(num) {
-  return `${(num + 1) * 2} ${(num + 1) * 3}`;
+  let result = 1;
+  if (num <= 1) return 1;
+  for (let i = num; 1 <= i; i--) {
+    result *= i;
+  }
+  return result;
 }
 
-console.log('SHIP NAME      CLASS          DEPLOYMENT IN SERVICE');
-console.log('N2 Bomber      Heavy Fighter  Limited    21        ');
-console.log('J-Type 327     Light Combat   Unlimited  1         ');
-console.log('NX Cruiser     Medium Fighter Limited    18        ');
-console.log('N1 Starfighter Medium Fighter Unlimited  25        ');
-console.log('Royal Cruiser  Light Combat   Limited    4         ');
+console.log(solution(input));
 
 module.exports = {
   solution,
