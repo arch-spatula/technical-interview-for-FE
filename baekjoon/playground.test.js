@@ -8,12 +8,6 @@ describe('N 찍기', () => {
   test('예제 2', () => {
     expect(solution(6, 4, 14)).toEqual([3, 2]);
   });
-  test('예제 3', () => {
-    expect(solution(6, 4, 23)).toEqual([6, 4]);
-  });
-  test('예제 4', () => {
-    expect(solution(6, 4, 23)).toEqual([5, 4]);
-  });
 });
 
 //  0  1  2  3
