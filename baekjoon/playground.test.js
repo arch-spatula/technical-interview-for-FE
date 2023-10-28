@@ -3,10 +3,7 @@ import { test, expect, describe } from 'vitest';
 
 describe('N 찍기', () => {
   test('예제 1', () => {
-    expect(solution(3, 4, 6)).toEqual([1, 2]);
-  });
-  test('예제 2', () => {
-    expect(solution(6, 4, 14)).toEqual([3, 2]);
+    expect(solution('alert')).toEqual('ALERT');
   });
 });
 
