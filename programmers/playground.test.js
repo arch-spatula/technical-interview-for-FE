@@ -7,15 +7,23 @@ import { test, expect, describe } from 'vitest';
 describe('day 1', () => {
   test('예제 1', () => {
     expect(
-      solution(`two1nine
-eightwothree
-abcone2threexyz
-xtwone3four
-4nineeightseven2
-zoneight234
-7pqrstsixteen
-eightwo
-dsxnfkjn2vtwofivethree2`)
-    ).toBe(385);
+      solution([
+        { name: 'asparagus', type: 'vegetables', quantity: 5 },
+        { name: 'bananas', type: 'fruit', quantity: 0 },
+        { name: 'goat', type: 'meat', quantity: 23 },
+        { name: 'cherries', type: 'fruit', quantity: 5 },
+        { name: 'fish', type: 'meat', quantity: 22 },
+      ])
+    ).toEqual({
+      restock: [
+        { name: 'asparagus', type: 'vegetables', quantity: 5 },
+        { name: 'bananas', type: 'fruit', quantity: 0 },
+        { name: 'cherries', type: 'fruit', quantity: 5 },
+      ],
+      ok: [
+        { name: 'goat', type: 'meat', quantity: 23 },
+        { name: 'fish', type: 'meat', quantity: 22 },
+      ],
+    });
   });
 });
